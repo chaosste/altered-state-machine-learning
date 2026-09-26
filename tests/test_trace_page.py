@@ -1,0 +1,83 @@
+"""The trace page records a human mark and leaves the score file alone."""
+
+from __future__ import annotations
+
+import json
+import threading
+import unittest
+import urllib.request
+from pathlib import Path
+from tempfile import TemporaryDirectory
+
+from interface.trace_page import append_decision, decisions_path, load_traces, make_server, render_trace_page
+
+
+class TracePageTests(unittest.TestCase):
+    def test_mark_does_not_rewrite_metrics(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            trace = root / "trace.json"
+            metrics = root / "metrics.json"
+            trace.write_text(
+                json.dumps(
+                    [
+                        {
+                            "name": "anchor_open",
+                            "blurb": "Stationary open partner.",
+                            "outcome": "correct",
+                            "steps": [
+                                {
+                                    "cue": "go",
+                                    "action": "wait",
+                                    "requery_action": "wait",
+                                    "belief_after": [0.7, 0.3],
+                                    "exact_belief": [0.88, 0.12],
+                                    "epistemic_entropy": 0.61,
+                                    "aleatoric": 0.25,
+                                    "label": "open",
+                                    "gate_would_block": False,
+                                }
+                            ],
+                        }
+                    ]
+                )
+            )
+            metrics.write_text(json.dumps({"BeliefUpdateScore": 0.5}) + "\n")
+            before = metrics.read_text()
+            page = render_trace_page(load_traces(trace), score=0.5)
+            self.assertIn("anchor_open", page)
+            self.assertIn("BeliefUpdateScore 0.500", page)
+            self.assertIn("does not change the score", page)
+            append_decision(trace, "discard", "perseveration rose", "anchor_open")
+            self.assertEqual(metrics.read_text(), before)
+            saved = decisions_path(trace).read_text()
+            self.assertIn("discard", saved)
+            self.assertNotIn("BeliefUpdateScore", saved)
+
+    def test_http_mark_round_trip(self) -> None:
+        with TemporaryDirectory() as tmp:
+            trace = Path(tmp) / "trace.json"
+            trace.write_text(json.dumps([{"name": "handoff_closed", "blurb": "", "outcome": "incorrect", "steps": []}]))
+            server = make_server(trace, score=None, port=0)
+            thread = threading.Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            host, port = server.server_address
+            try:
+                page = urllib.request.urlopen(f"http://{host}:{port}/").read().decode()
+                self.assertIn("handoff_closed", page)
+                request = urllib.request.Request(
+                    f"http://{host}:{port}/decision",
+                    data=json.dumps({"mark": "keep", "note": "worth another seed", "scenario": "handoff_closed"}).encode(),
+                    headers={"Content-Type": "application/json"},
+                )
+                payload = json.loads(urllib.request.urlopen(request).read().decode())
+                self.assertTrue(payload["ok"])
+                self.assertTrue(payload["score_unchanged"])
+                self.assertIn("keep", decisions_path(trace).read_text())
+            finally:
+                server.shutdown()
+                server.server_close()
+
+
+if __name__ == "__main__":
+    unittest.main()

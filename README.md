@@ -1,0 +1,313 @@
+# REBUS belief-update suite
+
+A small, local-first experiment. It asks whether a few learning-rule changes, taken from psychedelic reinforcement-learning and predictive-coding results, help an agent revise a hidden partner model under partial observability.
+
+The result that matters is calibrated belief revision in simulated encounters. The agent is a decision model with an inspectable belief. It is not a model of intoxication, hallucinations, or emotion.
+
+The scientific contract lives in [`program.md`](program.md). This file is the map: how to run the first loop, what the words mean, and what belongs in a public repository.
+
+## Status
+
+The frozen world, the exact small solution, the score, the baseline trainer, the tests, and the belief-trace page are in place. A one-episode file under `logs/ui-smoke/` was used to check the page. It is not a result.
+
+Online runs and GPU fine-tuning are later steps. They must use this same `env.py`, `oracle.py`, and `eval.py`. A language model may later read the belief trace aloud. It does not track the partner.
+
+## Requirements
+
+- Python 3.11 or newer
+- The packages in [`requirements.txt`](requirements.txt): NumPy and PyTorch
+
+CPU is enough for the starter loop. `--device` on `train.py` accepts `cpu`, `mps`, or `cuda` when you have one.
+
+## Setup
+
+From this directory:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python -m unittest discover -s tests -t .
+```
+
+If you keep using the path directly, the same commands are `.venv/bin/python` and `.venv/bin/pip`.
+
+## Starter workflow
+
+Do these in order. One hypothesis, one change, then a comparison against the baseline at the same seed.
+
+1. Run the tests in the setup block. They lock the scenario seeds, check the exact filter, and check that a policy which trusts the latest public cue fails the held-out partner.
+2. Train the baseline and leave `train.py` untouched:
+
+   ```bash
+   python train.py --episodes 50 --seed 7 --output-dir logs/baseline-seed7
+   ```
+
+3. Read `logs/baseline-seed7/metrics.json`. The selection field is `BeliefUpdateScore`. The other fields say why.
+4. Open the trace:
+
+   ```bash
+   python scripts/serve_trace.py \
+     --trace logs/baseline-seed7/trace.json \
+     --metrics logs/baseline-seed7/metrics.json
+   ```
+
+   The page is at `http://127.0.0.1:8765/`. Each strip shows the cue, the belief before and after, epistemic and aleatoric uncertainty, the action, and whether the commit gate would have blocked it.
+5. Write one sentence in a note: which single constant in `train.py` you expect to move, and which component should move with it. The allowed sequence is in [`program.md`](program.md).
+6. Copy `train.py` to a new file, for example `candidates/arm2_reward_lr.py`. Change one constant block. Set `VARIANT` to a name that matches the file. Do not edit `env.py`, `oracle.py`, or `eval.py`.
+7. Compare at the same seed:
+
+   ```bash
+   python scripts/local_runner.py \
+     --episodes 50 \
+     --seed 7 \
+     --output-root logs/seed7-arm2 \
+     --candidate-train-py candidates/arm2_reward_lr.py
+   ```
+
+   The runner starts a separate process for the candidate, so its constants cannot leak into the baseline. It writes `selection/selection.json` with `keep` true or false.
+8. On the trace page, mark the run keep or discard and write the reason. That mark is stored beside the trace, in a `.decisions.jsonl` file. It does not change `BeliefUpdateScore`.
+9. Keep the candidate only when `selection.json` says `keep`. A higher reward learning rate that speeds acquisition and increases perseveration does not win.
+10. Repeat from step 5. Combine arms only after a single arm has already passed the keep rule.
+
+Changing a weight or a scenario is a separate kind of edit. Write it in [`program.md`](program.md) before the run. That is the double loop. Do not hide it inside `eval.py`.
+
+## Commands
+
+| Command | What it does |
+| --- | --- |
+| `python train.py --episodes 50 --seed 7 --output-dir logs/baseline-seed7` | Trains the baseline, evaluates the fixed suite, prints `eval_metrics=` |
+| `python scripts/local_runner.py --episodes 50 --seed 7 --output-root logs/local-run` | Trains the baseline only |
+| `python scripts/local_runner.py ... --candidate-train-py PATH` | Trains baseline and candidate, then applies the keep rule |
+| `python scripts/serve_trace.py --trace PATH --metrics PATH` | Serves the belief trace. `--port` defaults to 8765 |
+| `python -m unittest discover -s tests -t .` | Runs the integrity tests |
+
+`train.py` defaults are 200 episodes, seed 7, device `cpu`, and a required `--output-dir`. The runner defaults to 50 episodes and seed 7.
+
+## Repository map
+
+| Path | Role during a search |
+| --- | --- |
+| [`program.md`](program.md) | Claim, score, keep rule, and the allowed arms |
+| [`env.py`](env.py) | Frozen partner POMDP and the fixed validation scenarios |
+| [`oracle.py`](oracle.py) | Frozen exact filter and the anchor belief-MDP solution |
+| [`eval.py`](eval.py) | Frozen score, components, and keep rule |
+| [`train.py`](train.py) | The only file a search edits |
+| [`scripts/local_runner.py`](scripts/local_runner.py) | Baseline versus candidate, in separate processes |
+| [`scripts/serve_trace.py`](scripts/serve_trace.py) | Local belief-trace page |
+| [`interface/trace_page.py`](interface/trace_page.py) | Page renderer and the keep/discard note |
+| [`tests/`](tests) | Seed lock, oracle checks, memorizer failure, trainer smoke |
+| [`academic_basis/`](academic_basis) | Source papers, grouped by question. The trainer does not import them |
+| `logs/` | Generated runs. One directory per seed and variant |
+
+## What a run writes
+
+Inside the output directory:
+
+- `metrics.json` — `BeliefUpdateScore`, the components, the seed, the episode count, and the constants used at evaluation
+- `trace.json` — cue, belief, uncertainty, action, and commit gate for every validation episode
+- `learning_curve.csv` — return and belief match by training episode
+- `model.pt` — network weights and the phenotype constants
+
+The runner adds `baseline/`, optional `candidate/`, and `selection/selection.json`.
+
+Evaluation of a plasticity-window arm uses the constants after the window has closed. A gain that exists only while the boost is on, and disappears on the later novel reversal, is not a lasting effect.
+
+## Rules that keep a result comparable
+
+- Compare runs that share the evaluation code, the scenario list, and the seed.
+- Belief parameters may change learning rates, prior precision, stickiness, and prediction-error gain.
+- They may not add a bonus to proceed or commit.
+- `BeliefUpdateScore` is the only keep/discard metric. Do not compare it with `ToMCoordScore` from the earlier coordination benchmark.
+- The anchor has two hidden states and is solved by value iteration. A change that does not move the learned belief toward that filter is not a candidate for a larger model.
+- Yield, proceed, and commit end the encounter. Wait and probe do not. A repeated yield cannot outscore one correct commit.
+
+The numeric weights, hard penalties, and keep thresholds are specified in [`program.md`](program.md) and implemented in [`eval.py`](eval.py). If those two disagree, `eval.py` is what the runner executes, and the disagreement should be fixed in the open.
+
+## Tests
+
+```bash
+python -m unittest discover -s tests -t .
+```
+
+The suite checks that likelihood rows sum to one, that scripted rollouts repeat, that a `go` cue from a uniform prior matches the hand-computed posterior, that the anchor policy commits when the partner is almost surely open and yields when it is almost surely closed, that a cue-memorizer fails the held-out partner, and that a confirmation flip breaks commitment consistency.
+
+## Before the GitHub repository
+
+Include the source, `program.md`, `requirements.txt`, and this file. The
+reference papers in `academic_basis/` remain local research material and are
+not included in the public repository because their redistribution rights are
+not assumed.
+
+Leave out:
+
+- `.venv/`
+- `logs/`
+- `__pycache__/` and `*.pyc`
+- `graphify-out/`
+- `*.decisions.jsonl` notes from local reviews
+
+No license file is in the tree yet. Add one when the public repository is created, before the first push. The papers under `academic_basis/` stay subject to their own publishers' terms.
+
+## Glossary
+
+### Actions and observations
+
+**Wait.** Stay in the encounter for one step and take the ordinary noisy cue. The episode continues.
+
+**Probe.** Pay a small extra cost to make the next cue sharper. This is the surveillance action in a POMDP: spend a step to reduce state uncertainty.
+
+**Yield.** End the encounter by giving way. This is the appropriate ending when the partner model is closed.
+
+**Proceed.** End the encounter with a milder commitment than commit. The payoff is smaller when the partner is open, and the penalty is smaller when the partner is closed.
+
+**Commit.** End the encounter with the high-stakes act. Safe when the world is open and the belief is sharp enough. Unsafe when the world is closed, or when the belief is still diffuse.
+
+**Cue.** The public observation on a step: `go`, `stop`, or `none`.
+
+**None / omission.** A missing event. In this likelihood, `none` is more common when the partner model is closed, so a `none` cue should raise the probability of closed.
+
+**Open.** The partner model in which commit is appropriate.
+
+**Closed.** The partner model in which commit is unsafe and yield is appropriate.
+
+**Clarity.** A flag on the observation that follows a probe. It tells the controller the cue was drawn from the sharper table.
+
+### The decision problem
+
+**POMDP.** A partially observable Markov decision process. The agent chooses a sequence of actions to maximize reward, but it sees noisy cues rather than the hidden state. Chadès et al. (2021) use this tuple for decisions under state uncertainty and model uncertainty. This suite is the small discrete case of that idea.
+
+**Partial observability.** The partner model is hidden. The agent must act on cues, and on a private channel when the scenario provides one.
+
+**Hidden state.** Here, the partner model: open or closed. In a false-belief item, the partner's belief and the world can differ.
+
+**Belief.** A probability distribution over the partner model. The baseline stores it as logits and turns it into probabilities with a softmax.
+
+**Belief update.** The rule that moves the belief after a cue. With prediction-error gain 1 and a uniform start, it is exact Bayes on the public likelihood.
+
+**Prior.** The belief at the start of an episode, before cues. The baseline prior leans open.
+
+**Prior precision.** How strongly that starting belief is held. `PRIOR_PRECISION` 1.5 is an overweighted open prior. Lowering it is the REBUS-style edit: the high-level belief becomes easier to revise.
+
+**Prediction error.** The surprise of the cue under each partner model, implemented as the log likelihood of that cue.
+
+**Prediction-error gain.** `BELIEF_PE_GAIN`. It scales how far one cue moves the belief. The baseline uses 0.35. The exact filter uses 1.
+
+**Exact filter.** The Bayes update with gain 1 and a uniform prior, using the same likelihood tables as the environment. Evaluation compares the agent's belief with this filter.
+
+**Belief MDP.** The fully observed problem whose state is the belief. On the anchor, value iteration solves it on a grid over the probability of open.
+
+**Anchor.** The two stationary scenarios (seeds 13 and 29) that the exact solution covers. Other families are scored, and they are not claimed to be solved exactly.
+
+**Oracle.** The exact filter plus the anchor action from value iteration. "Oracle" here means the solved small model, which is the reference a later larger model has to approach.
+
+**Value iteration.** The backward pass that computes the best action for each belief and each number of steps left on the anchor.
+
+**Policy.** The mapping from the current observation and belief to an action. The baseline policy is a GRU plus linear heads. The belief itself is the explicit filter, so the numbers that matter can be read without opening the network.
+
+**Stickiness.** A bonus on the previous action's logit. It is choice repetition, the Kanen stimulus-stickiness parameter. It is not a bonus for proceed or commit. The baseline value is 0.75.
+
+**Reinforcement sensitivity.** How sharply the action logits are scaled before the action is chosen. In the Kanen models this is the explore/exploit parameter. The baseline keeps it constant. A later arm may lower it on quiet updates and raise it after a large belief move.
+
+**Reward learning rate and punishment learning rate.** Separate weights on the value loss after positive and negative immediate rewards. They are equal in the baseline. Raising only the reward rate is the Kanen 2025 marker, and that arm is allowed to lose: in the 2023 human data, a higher reward learning rate during acquisition predicted more perseverative errors after reversal.
+
+**Phenotype constants.** The named numbers at the top of `train.py` that implement those learning rules. Evaluation reads them after any plasticity window has closed.
+
+**Plasticity window.** A training span during which the edited rates are on. After `PLASTICITY_UNTIL_EPISODE`, training and evaluation use the consolidated constants. This follows Šabanović et al. (2024): a benefit has to show up later, on a novel reversal, after the boost has ended.
+
+### Scenarios
+
+**Handoff.** A structured encounter. The task is known and the partner model is hidden. This is the simple human–robot case: read intent, then yield or commit.
+
+**Reversal.** The partner model flips during the episode. Training reversals go open to closed. The score clock for speed starts at the flip.
+
+**Novel reversal.** A flip in the other direction, closed to open, after a block of unrelated steps that are not evidence. The agent cannot pass this item by memorizing the training direction.
+
+**Intervening trials.** Those unrelated steps. Belief updates are masked, so the gap is not a string of fake cues.
+
+**False belief.** Public cues follow what the partner believes, which can disagree with the world. A private channel can reveal the world.
+
+**True-belief control.** The same family with public cues and private evidence in agreement. It checks that the item is solvable when there is no conflict.
+
+**Perceptual access.** Whether the agent can see the private channel. With access missing, the public cue is not evidence about the world. An undetermined belief is the appropriate report.
+
+**Whose-belief.** The question is what the partner believes, not what is true of the world. Private evidence is about the world, so the filter ignores it for this question.
+
+**Held-out partner.** A deceptive case used only at test. Public cues say go, and commit is unsafe. Training never draws it. A policy that copies the latest cue fails it.
+
+**Held-out.** Reserved for test. The point, from Krasnytskyi and Cuzzolin (2025), is that success on trained patterns can be memorization.
+
+### Score words
+
+**BeliefUpdateScore.** The only number used to keep or discard a change. It is a weighted mean of revision accuracy, revision speed, low perseveration, omission sensitivity, calibration, commitment consistency, and safe commit, minus hard penalties, clipped to the range 0 to 1.
+
+**Revision accuracy.** On each scored step, credit for naming the true label. Ambiguous items also credit an undetermined belief. Clear items do not.
+
+**Revision speed.** How soon the probability of the true label reaches 0.7. On a reversal, speed is zero if the agent was already sure of the new label before the new cue.
+
+**Perseveration.** After a flip, repeating the action class that fitted the old partner model. This is the Kanen failure mode.
+
+**Omission sensitivity.** On a `none` cue, whether the probability of closed rose.
+
+**Epistemic uncertainty.** Uncertainty about which partner model is true. Reported as the entropy of the belief.
+
+**Aleatoric uncertainty.** Noise in the cue itself, reported as one minus the probability of the cue that was actually seen. It is printed beside the score and is not folded into the belief.
+
+**Calibration.** Whether confidence matches how often the belief is right. The component is one minus the expected calibration error.
+
+**Expected calibration error.** A binned gap between average confidence and average accuracy.
+
+**Commitment consistency.** The same situation is asked again with a confirmation flag and no new evidence. The action and the reported belief should stay put. This follows Solaki et al. (2025).
+
+**Undetermined.** A belief that is too flat to call, or whose two probabilities are nearly tied. On an ambiguous item this is a success. On a clear item it is not.
+
+**Unsafe commit.** A commit while the world is closed, or while belief entropy is still above the commit threshold.
+
+**Commit gate.** A flag on the trace when a commit would be blocked because the belief is too diffuse or the probability of open is too low. The environment still carries out the action, so the score can count it. The page shows the gate. It does not secretly fix the action.
+
+**Ignored evidence.** After a strong cue, the belief barely moves or stays near maximum entropy.
+
+**Hard penalty.** A subtraction applied after the weighted mean when unsafe commits, perseveration, or ignored evidence cross a fixed high threshold. The thresholds are in [`program.md`](program.md).
+
+**Keep / discard.** The comparison rule. The score must rise by at least 0.02, and unsafe commits, perseveration, and ignored evidence must not worsen by more than 0.05. The trace-page buttons record a human note. They do not apply this rule.
+
+**Total variation.** Half the sum of absolute differences between two distributions. Anchor belief total variation is the distance between the learned belief and the exact filter.
+
+**Anchor action agreement.** How often the chosen action matches the anchor solution at the exact filter's belief.
+
+**Correct, incorrect, undetermined rates.** The share of scenarios whose final belief falls in each class. These rates are reported beside the score.
+
+### Experiment words
+
+**Baseline.** The untouched `train.py`: open-leaning prior, low prediction-error gain, equal reward and punishment learning rates, stickiness on the previous action only.
+
+**Arm.** One pre-registered edit. Arm 2 raises the reward learning rate only. Arm 3 is the Kanen phase pattern. Arm 4 lowers prior precision and raises prediction-error gain on the belief channel. Arm 5 is a plasticity window around arm 3 or 4.
+
+**Frozen file.** `env.py`, `oracle.py`, and `eval.py` during a search. Editing them changes the test, so the new number is not comparable.
+
+**Variant.** The `VARIANT` string stored in `metrics.json`. Name it after the file you ran.
+
+**Seed.** The integer that fixes training draws and, separately, the seeds inside each validation scenario. Compare equal seeds.
+
+**Double loop.** A change to the question itself: a weight, a scenario, or a penalty. Write it in `program.md` first. The phrase is from Argyris and Schön, as used in the OntoOmnia note, and here it only means that kind of recorded edit.
+
+**Single loop.** An edit inside `train.py` that tries to do better on the current score.
+
+**Shortcut.** A policy that uses a surface cue, such as "go means commit," and fails when that cue is a lie. The held-out partner is the check.
+
+**REBUS.** Relaxed beliefs under psychedelics (Carhart-Harris and Friston, 2019). In this code it means lowering the precision of a high-level prior so prediction error can revise it, with the gain on the belief channel. It does not mean raising action entropy without a limit.
+
+**Hot cognition.** In Cuzzolin et al. (2020), thinking that has to track someone else's changing state and use that state to choose. Here that is the partner model. It is not an emotion label.
+
+**Theory of mind.** Attributing a belief to the partner. The whose-belief item asks for that attribution. The score is still belief revision, not a claim that the network has a mind.
+
+## Reading
+
+The papers are grouped under [`academic_basis/`](academic_basis):
+
+- `human_brain_models/` — what the learning-rule changes are allowed to be
+- `machine_learning_behaviour_tests/` — how the tests are specified, including the POMDP primer
+- `applied_uses/` — handoff, reversal, and an inspectable decision as the practical target
+- `ethics_human_ai_communication/` — the trace page: the run states its belief, and a person can answer keep or discard
+
+[`program.md`](program.md) is the short version of how those papers constrain the code.
