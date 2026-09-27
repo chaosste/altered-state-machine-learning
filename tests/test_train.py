@@ -36,6 +36,24 @@ class TrainTests(unittest.TestCase):
         self.assertEqual(phenotype_constants(0)["pe_gain"], BELIEF_PE_GAIN)
         self.assertEqual(phenotype_constants(10**9)["pe_gain"], BELIEF_PE_GAIN)
 
+    def test_rebus_arm_is_a_named_switch(self) -> None:
+        from train import apply_variant, active_variant
+
+        previous = apply_variant("baseline")
+        try:
+            apply_variant("rebus")
+            self.assertEqual(active_variant(), "arm4_rebus")
+            open_window = phenotype_constants(0)
+            self.assertEqual(open_window["prior_precision"], 0.5)
+            self.assertEqual(open_window["pe_gain"], 1.0)
+            self.assertEqual(open_window["reward_lr"], REWARD_LEARNING_RATE)
+            apply_variant("arm5")
+            self.assertEqual(phenotype_constants(0)["pe_gain"], 1.0)
+            self.assertEqual(phenotype_constants(10**9)["pe_gain"], BELIEF_PE_GAIN)
+            self.assertEqual(phenotype_constants(10**9)["prior_precision"], PRIOR_PRECISION)
+        finally:
+            apply_variant(previous)
+
     def test_requery_does_not_move_the_belief(self) -> None:
         from env import PartnerEnv, fixed_validation_scenarios
 

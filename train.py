@@ -55,29 +55,65 @@ GAMMA = 0.95
 ENTROPY_COEF = 0.01
 VALUE_COEF = 0.5
 
+# One pre-registered edit each. `rebus` and `arm4_rebus` are arm 4.
+VARIANT_ALIASES = {
+    "baseline": "baseline",
+    "arm2": "arm2",
+    "arm3": "arm3",
+    "arm4": "arm4",
+    "arm4_rebus": "arm4",
+    "rebus": "arm4",
+    "arm5": "arm5",
+}
+VARIANT_LABELS = {
+    "baseline": "baseline",
+    "arm2": "arm2_reward_lr",
+    "arm3": "arm3_kanen_phase",
+    "arm4": "arm4_rebus",
+    "arm5": "arm5_plasticity_window",
+}
+VARIANT_OVERRIDES: Dict[str, Dict[str, object]] = {
+    "baseline": {},
+    "arm2": {"reward_lr": 0.30},
+    "arm3": {
+        "reward_lr": 0.30,
+        "punishment_lr": 0.22,
+        "stickiness": 0.25,
+        "phase_dependent_sensitivity": True,
+        "acquisition_beta": 0.75,
+        "reversal_beta": 1.25,
+    },
+    "arm4": {"prior_precision": 0.5, "pe_gain": 1.0},
+    "arm5": {"prior_precision": 0.5, "pe_gain": 1.0, "plasticity_until_episode": 25},
+}
+_ACTIVE_VARIANT = "baseline"
+
+
+def resolve_variant(name: str) -> str:
+    key = VARIANT_ALIASES.get(name.strip().lower())
+    if key is None:
+        known = ", ".join(sorted(VARIANT_ALIASES))
+        raise ValueError(f"Unknown variant {name}. Choose from {known}.")
+    return key
+
+
+def apply_variant(name: str) -> str:
+    global _ACTIVE_VARIANT
+    _ACTIVE_VARIANT = resolve_variant(name)
+    return _ACTIVE_VARIANT
+
+
+def active_variant() -> str:
+    return VARIANT_LABELS[_ACTIVE_VARIANT]
+
 
 def phenotype_constants(episode: int | None = None) -> Dict[str, float | bool | None]:
     """Constants that actually drive the update. Eval passes a huge episode index."""
-    use_window = (
-        PLASTICITY_UNTIL_EPISODE is not None
-        and episode is not None
-        and episode >= PLASTICITY_UNTIL_EPISODE
-    )
-    if use_window:
-        pe_gain = CONSOLIDATED_PE_GAIN
-        reward_lr = CONSOLIDATED_REWARD_LEARNING_RATE
-        punishment_lr = CONSOLIDATED_PUNISHMENT_LEARNING_RATE
-        stickiness = CONSOLIDATED_STICKINESS
-    else:
-        pe_gain = BELIEF_PE_GAIN
-        reward_lr = REWARD_LEARNING_RATE
-        punishment_lr = PUNISHMENT_LEARNING_RATE
-        stickiness = STICKINESS
-    return {
-        "pe_gain": pe_gain,
-        "reward_lr": reward_lr,
-        "punishment_lr": punishment_lr,
-        "stickiness": stickiness,
+    spec: Dict[str, float | bool | None] = {
+        "pe_gain": BELIEF_PE_GAIN,
+        "reward_lr": REWARD_LEARNING_RATE,
+        "punishment_lr": PUNISHMENT_LEARNING_RATE,
+        "stickiness": STICKINESS,
         "prior_precision": PRIOR_PRECISION,
         "reinforcement_sensitivity": REINFORCEMENT_SENSITIVITY,
         "phase_dependent_sensitivity": PHASE_DEPENDENT_SENSITIVITY,
@@ -85,6 +121,17 @@ def phenotype_constants(episode: int | None = None) -> Dict[str, float | bool | 
         "reversal_beta": REVERSAL_BETA,
         "plasticity_until_episode": PLASTICITY_UNTIL_EPISODE,
     }
+    for key, value in VARIANT_OVERRIDES[_ACTIVE_VARIANT].items():
+        spec[key] = value  # type: ignore[assignment]
+    until = spec["plasticity_until_episode"]
+    window_closed = until is not None and episode is not None and episode >= int(until)
+    if window_closed:
+        spec["pe_gain"] = CONSOLIDATED_PE_GAIN
+        spec["reward_lr"] = CONSOLIDATED_REWARD_LEARNING_RATE
+        spec["punishment_lr"] = CONSOLIDATED_PUNISHMENT_LEARNING_RATE
+        spec["stickiness"] = CONSOLIDATED_STICKINESS
+        spec["prior_precision"] = PRIOR_PRECISION
+    return spec
 
 
 @dataclass
@@ -107,6 +154,7 @@ class BaselinePolicy(nn.Module):
         self.value_head = nn.Linear(hidden_dim, 1)
         self.to(self.device)
         self.h = torch.zeros(1, hidden_dim, device=self.device)
+        self._spec_episode: int | None = 10**9
         self.logits = initial_logits(PRIOR_PRECISION)
         self.prev_action = WAIT
         self.pe_gain = BELIEF_PE_GAIN
@@ -115,6 +163,7 @@ class BaselinePolicy(nn.Module):
 
     def reset_episode(self) -> None:
         self.h = torch.zeros(1, self.hidden_dim, device=self.device)
+        self._spec_episode = 10**9
         constants = phenotype_constants(10**9)
         self.logits = initial_logits(float(constants["prior_precision"]))
         self.prev_action = WAIT
@@ -124,6 +173,7 @@ class BaselinePolicy(nn.Module):
 
     def begin_training_episode(self, episode: int) -> None:
         self.h = torch.zeros(1, self.hidden_dim, device=self.device)
+        self._spec_episode = episode
         constants = phenotype_constants(episode)
         self.logits = initial_logits(float(constants["prior_precision"]))
         self.prev_action = WAIT
@@ -160,12 +210,13 @@ class BaselinePolicy(nn.Module):
         return StepDecision(action, after.copy(), after.copy())
 
     def _sensitivity(self, before: np.ndarray, after: np.ndarray) -> float:
-        if not PHASE_DEPENDENT_SENSITIVITY:
-            return float(REINFORCEMENT_SENSITIVITY)
+        spec = phenotype_constants(self._spec_episode)
+        if not spec["phase_dependent_sensitivity"]:
+            return float(spec["reinforcement_sensitivity"])
         surprise = 0.5 * float(np.abs(after - before).sum())
         if surprise >= SURPRISE_THRESHOLD:
-            return float(REVERSAL_BETA)
-        return float(ACQUISITION_BETA)
+            return float(spec["reversal_beta"])
+        return float(spec["acquisition_beta"])
 
     def _forward(
         self,
@@ -272,7 +323,7 @@ def train(episodes: int, seed: int, output_dir: Path, device: str, hidden_dim: i
         policy.train()
     traces = metrics.pop("traces")
     payload = {
-        "variant": VARIANT,
+        "variant": active_variant(),
         "seed": seed,
         "episodes": episodes,
         "constants": phenotype_constants(10**9),
@@ -284,7 +335,7 @@ def train(episodes: int, seed: int, output_dir: Path, device: str, hidden_dim: i
         {
             "state_dict": policy.state_dict(),
             "constants": phenotype_constants(None),
-            "variant": VARIANT,
+            "variant": active_variant(),
             "hidden_dim": hidden_dim,
         },
         output_dir / "model.pt",
@@ -303,7 +354,12 @@ def main() -> None:
     parser.add_argument("--device", type=str, default="cpu")
     parser.add_argument("--hidden", type=int, default=64)
     parser.add_argument("--lr", type=float, default=3e-3)
+    parser.add_argument("--variant", default="baseline")
     args = parser.parse_args()
+    try:
+        apply_variant(args.variant)
+    except ValueError as exc:
+        parser.error(str(exc))
     train(
         episodes=args.episodes,
         seed=args.seed,

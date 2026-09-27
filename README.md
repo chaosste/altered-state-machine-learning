@@ -10,6 +10,8 @@ The scientific contract lives in [`program.md`](program.md). This file is the ma
 
 The frozen world, the exact small solution, the score, the baseline trainer, the tests, and the belief-trace page are in place. A one-episode file under `logs/ui-smoke/` was used to check the page. It is not a result.
 
+Cue stance, cue polarity, and richness can be read off a finished trace. They are reports. `BeliefUpdateScore` remains the only keep/discard metric. The boundary is written in [`program.md`](program.md) under Later readings.
+
 Online runs and GPU fine-tuning are later steps. They must use this same `env.py`, `oracle.py`, and `eval.py`. A language model may later read the belief trace aloud. It does not track the partner.
 
 ## Requirements
@@ -44,7 +46,14 @@ Do these in order. One hypothesis, one change, then a comparison against the bas
    ```
 
 3. Read `logs/baseline-seed7/metrics.json`. The selection field is `BeliefUpdateScore`. The other fields say why.
-4. Open the trace:
+4. Write the readings beside the trace:
+
+   ```bash
+   python scripts/read_trace.py --trace logs/baseline-seed7/trace.json
+   ```
+
+   That writes `logs/baseline-seed7/trace.readings.json`. Cue stance names each public cue. Cue polarity is the signed count of those stances. Richness is the entropy band of the partner belief. The file is a report. It leaves `metrics.json` alone.
+5. Open the trace:
 
    ```bash
    python scripts/serve_trace.py \
@@ -52,10 +61,10 @@ Do these in order. One hypothesis, one change, then a comparison against the bas
      --metrics logs/baseline-seed7/metrics.json
    ```
 
-   The page is at `http://127.0.0.1:8765/`. Each strip shows the cue, the belief before and after, epistemic and aleatoric uncertainty, the action, and whether the commit gate would have blocked it.
-5. Write one sentence in a note: which single constant in `train.py` you expect to move, and which component should move with it. The allowed sequence is in [`program.md`](program.md).
-6. Copy `train.py` to a new file, for example `candidates/arm2_reward_lr.py`. Change one constant block. Set `VARIANT` to a name that matches the file. Do not edit `env.py`, `oracle.py`, or `eval.py`.
-7. Compare at the same seed:
+   The page is at `http://127.0.0.1:8765/`. Each strip shows the cue, the belief before and after, epistemic and aleatoric uncertainty, the action, whether the commit gate would have blocked it, the cue stance, and the richness band. The scenario line shows cue polarity. `BeliefUpdateScore` stays the selection metric.
+6. Write one sentence in a note: which single constant in `train.py` you expect to move, and which component should move with it. The allowed sequence is in [`program.md`](program.md).
+7. Choose one pre-registered arm. From the menu, `candidate=arm4` is the REBUS edit (prior precision 0.5, prediction-error gain 1). `candidate=rebus` is the same arm. `/arms` lists the others. A hand-written copy of `train.py` is still accepted as a path. Do not edit `env.py`, `oracle.py`, or `eval.py`.
+8. Compare at the same seed:
 
    ```bash
    python scripts/local_runner.py \
@@ -66,37 +75,69 @@ Do these in order. One hypothesis, one change, then a comparison against the bas
    ```
 
    The runner starts a separate process for the candidate, so its constants cannot leak into the baseline. It writes `selection/selection.json` with `keep` true or false.
-8. On the trace page, mark the run keep or discard and write the reason. That mark is stored beside the trace, in a `.decisions.jsonl` file. It does not change `BeliefUpdateScore`.
-9. Keep the candidate only when `selection.json` says `keep`. A higher reward learning rate that speeds acquisition and increases perseveration does not win.
-10. Repeat from step 5. Combine arms only after a single arm has already passed the keep rule.
+9. On the trace page, mark the run keep or discard and write the reason. That mark is stored beside the trace, in a `.decisions.jsonl` file. It does not change `BeliefUpdateScore`.
+10. Keep the candidate only when `selection.json` says `keep`. A higher reward learning rate that speeds acquisition and increases perseveration does not win.
+11. Repeat from step 6. Combine arms only after a single arm has already passed the keep rule.
 
 Changing a weight or a scenario is a separate kind of edit. Write it in [`program.md`](program.md) before the run. That is the double loop. Do not hide it inside `eval.py`.
+
+## Later readings
+
+Three instruments can be read off a finished trace. They explain a run. They do not select one.
+
+- **Cue stance.** `go` is approach, `stop` is avoid, `none` is withhold. A masked update is unavailable.
+- **Cue polarity.** Approach cues minus avoid cues for that episode. The report sets `cue_polarity_used_as_reward` to false. The count stays out of the return.
+- **Richness.** Entropy of the partner belief, whether that entropy sits in the band, how far the belief moved, and whether the partner call changed. Entropy below 0.15 is over-precise. Entropy above 0.9 × ln 2, or a probability gap below 0.05, is diffuse. Otherwise the step is in band.
+
+```bash
+python scripts/read_trace.py --trace logs/baseline-seed7/trace.json
+```
+
+The trace page shows the same three readings. `BeliefUpdateScore` remains the only keep/discard metric. The boundary is the Later readings section of [`program.md`](program.md).
+
+## Further-study tests
+
+Three reports sit beside the score. They use [`further_study_scenarios()`](env.py) and seeds outside the fixed validation list. They do not change `BeliefUpdateScore` or the keep rule.
+
+- **Enduring revision.** Revision accuracy on a novel reversal that follows unrelated intervening steps, read after the plasticity window has closed.
+- **Refinement.** Total variation of that same belief against the exact filter on two extra anchor problems, plus the share of those steps whose entropy is inside the richness band. A fast revision can still be a flat belief.
+- **Varied scenes.** Several questions about one partner model: the world, the partner's belief, and the next action. A true-belief item is paired with each false-belief item. Credit is for the next action. A replay of a stored commit sequence misses the switch of whose belief is asked.
+- **Recovery.** After evidence that the partner is open, a scripted `stop` arrives as the world closes. `wait` or `yield` recovers. `commit` on that cue does not. The trace names the `stop`, the belief move, and the commit gate.
+
+The full statement is the Further-study tests section of [`program.md`](program.md).
 
 ## Commands
 
 | Command | What it does |
 | --- | --- |
+| `python rebus.py` | Prints the REBUS banner, then a menu. Commands run with `.venv` when that folder is present |
 | `python train.py --episodes 50 --seed 7 --output-dir logs/baseline-seed7` | Trains the baseline, evaluates the fixed suite, prints `eval_metrics=` |
 | `python scripts/local_runner.py --episodes 50 --seed 7 --output-root logs/local-run` | Trains the baseline only |
 | `python scripts/local_runner.py ... --candidate-train-py PATH` | Trains baseline and candidate, then applies the keep rule |
-| `python scripts/serve_trace.py --trace PATH --metrics PATH` | Serves the belief trace. `--port` defaults to 8765 |
+| `python scripts/serve_trace.py --output-dir logs/baseline-seed7` | Opens the belief-trace page for that run. `--port` defaults to 8765. `--trace` still accepts a trace file |
+| `python scripts/read_trace.py --trace PATH` | Writes cue stance, polarity, and richness beside the trace. It refuses to replace `metrics.json` |
 | `python -m unittest discover -s tests -t .` | Runs the integrity tests |
 
 `train.py` defaults are 200 episodes, seed 7, device `cpu`, and a required `--output-dir`. The runner defaults to 50 episodes and seed 7.
+
+The menu and the page share one run directory. `/train output=logs/baseline-seed7` writes `metrics.json` and `trace.json` there. `/score metrics=logs/baseline-seed7/metrics.json` and the page print that score as the same list. `/trace output=logs/baseline-seed7` opens the page and returns to the menu, so you can train again while the page stays up. Refresh the page after a new train of that directory. `/quit` closes a page the menu opened. A direct `serve_trace.py` process stays in the foreground in that terminal. Two pages cannot share port 8765. A comparison directory has no trace at its root: open `output=logs/local-run/baseline` or `output=logs/local-run/candidate`. The Keep and Discard buttons write a note beside the trace. The automatic keep is `selection/selection.json` from `/compare`.
 
 ## Repository map
 
 | Path | Role during a search |
 | --- | --- |
-| [`program.md`](program.md) | Claim, score, keep rule, and the allowed arms |
-| [`env.py`](env.py) | Frozen partner POMDP and the fixed validation scenarios |
+| [`program.md`](program.md) | Claim, score, keep rule, allowed arms, Later readings, and further-study tests |
+| [`rebus.py`](rebus.py) | Terminal banner, numbered menu, and slash commands |
+| [`env.py`](env.py) | Frozen partner POMDP, the fixed validation scenarios, and `further_study_scenarios()` |
 | [`oracle.py`](oracle.py) | Frozen exact filter and the anchor belief-MDP solution |
 | [`eval.py`](eval.py) | Frozen score, components, and keep rule |
 | [`train.py`](train.py) | The only file a search edits |
 | [`scripts/local_runner.py`](scripts/local_runner.py) | Baseline versus candidate, in separate processes |
 | [`scripts/serve_trace.py`](scripts/serve_trace.py) | Local belief-trace page |
+| [`readings.py`](readings.py) | Cue stance, polarity, and richness. Reports only |
+| [`scripts/read_trace.py`](scripts/read_trace.py) | Writes `trace.readings.json` from a finished trace |
 | [`interface/trace_page.py`](interface/trace_page.py) | Page renderer and the keep/discard note |
-| [`tests/`](tests) | Seed lock, oracle checks, memorizer failure, trainer smoke |
+| [`tests/`](tests) | Seed lock, oracle checks, memorizer failure, trainer smoke, and readings staying off the score |
 | [`academic_basis/`](academic_basis) | Source papers, grouped by question. The trainer does not import them |
 | `logs/` | Generated runs. One directory per seed and variant |
 
@@ -106,6 +147,7 @@ Inside the output directory:
 
 - `metrics.json` — `BeliefUpdateScore`, the components, the seed, the episode count, and the constants used at evaluation
 - `trace.json` — cue, belief, uncertainty, action, and commit gate for every validation episode
+- `trace.readings.json` — optional report from `scripts/read_trace.py`: cue stance, polarity, and richness. It is not a score
 - `learning_curve.csv` — return and belief match by training episode
 - `model.pt` — network weights and the phenotype constants
 
@@ -119,6 +161,7 @@ Evaluation of a plasticity-window arm uses the constants after the window has cl
 - Belief parameters may change learning rates, prior precision, stickiness, and prediction-error gain.
 - They may not add a bonus to proceed or commit.
 - `BeliefUpdateScore` is the only keep/discard metric. Do not compare it with `ToMCoordScore` from the earlier coordination benchmark.
+- A reading can explain a trace. It cannot keep a candidate.
 - The anchor has two hidden states and is solved by value iteration. A change that does not move the learned belief toward that filter is not a candidate for a larger model.
 - Yield, proceed, and commit end the encounter. Wait and probe do not. A repeated yield cannot outscore one correct commit.
 
@@ -130,7 +173,7 @@ The numeric weights, hard penalties, and keep thresholds are specified in [`prog
 python -m unittest discover -s tests -t .
 ```
 
-The suite checks that likelihood rows sum to one, that scripted rollouts repeat, that a `go` cue from a uniform prior matches the hand-computed posterior, that the anchor policy commits when the partner is almost surely open and yields when it is almost surely closed, that a cue-memorizer fails the held-out partner, and that a confirmation flip breaks commitment consistency.
+The suite checks that likelihood rows sum to one, that scripted rollouts repeat, that a `go` cue from a uniform prior matches the hand-computed posterior, that the anchor policy commits when the partner is almost surely open and yields when it is almost surely closed, that a cue-memorizer fails the held-out partner, that a confirmation flip breaks commitment consistency, that cue stance, polarity, and richness leave the reward and `BeliefUpdateScore` unchanged, that the terminal menu's `/score` and `/readings` commands do the same, and that the three further-study reports leave the fifteen validation seeds and the keep rule unchanged.
 
 ## Before the GitHub repository
 
@@ -297,7 +340,21 @@ No license file is in the tree yet. Add one when the public repository is create
 
 **REBUS.** Relaxed beliefs under psychedelics (Carhart-Harris and Friston, 2019). In this code it means lowering the precision of a high-level prior so prediction error can revise it, with the gain on the belief channel. It does not mean raising action entropy without a limit.
 
-**Hot cognition.** In Cuzzolin et al. (2020), thinking that has to track someone else's changing state and use that state to choose. Here that is the partner model. It is not an emotion label.
+**Hot cognition.** In Cuzzolin et al. (2020), thinking that has to track someone else's changing state and use that state to choose. Here that is the partner model. The cue-stance reading names the public cue. The partner model remains the thing the score tracks.
+
+**Cue stance.** A label of the public cue on a finished step: approach for `go`, avoid for `stop`, withhold for `none`, unavailable when the update is masked. This is the emotion-classifier instrument in the current suite. The scenarios carry cue names, and the label is computed after the run.
+
+**Cue polarity.** The signed count of approach cues minus avoid cues in one episode. This is the sentiment instrument. The report sets `cue_polarity_used_as_reward` to false, and the count stays out of `immediate_reward`.
+
+**Richness.** The entropic-brain index on the belief channel: entropy, an entropy band, how far the belief moved, and whether the partner call changed. Entropy below 0.15 is over-precise. Entropy above 0.9 × ln 2, or a probability gap below 0.05, is diffuse. Otherwise the step is in band. The commit gate at entropy 0.45 is a separate safety flag.
+
+**Enduring revision.** Revision accuracy on a novel reversal after a block of unrelated steps, using the constants from a closed plasticity window. It is reported beside the score.
+
+**Refinement.** How close that post-window belief stays to the exact filter, and whether its entropy remains inside the richness band. Flattening the belief fails refinement.
+
+**Varied scenes.** A small theory-of-mind set outside the fifteen fixed scenarios. The questions share a partner model and ask about the world, the partner's belief, or the next action. False-belief items have true-belief pairs.
+
+**Recovery.** The action taken when a live `stop` contradicts an open partner. `wait` and `yield` recover. `commit` does not. The belief trace has to name that cue.
 
 **Theory of mind.** Attributing a belief to the partner. The whose-belief item asks for that attribution. The score is still belief revision, not a claim that the network has a mind.
 

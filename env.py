@@ -89,6 +89,7 @@ class Scenario:
     max_steps: int = 8
     score_from_step: int = 0
     blurb: str = ""
+    scripted_cues: Optional[Tuple[int, ...]] = None
 
 
 @dataclass
@@ -318,6 +319,116 @@ def fixed_validation_scenarios() -> List[Scenario]:
 _VALIDATION_SEEDS = {scenario.seed for scenario in fixed_validation_scenarios()}
 
 
+def further_study_scenarios() -> List[Scenario]:
+    """Reports beside the score. Seeds stay off the fixed validation list."""
+    return [
+        *_endurance_scenarios(),
+        *_varied_tom_scenarios(),
+        *_recovery_scenarios(),
+    ]
+
+
+def _endurance_scenarios() -> List[Scenario]:
+    return [
+        _scenario(
+            "further_novel_reversal", 307, "further_endurance", CLOSED,
+            "Intervening steps, then a novel reversal, read after the plasticity window has closed.",
+            reversal_step=6,
+            reversal_world=OPEN,
+            reversal_partner=OPEN,
+            intervening_start=3,
+            intervening_len=3,
+            novel_reversal=True,
+            max_steps=10,
+            score_from_step=6,
+        ),
+        _scenario(
+            "further_anchor_open", 311, "further_anchor", OPEN,
+            "Anchor for refinement against the exact filter.",
+            max_steps=6,
+        ),
+        _scenario(
+            "further_anchor_closed", 317, "further_anchor", CLOSED,
+            "Closed anchor for refinement against the exact filter.",
+            max_steps=6,
+        ),
+    ]
+
+
+def _varied_tom_scenarios() -> List[Scenario]:
+    return [
+        _scenario(
+            "varied_world_true", 251, "further_varied", OPEN,
+            "True-belief control for the world question.",
+            partner_belief=OPEN,
+            max_steps=6,
+        ),
+        _scenario(
+            "varied_world_false", 263, "further_varied", CLOSED,
+            "False belief about the world. Public cues follow an open partner.",
+            partner_belief=OPEN,
+            cues_follow_partner=True,
+            private_evidence=True,
+            private_deterministic=True,
+            private_from_step=1,
+            max_steps=8,
+        ),
+        _scenario(
+            "varied_partner_true", 277, "further_varied", OPEN,
+            "True belief about the partner.",
+            partner_belief=OPEN,
+            query_target="partner",
+            cues_follow_partner=True,
+            max_steps=7,
+            score_from_step=1,
+        ),
+        _scenario(
+            "varied_partner_false", 281, "further_varied", OPEN,
+            "False belief paired with the partner question. The partner model is closed.",
+            partner_belief=CLOSED,
+            cues_follow_partner=True,
+            query_target="partner",
+            private_evidence=True,
+            private_deterministic=True,
+            private_from_step=2,
+            max_steps=8,
+        ),
+        _scenario(
+            "varied_whose_belief", 293, "further_varied", OPEN,
+            "Switch of whose belief is asked. The partner model is closed.",
+            partner_belief=CLOSED,
+            cues_follow_partner=True,
+            query_target="partner",
+            private_evidence=True,
+            private_deterministic=True,
+            private_from_step=0,
+            max_steps=5,
+            score_from_step=1,
+        ),
+        _scenario(
+            "varied_next_action", 347, "further_varied", OPEN,
+            "Same open partner, reshuffled horizon. Credit is the next action.",
+            partner_belief=OPEN,
+            max_steps=5,
+            score_from_step=2,
+        ),
+    ]
+
+
+def _recovery_scenarios() -> List[Scenario]:
+    return [
+        _scenario(
+            "recovery_stop", 331, "further_recovery", OPEN,
+            "Open evidence, then a scripted stop as the world closes.",
+            reversal_step=2,
+            reversal_world=CLOSED,
+            reversal_partner=CLOSED,
+            scripted_cues=(GO, GO, STOP),
+            max_steps=4,
+        ),
+    ]
+
+
 def sample_training_scenario(rng: random.Random) -> Scenario:
     """Training draws. Excludes validation seeds and the held-out deceptive partner."""
     seed = rng.randrange(1_000, 20_000)
@@ -414,6 +525,9 @@ class PartnerEnv:
         if intervening:
             discrete = NONE
             mask_update = True
+        elif scenario.scripted_cues is not None and self.step_id < len(scenario.scripted_cues):
+            discrete = int(scenario.scripted_cues[self.step_id])
+            mask_update = False
         else:
             source = self.partner if scenario.cues_follow_partner else self.world
             table = PROBE_LIKELIHOOD if generated_by == PROBE else BASE_LIKELIHOOD

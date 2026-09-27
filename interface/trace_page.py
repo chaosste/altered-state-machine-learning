@@ -7,6 +7,10 @@ import json
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence
 
+from interface.metrics_view import TAGLINE, format_metrics_list
+from partner import draft_note, narrate_scenario
+from readings import cue_stance, read_trace
+
 
 def decisions_path(trace_path: Path) -> Path:
     return trace_path.with_suffix(".decisions.jsonl")
@@ -22,14 +26,52 @@ def append_decision(trace_path: Path, mark: str, note: str, scenario: str) -> Pa
     return path
 
 
-def render_trace_page(traces: Sequence[Dict], score: Optional[float] = None) -> str:
+def run_files(directory: Path) -> tuple[Optional[Path], Optional[Path], str]:
+    """Resolve the files train.py writes into one output directory."""
+    directory = Path(directory)
+    trace = directory / "trace.json"
+    metrics = directory / "metrics.json"
+    if trace.is_file():
+        return trace, metrics if metrics.is_file() else None, ""
+    sides = [
+        directory / name
+        for name in ("baseline", "candidate")
+        if (directory / name / "trace.json").is_file()
+    ]
+    if sides:
+        lines = ["This directory holds a comparison. Open one side:"]
+        lines.extend(f"  output={side}" for side in sides)
+        return None, None, "\n".join(lines)
+    return None, None, f"No trace at {trace}."
+
+
+def render_trace_page(
+    traces: Sequence[Dict],
+    score: Optional[float] = None,
+    metrics: Optional[Dict] = None,
+    partner_lines: Optional[Sequence[str]] = None,
+) -> str:
     options = []
     panels = []
+    drafts = []
     for index, trace in enumerate(traces):
         name = str(trace.get("name", f"scenario-{index}"))
         options.append(f'<option value="{index}">{html.escape(name)}</option>')
-        panels.append(_panel(index, trace))
-    score_line = "Score is not loaded." if score is None else f"BeliefUpdateScore {score:.3f}"
+        spoken = partner_lines[index] if partner_lines is not None else narrate_scenario(trace)
+        note = draft_note(trace)
+        drafts.append(note)
+        panels.append(_panel(index, trace, spoken, note))
+    first_draft = drafts[0] if drafts else ""
+    if metrics is None and score is not None:
+        metrics = {"BeliefUpdateScore": float(score)}
+    score_block = "Score is not loaded." if metrics is None else format_metrics_list(metrics)
+    lede = (
+        f"{TAGLINE} The list is the same one /score prints. Refresh after you train this directory again. "
+        "A keep or discard mark is written beside the trace. It does not change the score. "
+        "The automatic keep from /compare is selection.json. "
+        "Cue stance, polarity, and richness are readings on the finished trace. The score ignores them. "
+        "The filled bar is the agent's P(open). The brown tick is the exact filter."
+    )
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,6 +83,7 @@ def render_trace_page(traces: Sequence[Dict], score: Optional[float] = None) -> 
   main {{ max-width: 46rem; margin: 0 auto; padding: 1.5rem 1.2rem 3rem; }}
   h1 {{ font-size: 1.6rem; font-weight: 600; margin-bottom: 0.2rem; }}
   p.lede {{ margin-top: 0; color: #3f3a33; }}
+  pre.score {{ font: 0.92rem/1.45 ui-monospace, "SF Mono", Menlo, monospace; white-space: pre-wrap; background: #fffdf8; border: 1px solid #d9d0c1; padding: 0.7rem 0.9rem; margin: 0.8rem 0 1rem; }}
   select, textarea, button {{ font: inherit; }}
   select {{ margin: 0.6rem 0 1rem; padding: 0.3rem 0.4rem; }}
   article {{ display: none; background: #fffdf8; border: 1px solid #d9d0c1; padding: 0.8rem 1rem 1rem; }}
@@ -50,6 +93,7 @@ def render_trace_page(traces: Sequence[Dict], score: Optional[float] = None) -> 
   .track {{ position: relative; height: 0.85rem; background: #e4d8c4; margin: 0.2rem 0 0.35rem; }}
   .track .agent {{ display: block; height: 100%; background: #1f4e3d; }}
   .track .exact {{ position: absolute; top: -0.15rem; width: 2px; height: 1.15rem; background: #8a4b08; }}
+  .partner {{ margin: 0.4rem 0 0.8rem; }}
   .meta {{ color: #4a453d; font-size: 0.92rem; }}
   .gate {{ color: #8d1d18; }}
   form {{ margin-top: 1.2rem; display: grid; gap: 0.5rem; }}
@@ -63,13 +107,14 @@ def render_trace_page(traces: Sequence[Dict], score: Optional[float] = None) -> 
 <body>
 <main>
   <h1>Belief trace</h1>
-  <p class="lede">{html.escape(score_line)}. A keep or discard mark is written beside the trace. It does not change the score. The filled bar is the agent's P(open). The brown tick is the exact filter.</p>
+  <p class="lede">{html.escape(lede)}</p>
+  <pre class="score">{html.escape(score_block)}</pre>
   <label for="scenario">Scenario</label>
   <select id="scenario">{''.join(options)}</select>
   {''.join(panels)}
   <form id="mark">
     <label for="note">Note for the next training hypothesis</label>
-    <textarea id="note" name="note"></textarea>
+    <textarea id="note" name="note">{html.escape(first_draft)}</textarea>
     <div class="actions">
       <button type="button" id="keep" data-mark="keep">Keep</button>
       <button type="button" class="discard" id="discard" data-mark="discard">Discard</button>
@@ -82,7 +127,10 @@ const select = document.getElementById("scenario");
 function show(index) {{
   document.querySelectorAll("article").forEach((node) => node.classList.remove("active"));
   const panel = document.getElementById("panel-" + index);
-  if (panel) panel.classList.add("active");
+  if (!panel) return;
+  panel.classList.add("active");
+  const note = document.getElementById("note");
+  if (note && panel.dataset.draft) note.value = panel.dataset.draft;
 }}
 select.addEventListener("change", () => show(select.value));
 show(select.value || "0");
@@ -109,21 +157,31 @@ document.getElementById("discard").addEventListener("click", () => mark("discard
 """
 
 
-def _panel(index: int, trace: Dict) -> str:
+def _panel(index: int, trace: Dict, spoken: str, note: str) -> str:
     blurb = html.escape(str(trace.get("blurb", "")))
     outcome = html.escape(str(trace.get("outcome", "")))
+    reading = read_trace(trace)
+    summary = (
+        f"Cue polarity {int(reading['cue_polarity_sum']):+d}. "
+        f"Steps in the entropy band: {reading['steps_in_entropy_band']} of {reading['n_steps']}. "
+        f"Partner-call changes: {reading['partner_call_changes']}. "
+        "Polarity is left out of the return."
+    )
     steps = []
-    for step in trace.get("steps", []):
-        steps.append(_step(step))
+    richness = list(reading["richness"])
+    for step, row in zip(trace.get("steps", []), richness):
+        steps.append(_step(step, row))
     active = " active" if index == 0 else ""
     return (
-        f'<article id="panel-{index}" class="{active.strip()}">'
+        f'<article id="panel-{index}" class="{active.strip()}" data-draft="{html.escape(note, quote=True)}">'
         f"<p>{blurb} Outcome: {outcome}.</p>"
+        f"<p class='partner'>{html.escape(spoken)}</p>"
+        f"<p class='meta'>{html.escape(summary)}</p>"
         f"{''.join(steps)}</article>"
     )
 
 
-def _step(step: Dict) -> str:
+def _step(step: Dict, row: Dict) -> str:
     belief = step.get("belief_after") or [0.0, 0.0]
     exact = step.get("exact_belief") or [0.0, 0.0]
     p_open = float(belief[0])
@@ -144,7 +202,9 @@ def _step(step: Dict) -> str:
         f"action {html.escape(str(step.get('action', '')))}, "
         f"confirm {html.escape(str(step.get('requery_action', '')))}, "
         f"label {html.escape(str(step.get('label', '')))}, "
-        f"epistemic {entropy_text}, aleatoric {aleatoric_text}"
+        f"epistemic {entropy_text}, aleatoric {aleatoric_text}, "
+        f"stance {html.escape(str(cue_stance(step)))}, "
+        f"richness {html.escape(str(row.get('band_label', 'unavailable')))}"
         f"</div>{gate}</div></div>"
     )
 
@@ -156,17 +216,32 @@ def load_traces(path: Path) -> List[Dict]:
     return list(payload)
 
 
-def make_server(trace_path: Path, score: Optional[float] = None, port: int = 0):
+def make_server(
+    trace_path: Path,
+    score: Optional[float] = None,
+    port: int = 0,
+    metrics_path: Optional[Path] = None,
+):
     from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-    page = render_trace_page(load_traces(trace_path), score=score)
+    def page_bytes() -> bytes:
+        payload = None
+        if metrics_path is not None and Path(metrics_path).is_file():
+            payload = json.loads(Path(metrics_path).read_text())
+        elif score is not None:
+            payload = {"BeliefUpdateScore": float(score)}
+        from partner import speak
+
+        loaded = load_traces(trace_path)
+        spoken = [speak(trace) for trace in loaded]
+        return render_trace_page(loaded, metrics=payload, partner_lines=spoken).encode("utf-8")
 
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self) -> None:  # noqa: N802
             if self.path.split("?", 1)[0] not in {"/", "/index.html"}:
                 self.send_error(404)
                 return
-            body = page.encode("utf-8")
+            body = page_bytes()
             self.send_response(200)
             self.send_header("Content-Type", "text/html; charset=utf-8")
             self.send_header("Content-Length", str(len(body)))

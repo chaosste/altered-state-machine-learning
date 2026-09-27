@@ -21,10 +21,12 @@ from env import (
     PartnerEnv,
     Scenario,
     fixed_validation_scenarios,
+    further_study_scenarios,
     likelihood,
     perseverative_action,
 )
 from oracle import anchor_action, entropy, evidence_update, initial_logits, softmax
+from readings import entropy_band
 
 
 LN2 = float(np.log(2.0))
@@ -377,4 +379,124 @@ def _strong_evidence(obs: Observation, prev_action: int) -> bool:
         return False
     log_row = np.log(np.array([likelihood(prev_action, state, obs.discrete) for state in range(2)]))
     return float(np.max(log_row) - np.min(log_row)) >= np.log(2.0)
+
+
+WINDOW_CLOSED_EPISODE = 10**9
+RECOVERY_ACTIONS = {"wait", "yield"}
+OPEN_NEXT_ACTIONS = {"proceed", "commit"}
+CLOSED_NEXT_ACTIONS = {"wait", "yield"}
+
+
+def _paired_rollouts(policy: BeliefPolicy, scenarios: Sequence[Scenario]):
+    env = PartnerEnv()
+    rows = []
+    traces = []
+    for scenario in scenarios:
+        row, trace = _rollout(policy, env, scenario)
+        rows.append(row)
+        traces.append(trace)
+    return rows, traces
+
+
+def _belief_tv(step: Dict[str, object]) -> float:
+    belief = np.asarray(step["belief_after"], dtype=np.float64)
+    exact = np.asarray(step["exact_belief"], dtype=np.float64)
+    return 0.5 * float(np.abs(belief - exact).sum())
+
+
+def enduring_precision_report(policy: BeliefPolicy) -> Dict[str, object]:
+    """Post-window revision, and distance of that belief from the exact filter.
+
+    Policies that close a plasticity window do so in reset_episode, which the
+    rollout calls. The episode index recorded here is the closed-window index.
+    """
+    selected = [
+        scenario
+        for scenario in further_study_scenarios()
+        if scenario.family in {"further_endurance", "further_anchor"}
+    ]
+    rows, traces = _paired_rollouts(policy, selected)
+    revision = [
+        float(row["revision_accuracy"])
+        for row, scenario in zip(rows, selected)
+        if scenario.novel_reversal
+    ]
+    anchor_steps = [
+        step
+        for trace, scenario in zip(traces, selected)
+        if scenario.family == "further_anchor"
+        for step in trace["steps"]
+    ]
+    in_band = [1.0 if entropy_band(step.get("epistemic_entropy")) == "in_band" else 0.0 for step in anchor_steps]
+    return {
+        "enduring_revision": _mean(revision, 0.0),
+        "refinement_tv": _mean([_belief_tv(step) for step in anchor_steps], 0.0),
+        "refinement_entropy_in_band": _mean(in_band, 0.0),
+        "window_closed_episode": WINDOW_CLOSED_EPISODE,
+        "pe_gain": getattr(policy, "pe_gain", None),
+        "changes_belief_update_score": False,
+    }
+
+
+def _next_action_hit(step: Dict[str, object]) -> float:
+    label = str(step.get("label", ""))
+    action = str(step.get("action", ""))
+    allowed = OPEN_NEXT_ACTIONS if label == "open" else CLOSED_NEXT_ACTIONS
+    return 1.0 if action in allowed else 0.0
+
+
+def varied_tom_report(policy: BeliefPolicy) -> Dict[str, object]:
+    """Next-action credit on varied scenes. A stored trajectory is not enough."""
+    selected = [scenario for scenario in further_study_scenarios() if scenario.family == "further_varied"]
+    _rows, traces = _paired_rollouts(policy, selected)
+    hits = []
+    whose = None
+    for scenario, trace in zip(selected, traces):
+        step = trace["steps"][0]
+        hit = _next_action_hit(step)
+        hits.append(hit)
+        if scenario.name == "varied_whose_belief":
+            whose = bool(hit == 1.0)
+    return {
+        "next_action_accuracy": _mean(hits, 0.0),
+        "whose_belief_correct": bool(whose),
+        "n_scenarios": len(selected),
+        "changes_belief_update_score": False,
+    }
+
+
+def _trace_names_stop(trace: Dict[str, object]) -> bool:
+    for step in trace.get("steps", []):
+        if step.get("cue") != "stop":
+            continue
+        before = step.get("belief_before")
+        after = step.get("belief_after")
+        if not isinstance(before, list) or not isinstance(after, list):
+            continue
+        if len(before) < 2 or len(after) < 2:
+            continue
+        if "gate_would_block" not in step:
+            continue
+        return True
+    return False
+
+
+def recovery_report(policy: BeliefPolicy) -> Dict[str, object]:
+    """Yield or wait after a live stop. The trace names that cue."""
+    selected = [scenario for scenario in further_study_scenarios() if scenario.family == "further_recovery"]
+    rows, traces = _paired_rollouts(policy, selected)
+    recovered = []
+    named = []
+    stable = []
+    for row, trace in zip(rows, traces):
+        stop_actions = [str(step["action"]) for step in trace["steps"] if step.get("cue") == "stop"]
+        recovered.append(1.0 if stop_actions and all(action in RECOVERY_ACTIONS for action in stop_actions) else 0.0)
+        named.append(1.0 if _trace_names_stop(trace) else 0.0)
+        stable.append(float(row["commitment_consistency"]))
+    return {
+        "recovery_rate": _mean(recovered, 0.0),
+        "trace_names_the_cue": bool(named) and all(flag == 1.0 for flag in named),
+        "requery_stable": _mean(stable, 0.0) == 1.0,
+        "changes_belief_update_score": False,
+    }
 

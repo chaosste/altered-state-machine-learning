@@ -19,7 +19,14 @@ if str(ROOT) not in sys.path:
 from eval import keep_candidate  # noqa: E402
 
 
-def run_train(train_py: Path, episodes: int, seed: int, output_dir: Path, device: str) -> None:
+def run_train(
+    train_py: Path,
+    episodes: int,
+    seed: int,
+    output_dir: Path,
+    device: str,
+    variant: str = "baseline",
+) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     subprocess.check_call(
         [
@@ -33,6 +40,8 @@ def run_train(train_py: Path, episodes: int, seed: int, output_dir: Path, device
             str(output_dir),
             "--device",
             device,
+            "--variant",
+            variant,
         ],
         cwd=str(ROOT),
     )
@@ -46,17 +55,26 @@ def main() -> None:
     parser.add_argument("--device", type=str, default="cpu")
     parser.add_argument("--baseline-train-py", type=str, default=str(ROOT / "train.py"))
     parser.add_argument("--candidate-train-py", type=str, default="")
+    parser.add_argument("--candidate-variant", type=str, default="")
     args = parser.parse_args()
 
     output_root = Path(args.output_root)
     baseline_dir = output_root / "baseline"
-    run_train(Path(args.baseline_train_py), args.episodes, args.seed, baseline_dir, args.device)
-    if not args.candidate_train_py:
+    run_train(Path(args.baseline_train_py), args.episodes, args.seed, baseline_dir, args.device, "baseline")
+    if not args.candidate_train_py and not args.candidate_variant:
         print(f"baseline_metrics={baseline_dir / 'metrics.json'}")
         return
 
     candidate_dir = output_root / "candidate"
-    run_train(Path(args.candidate_train_py), args.episodes, args.seed, candidate_dir, args.device)
+    candidate_py = Path(args.candidate_train_py) if args.candidate_train_py else Path(args.baseline_train_py)
+    run_train(
+        candidate_py,
+        args.episodes,
+        args.seed,
+        candidate_dir,
+        args.device,
+        args.candidate_variant or "baseline",
+    )
     baseline = json.loads((baseline_dir / "metrics.json").read_text())
     candidate = json.loads((candidate_dir / "metrics.json").read_text())
     kept = keep_candidate(baseline, candidate)
