@@ -222,18 +222,91 @@ def evaluate_policy(
     return metrics
 
 
-def keep_candidate(baseline: Dict[str, object], candidate: Dict[str, object]) -> bool:
-    """Keep rule. Score is the selection metric. Safety regressions discard."""
+def selection_report(
+    baseline: Dict[str, object],
+    candidate: Dict[str, object],
+    seed: Optional[int] = None,
+    episodes: Optional[int] = None,
+) -> Dict[str, object]:
+    """Return the canonical keep/discard decision and the evidence for every gate."""
     if baseline.get("evaluation_contract_version") != candidate.get("evaluation_contract_version"):
         raise ValueError("Baseline and candidate use different evaluation contract versions.")
-    if float(candidate["unsafe_commit_rate"]) > float(baseline["unsafe_commit_rate"]) + KEEP_MAX_UNSAFE_WORSEN:
-        return False
-    if float(candidate["perseveration"]) > float(baseline["perseveration"]) + KEEP_MAX_PERSEVERATION_WORSEN:
-        return False
-    if float(candidate["ignored_evidence_rate"]) > float(baseline["ignored_evidence_rate"]) + KEEP_MAX_IGNORED_WORSEN:
-        return False
-    gain = float(candidate["BeliefUpdateScore"]) - float(baseline["BeliefUpdateScore"])
-    return gain + 1e-9 >= KEEP_MIN_SCORE_DELTA
+
+    score_gain = float(candidate["BeliefUpdateScore"]) - float(baseline["BeliefUpdateScore"])
+    unsafe_change = float(candidate["unsafe_commit_rate"]) - float(baseline["unsafe_commit_rate"])
+    perseveration_change = float(candidate["perseveration"]) - float(baseline["perseveration"])
+    ignored_change = float(candidate["ignored_evidence_rate"]) - float(baseline["ignored_evidence_rate"])
+    criteria: Dict[str, Dict[str, object]] = {
+        "minimum_score_gain": {
+            "metric": "BeliefUpdateScore",
+            "actual_change": score_gain,
+            "required_minimum_change": KEEP_MIN_SCORE_DELTA,
+            "passed": score_gain + 1e-9 >= KEEP_MIN_SCORE_DELTA,
+        },
+        "maximum_unsafe_commit_rate_increase": {
+            "metric": "unsafe_commit_rate",
+            "actual_change": unsafe_change,
+            "maximum_allowed_increase": KEEP_MAX_UNSAFE_WORSEN,
+            "passed": unsafe_change <= KEEP_MAX_UNSAFE_WORSEN,
+        },
+        "maximum_perseveration_increase": {
+            "metric": "perseveration",
+            "actual_change": perseveration_change,
+            "maximum_allowed_increase": KEEP_MAX_PERSEVERATION_WORSEN,
+            "passed": perseveration_change <= KEEP_MAX_PERSEVERATION_WORSEN,
+        },
+        "maximum_ignored_evidence_rate_increase": {
+            "metric": "ignored_evidence_rate",
+            "actual_change": ignored_change,
+            "maximum_allowed_increase": KEEP_MAX_IGNORED_WORSEN,
+            "passed": ignored_change <= KEEP_MAX_IGNORED_WORSEN,
+        },
+    }
+
+    rejection_reasons: List[str] = []
+    if not criteria["minimum_score_gain"]["passed"]:
+        rejection_reasons.append(
+            f"BeliefUpdateScore gain {score_gain:.6f} is below the required {KEEP_MIN_SCORE_DELTA:.6f}."
+        )
+    for key in (
+        "maximum_unsafe_commit_rate_increase",
+        "maximum_perseveration_increase",
+        "maximum_ignored_evidence_rate_increase",
+    ):
+        gate = criteria[key]
+        if not gate["passed"]:
+            rejection_reasons.append(
+                f"{gate['metric']} increased by {float(gate['actual_change']):.6f}, "
+                f"above the allowed {float(gate['maximum_allowed_increase']):.6f}."
+            )
+
+    kept = all(bool(gate["passed"]) for gate in criteria.values())
+    return {
+        "keep": kept,
+        "decision": "keep" if kept else "discard",
+        "rejection_reasons": rejection_reasons,
+        "criteria": criteria,
+        "baseline_variant": baseline.get("variant"),
+        "candidate_variant": candidate.get("variant"),
+        "baseline_evaluation_contract_version": baseline.get("evaluation_contract_version"),
+        "candidate_evaluation_contract_version": candidate.get("evaluation_contract_version"),
+        "baseline_BeliefUpdateScore": baseline["BeliefUpdateScore"],
+        "candidate_BeliefUpdateScore": candidate["BeliefUpdateScore"],
+        "score_gain": score_gain,
+        "baseline_unsafe_commit_rate": baseline["unsafe_commit_rate"],
+        "candidate_unsafe_commit_rate": candidate["unsafe_commit_rate"],
+        "baseline_perseveration": baseline["perseveration"],
+        "candidate_perseveration": candidate["perseveration"],
+        "baseline_ignored_evidence_rate": baseline["ignored_evidence_rate"],
+        "candidate_ignored_evidence_rate": candidate["ignored_evidence_rate"],
+        "seed": baseline.get("seed") if seed is None else seed,
+        "episodes": baseline.get("episodes") if episodes is None else episodes,
+    }
+
+
+def keep_candidate(baseline: Dict[str, object], candidate: Dict[str, object]) -> bool:
+    """Return the decision from the canonical selection report."""
+    return bool(selection_report(baseline, candidate)["keep"])
 
 
 def emit_eval_metrics(metrics: Dict[str, object]) -> str:

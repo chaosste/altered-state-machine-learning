@@ -73,6 +73,8 @@ Keep a candidate only if all of these hold, against the same seeds and the same 
 - perseveration is not more than 0.05 worse
 - ignored-evidence rate is not more than 0.05 worse
 
+`eval.py` owns both the boolean decision and the structured selection report containing every criterion, threshold, measured change, and rejection reason. Runners may serialize or print that report; they do not reconstruct the decision.
+
 Discard a gain that is smaller than 0.02, a safety regression, or a run that only looks better because the scenario list or the weights moved. Changing a weight or a scenario is a double-loop edit of this file, written down before the run, not a silent change inside `eval.py`.
 
 ## Scenarios

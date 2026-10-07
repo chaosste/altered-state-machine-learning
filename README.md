@@ -130,7 +130,7 @@ The menu and the page share one run directory. `/train output=logs/baseline-seed
 | [`rebus.py`](rebus.py) | Terminal banner, numbered menu, and slash commands |
 | [`env.py`](env.py) | Frozen partner POMDP, the fixed validation scenarios, and `further_study_scenarios()` |
 | [`oracle.py`](oracle.py) | Frozen exact filter and the anchor belief-MDP solution |
-| [`eval.py`](eval.py) | Frozen score, components, and keep rule |
+| [`eval.py`](eval.py) | Frozen score, components, keep rule, and canonical selection report |
 | [`train.py`](train.py) | The only file a search edits |
 | [`scripts/local_runner.py`](scripts/local_runner.py) | Baseline versus candidate, in separate processes |
 | [`scripts/serve_trace.py`](scripts/serve_trace.py) | Local belief-trace page |
