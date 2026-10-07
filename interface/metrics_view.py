@@ -8,10 +8,13 @@ from typing import Dict, List
 SCORE_FIELDS = (
     "BeliefUpdateScore",
     "revision_accuracy",
+    "clear_revision_accuracy",
+    "ambiguous_abstention_accuracy",
     "revision_speed",
     "perseveration",
     "omission_sensitivity",
     "calibration_ece",
+    "appropriate_outcome_rate",
     "commitment_consistency",
     "unsafe_commit_rate",
     "ignored_evidence_rate",

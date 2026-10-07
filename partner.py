@@ -26,6 +26,8 @@ def narrate_scenario(trace: Mapping[str, object]) -> str:
     name = str(trace.get("name", "scenario"))
     blurb = str(trace.get("blurb", "")).strip()
     outcome = str(trace.get("outcome", "undetermined"))
+    outcome_status = str(trace.get("outcome_status", ""))
+    ambiguous = bool(trace.get("ambiguous", False))
     steps = list(trace.get("steps") or [])
     if not steps:
         return (
@@ -45,9 +47,13 @@ def narrate_scenario(trace: Mapping[str, object]) -> str:
     aleatoric = _num(step.get("aleatoric"))
     band = str(row.get("band_label", "unavailable"))
     situation = blurb if blurb else name
+    status = ""
+    if outcome_status:
+        context = "ambiguous" if ambiguous else "clear"
+        status = f" That call was {outcome_status} for this {context} scenario."
     return (
         f"{situation} At the end of this finished encounter the belief call was {outcome}, "
-        f"and the true label on the last step was {label}. "
+        f"and the true label on the last step was {label}.{status} "
         f"The last cue was {cue}, which is a {stance} stance. "
         f"The agent chose {action}, and when asked again with no new evidence it chose {confirm}. "
         f"Epistemic uncertainty was {epistemic}, which is doubt about the partner type. "
@@ -61,11 +67,13 @@ def draft_note(trace: Mapping[str, object]) -> str:
     """A note for the box. It is not a keep or discard decision."""
     name = str(trace.get("name", "scenario"))
     outcome = str(trace.get("outcome", "undetermined"))
+    outcome_status = str(trace.get("outcome_status", "unscored"))
     steps = list(trace.get("steps") or [])
     action = str(steps[-1].get("action", "")) if steps else "none"
     label = str(steps[-1].get("label", "")) if steps else "unknown"
     return (
-        f"Draft for {name}. Final belief call {outcome}. Last action {action}, label {label}. "
+        f"Draft for {name}. Final belief call {outcome}, evaluated as {outcome_status}. "
+        f"Last action {action}, label {label}. "
         "This draft is not a keep or discard decision."
     )
 

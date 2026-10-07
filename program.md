@@ -38,11 +38,11 @@ Do not combine arms before a single arm improves `BeliefUpdateScore` without wor
 
 `BeliefUpdateScore` is a weighted mean of:
 
-- revision accuracy, 0.25 — macro mean of per-step credits. Ambiguous items credit an undetermined belief. Clear items do not.
-- revision speed, 0.15 — how soon P(label) reaches 0.7. On reversals the clock starts at the flip. Speed is zero if the agent was already sure of the new label before the new cue.
+- revision accuracy, 0.25 — macro mean of per-step credits. Clear items credit only the correct definite belief. Ambiguous items credit only an undetermined belief.
+- revision speed, 0.15 — on clear items, how soon P(label) reaches 0.7. On reversals the clock starts at the flip. Speed is zero if the agent was already sure of the new label before the new cue. Ambiguous items are excluded.
 - low perseveration, 0.15 — after a flip, not repeating the action class that fitted the old partner model
 - omission sensitivity, 0.10 — on a `none` cue, probability of `closed` should rise. `none` is the more likely cue for a closed partner. If a scenario has no omission, it is left out of this average.
-- calibration, 0.10 — one minus expected calibration error of confidence against being right
+- calibration, 0.10 — on clear items, one minus expected calibration error of confidence against being right. Ambiguous items are excluded because the binary belief has no abstention probability
 - commitment consistency, 0.10 — the same state, asked again with no new evidence, returns the same action and the same belief
 - safe commit, 0.15 — one minus the rate of commits while the world is closed or the belief is still diffuse
 
@@ -55,6 +55,14 @@ Hard penalties, subtracted after the weighted mean:
 - 0.10 if the ignored-evidence rate is above 0.80
 
 The score is clipped to [0, 1].
+
+### Ambiguous-outcome contract
+
+Written before the code change, on 7 October 2026. `ambiguous` is a property of the information available in a scenario; `undetermined` is a belief outcome. On a clear item, only a correct definite belief receives revision credit. On an ambiguous item, only `undetermined` receives revision credit; a definite belief receives no credit even when its argmax happens to match the hidden label, because the available evidence did not identify that label.
+
+Ambiguous items remain in revision accuracy as tests of appropriate abstention. They are excluded from revision speed, because speed to 0.7 on a hidden binary label would reward unwarranted certainty, and from binary expected calibration error, because the two-state belief has no explicit probability for abstention. The report records clear-item revision accuracy, ambiguous abstention accuracy, the number of clear calibration steps, and an appropriate-outcome rate. Trace outcomes retain the raw belief call and add whether that call was appropriate under this contract.
+
+This change revises the evaluation contract. Scores produced before this rule are not directly comparable with scores produced after it; baseline and candidate must be evaluated under the same contract version.
 
 ## Keep / discard
 

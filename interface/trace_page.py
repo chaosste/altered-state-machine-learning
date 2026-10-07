@@ -160,6 +160,12 @@ document.getElementById("discard").addEventListener("click", () => mark("discard
 def _panel(index: int, trace: Dict, spoken: str, note: str) -> str:
     blurb = html.escape(str(trace.get("blurb", "")))
     outcome = html.escape(str(trace.get("outcome", "")))
+    outcome_status = html.escape(str(trace.get("outcome_status", "")))
+    ambiguous = bool(trace.get("ambiguous", False))
+    status = ""
+    if outcome_status:
+        context = "ambiguous" if ambiguous else "clear"
+        status = f" Evaluation: {outcome_status} for this {context} scenario."
     reading = read_trace(trace)
     summary = (
         f"Cue polarity {int(reading['cue_polarity_sum']):+d}. "
@@ -174,7 +180,7 @@ def _panel(index: int, trace: Dict, spoken: str, note: str) -> str:
     active = " active" if index == 0 else ""
     return (
         f'<article id="panel-{index}" class="{active.strip()}" data-draft="{html.escape(note, quote=True)}">'
-        f"<p>{blurb} Outcome: {outcome}.</p>"
+        f"<p>{blurb} Outcome: {outcome}.{status}</p>"
         f"<p class='partner'>{html.escape(spoken)}</p>"
         f"<p class='meta'>{html.escape(summary)}</p>"
         f"{''.join(steps)}</article>"

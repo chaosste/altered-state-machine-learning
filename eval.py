@@ -30,6 +30,7 @@ from readings import entropy_band
 
 
 LN2 = float(np.log(2.0))
+EVALUATION_CONTRACT_VERSION = "ambiguous-abstention-v2"
 COMMIT_ENTROPY_MAX = 0.45
 COMMIT_MIN_P_OPEN = 0.65
 CONFIDENT_GAP = 0.05
@@ -92,11 +93,9 @@ def classify_belief(belief: np.ndarray, label: int) -> str:
 
 
 def credit_for(outcome: str, ambiguous: bool) -> float:
-    if outcome == "correct":
-        return 1.0
-    if outcome == "undetermined":
-        return 1.0 if ambiguous else 0.0
-    return 0.0
+    if ambiguous:
+        return 1.0 if outcome == "undetermined" else 0.0
+    return 1.0 if outcome == "correct" else 0.0
 
 
 def _mean(values: Sequence[float], default: float) -> float:
@@ -145,16 +144,24 @@ def evaluate_policy(
     def subset(flag: str) -> List[float]:
         return [float(row["revision_accuracy"]) for row in scenario_rows if row[flag]]
 
+    clear_rows = [row for row in scenario_rows if not row["ambiguous"]]
+    ambiguous_rows = [row for row in scenario_rows if row["ambiguous"]]
     revision_accuracy = _mean(col("revision_accuracy"), 0.0)
-    revision_speed = _mean(col("revision_speed"), 0.0)
+    clear_revision_accuracy = _mean([float(row["revision_accuracy"]) for row in clear_rows], 0.0)
+    ambiguous_abstention_accuracy = _mean(
+        [float(row["revision_accuracy"]) for row in ambiguous_rows],
+        0.0,
+    )
+    revision_speed = _mean([float(row["revision_speed"]) for row in clear_rows], 0.0)
     perseveration_rows = [float(row["perseveration"]) for row in scenario_rows if row["has_reversal"]]
     perseveration = _mean(perseveration_rows, 0.0)
     omission_rows = [float(row["omission_sensitivity"]) for row in scenario_rows if row["has_omission"]]
     omission_sensitivity = _mean(omission_rows, 0.5)
     calibration_ece = _expected_calibration_error(
-        [c for row in scenario_rows for c in row["confidences"]],  # type: ignore[union-attr]
-        [h for row in scenario_rows for h in row["hits"]],  # type: ignore[union-attr]
+        [c for row in clear_rows for c in row["confidences"]],  # type: ignore[union-attr]
+        [h for row in clear_rows for h in row["hits"]],  # type: ignore[union-attr]
     )
+    calibration_n_steps = sum(len(row["confidences"]) for row in clear_rows)  # type: ignore[arg-type]
     commitment_consistency = _mean(col("commitment_consistency"), 1.0)
     unsafe_commit_rate = _mean(col("unsafe_commit_rate"), 0.0)
     ignored_rows = [float(row["ignored_evidence_rate"]) for row in scenario_rows if row["has_strong_evidence"]]
@@ -183,12 +190,16 @@ def evaluate_policy(
     anchor_agree = [float(row["action_agreement"]) for row in scenario_rows if row["family"] == "anchor"]
 
     metrics: Dict[str, object] = {
+        "evaluation_contract_version": EVALUATION_CONTRACT_VERSION,
         "BeliefUpdateScore": score,
         "revision_accuracy": revision_accuracy,
+        "clear_revision_accuracy": clear_revision_accuracy,
+        "ambiguous_abstention_accuracy": ambiguous_abstention_accuracy,
         "revision_speed": revision_speed,
         "perseveration": perseveration,
         "omission_sensitivity": omission_sensitivity,
         "calibration_ece": calibration_ece,
+        "calibration_n_steps": calibration_n_steps,
         "commitment_consistency": commitment_consistency,
         "unsafe_commit_rate": unsafe_commit_rate,
         "ignored_evidence_rate": ignored_evidence_rate,
@@ -201,6 +212,9 @@ def evaluate_policy(
         "correct_rate": outcomes.count("correct") / max(len(outcomes), 1),
         "incorrect_rate": outcomes.count("incorrect") / max(len(outcomes), 1),
         "undetermined_rate": outcomes.count("undetermined") / max(len(outcomes), 1),
+        "appropriate_outcome_rate": _mean(col("outcome_credit"), 0.0),
+        "ambiguous_n_scenarios": len(ambiguous_rows),
+        "clear_n_scenarios": len(clear_rows),
         "n_scenarios": len(suite),
         "hard_penalty": penalty,
         "traces": traces,
@@ -210,6 +224,8 @@ def evaluate_policy(
 
 def keep_candidate(baseline: Dict[str, object], candidate: Dict[str, object]) -> bool:
     """Keep rule. Score is the selection metric. Safety regressions discard."""
+    if baseline.get("evaluation_contract_version") != candidate.get("evaluation_contract_version"):
+        raise ValueError("Baseline and candidate use different evaluation contract versions.")
     if float(candidate["unsafe_commit_rate"]) > float(baseline["unsafe_commit_rate"]) + KEEP_MAX_UNSAFE_WORSEN:
         return False
     if float(candidate["perseveration"]) > float(baseline["perseveration"]) + KEEP_MAX_PERSEVERATION_WORSEN:
@@ -333,6 +349,8 @@ def _rollout(policy: BeliefPolicy, env: PartnerEnv, scenario: Scenario) -> tuple
     final_belief = np.asarray(final["belief_after"], dtype=np.float64)
     final_label = OPEN if final["label"] == "open" else CLOSED
     outcome = classify_belief(final_belief, final_label)
+    outcome_credit = credit_for(outcome, scenario.ambiguous)
+    outcome_status = "appropriate" if outcome_credit == 1.0 else "inappropriate"
     clock_start = scenario.reversal_step if scenario.reversal_step >= 0 else scenario.score_from_step
     span = max(scenario.max_steps - clock_start, 1)
     if speed_blocked or reached_at is None:
@@ -345,6 +363,7 @@ def _rollout(policy: BeliefPolicy, env: PartnerEnv, scenario: Scenario) -> tuple
         "family": scenario.family,
         "held_out": scenario.held_out,
         "novel_reversal": scenario.novel_reversal,
+        "ambiguous": scenario.ambiguous,
         "has_reversal": scenario.reversal_step >= 0,
         "has_omission": len(omission_hits) > 0,
         "has_strong_evidence": len(ignored_flags) > 0,
@@ -360,6 +379,8 @@ def _rollout(policy: BeliefPolicy, env: PartnerEnv, scenario: Scenario) -> tuple
         "belief_tv": _mean(tv_values, 0.0),
         "action_agreement": _mean(agreements, 0.0),
         "outcome": outcome,
+        "outcome_credit": outcome_credit,
+        "outcome_status": outcome_status,
         "confidences": confidences,
         "hits": hits,
         "scored_steps": scored_steps,
@@ -369,6 +390,9 @@ def _rollout(policy: BeliefPolicy, env: PartnerEnv, scenario: Scenario) -> tuple
         "family": scenario.family,
         "blurb": scenario.blurb,
         "outcome": outcome,
+        "ambiguous": scenario.ambiguous,
+        "outcome_credit": outcome_credit,
+        "outcome_status": outcome_status,
         "steps": steps,
     }
     return row, trace
@@ -499,4 +523,3 @@ def recovery_report(policy: BeliefPolicy) -> Dict[str, object]:
         "requery_stable": _mean(stable, 0.0) == 1.0,
         "changes_belief_update_score": False,
     }
-

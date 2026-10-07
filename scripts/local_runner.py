@@ -93,6 +93,8 @@ def build_selection(
         "criteria": criteria,
         "baseline_variant": baseline.get("variant"),
         "candidate_variant": candidate.get("variant"),
+        "baseline_evaluation_contract_version": baseline.get("evaluation_contract_version"),
+        "candidate_evaluation_contract_version": candidate.get("evaluation_contract_version"),
         "baseline_BeliefUpdateScore": baseline["BeliefUpdateScore"],
         "candidate_BeliefUpdateScore": candidate["BeliefUpdateScore"],
         "score_gain": score_gain,

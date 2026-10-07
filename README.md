@@ -284,9 +284,9 @@ No license file is in the tree yet. Add one when the public repository is create
 
 **BeliefUpdateScore.** The only number used to keep or discard a change. It is a weighted mean of revision accuracy, revision speed, low perseveration, omission sensitivity, calibration, commitment consistency, and safe commit, minus hard penalties, clipped to the range 0 to 1.
 
-**Revision accuracy.** On each scored step, credit for naming the true label. Ambiguous items also credit an undetermined belief. Clear items do not.
+**Revision accuracy.** On each scored step, a clear item credits only the correct definite belief. An ambiguous item credits only an undetermined belief; a definite guess receives no credit even when it happens to match the hidden label.
 
-**Revision speed.** How soon the probability of the true label reaches 0.7. On a reversal, speed is zero if the agent was already sure of the new label before the new cue.
+**Revision speed.** On clear items, how soon the probability of the true label reaches 0.7. On a reversal, speed is zero if the agent was already sure of the new label before the new cue. Ambiguous items are excluded because speed toward a hidden binary label would reward unwarranted certainty.
 
 **Perseveration.** After a flip, repeating the action class that fitted the old partner model. This is the Kanen failure mode.
 
@@ -296,13 +296,13 @@ No license file is in the tree yet. Add one when the public repository is create
 
 **Aleatoric uncertainty.** Noise in the cue itself, reported as one minus the probability of the cue that was actually seen. It is printed beside the score and is not folded into the belief.
 
-**Calibration.** Whether confidence matches how often the belief is right. The component is one minus the expected calibration error.
+**Calibration.** On clear items, whether confidence matches how often the belief is right. The component is one minus the expected calibration error. Ambiguous items are excluded because the two-state belief has no explicit abstention probability.
 
 **Expected calibration error.** A binned gap between average confidence and average accuracy.
 
 **Commitment consistency.** The same situation is asked again with a confirmation flag and no new evidence. The action and the reported belief should stay put. This follows Solaki et al. (2025).
 
-**Undetermined.** A belief that is too flat to call, or whose two probabilities are nearly tied. On an ambiguous item this is a success. On a clear item it is not.
+**Undetermined.** A belief that is too flat to call, or whose two probabilities are nearly tied. On an ambiguous item it is the only credited belief outcome. On a clear item it receives no credit.
 
 **Unsafe commit.** A commit while the world is closed, or while belief entropy is still above the commit threshold.
 
