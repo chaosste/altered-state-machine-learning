@@ -44,6 +44,7 @@ MENU = """
 /arms lists the edits. arm4 is the prior-precision edit.
 /partner reads a finished trace. It does not train.
 /compare episodes=50 seed=7 output=logs/seed7-arm4 candidate=arm4
+/compare episodes=50 seeds=7,11,17,23,29 output=logs candidate=arm4
 /compare candidate=peft
 /trace output=logs/baseline-seed7
 /partner output=logs/baseline-seed7
@@ -140,6 +141,32 @@ def _integer(value: str) -> Optional[int]:
         return int(value)
     except ValueError:
         return None
+
+
+def _integer_list(value: str) -> Optional[List[int]]:
+    parts = [part.strip() for part in value.split(",")]
+    if not parts or any(not part for part in parts):
+        return None
+    values: List[int] = []
+    for part in parts:
+        parsed = _integer(part)
+        if parsed is None:
+            return None
+        if parsed not in values:
+            values.append(parsed)
+    return values
+
+
+def _candidate_output_name(candidate: str) -> str:
+    if candidate == "peft":
+        return "peft"
+    if candidate in ARM_CHOICES:
+        return ARM_CHOICES[candidate]
+    if not candidate:
+        return "baseline"
+    stem = Path(candidate).stem.lower().replace("_", "-")
+    safe = "".join(character if character.isalnum() or character == "-" else "-" for character in stem)
+    return safe.strip("-") or "candidate"
 
 
 def project_python() -> str:
@@ -256,36 +283,66 @@ def _train(spec: Dict[str, str], ask: Optional[Ask], run: Runner) -> Outcome:
 
 def _compare(spec: Dict[str, str], ask: Optional[Ask], run: Runner) -> Outcome:
     episodes = _field(spec, "episodes", ask, "Episodes", "50") or "50"
-    seed = _field(spec, "seed", ask, "Seed", "7") or "7"
-    output = _field(spec, "output", ask, "Output root", "logs/local-run") or "logs/local-run"
+    batch = "seeds" in spec
+    if batch and "seed" in spec:
+        return Outcome("Use seed= for one run or seeds= for a batch, not both.")
+    if batch:
+        seeds = _integer_list(spec["seeds"])
+        output = _field(spec, "output", ask, "Batch output root", "logs") or "logs"
+    else:
+        seed = _field(spec, "seed", ask, "Seed", "7") or "7"
+        seeds = [_integer(seed)] if _integer(seed) is not None else None
+        output = _field(spec, "output", ask, "Output root", "logs/local-run") or "logs/local-run"
     if "candidate" in spec:
         candidate = spec["candidate"]
     elif ask is None:
         candidate = ""
     else:
         candidate = ask("Candidate train.py (empty for baseline only): ").strip()
-    if _integer(episodes) is None or _integer(seed) is None:
-        return Outcome("Episodes and seed are integers.")
-    cmd = [
-        project_python(),
-        str(ROOT / "scripts" / "local_runner.py"),
-        "--episodes",
-        episodes,
-        "--seed",
-        seed,
-        "--output-root",
-        output,
-    ]
-    if candidate == "peft":
-        cmd.extend(["--candidate-train-py", str(ROOT / "train_peft.py")])
-    elif candidate in ARM_CHOICES:
-        cmd.extend(["--candidate-variant", ARM_CHOICES[candidate]])
-    elif candidate:
-        cmd.extend(["--candidate-train-py", candidate])
-    device = spec.get("device")
-    if device:
-        cmd.extend(["--device", device])
-    return _run(cmd, run)
+    if _integer(episodes) is None or seeds is None:
+        return Outcome("Episodes and seeds are integers. Separate batch seeds with commas.")
+
+    output_name = _candidate_output_name(candidate)
+    outputs: List[str] = []
+    for seed_value in seeds:
+        run_output = str(Path(output) / f"seed{seed_value}-{output_name}") if batch else output
+        cmd = [
+            project_python(),
+            str(ROOT / "scripts" / "local_runner.py"),
+            "--episodes",
+            episodes,
+            "--seed",
+            str(seed_value),
+            "--output-root",
+            run_output,
+        ]
+        if candidate == "peft":
+            cmd.extend(["--candidate-train-py", str(ROOT / "train_peft.py")])
+        elif candidate in ARM_CHOICES:
+            cmd.extend(["--candidate-variant", ARM_CHOICES[candidate]])
+        elif candidate:
+            cmd.extend(["--candidate-train-py", candidate])
+        device = spec.get("device")
+        if device:
+            cmd.extend(["--device", device])
+        try:
+            code = run(cmd)
+        except KeyboardInterrupt:
+            return Outcome(f"Batch stopped before seed {seed_value}. Completed: {', '.join(outputs) or 'none'}.")
+        if code != 0:
+            return Outcome(
+                f"Batch stopped at seed {seed_value} with exit code {code}. "
+                f"Completed: {', '.join(outputs) or 'none'}."
+            )
+        outputs.append(run_output)
+
+    if not batch:
+        return Outcome("Done.")
+    return Outcome(
+        f"Done. Compared seeds {','.join(str(value) for value in seeds)}.\n"
+        + "Outputs:\n"
+        + "\n".join(f"- {path}" for path in outputs)
+    )
 
 
 def stop_trace_pages() -> None:

@@ -75,6 +75,14 @@ Do these in order. One hypothesis, one change, then a comparison against the bas
    ```
 
    The runner starts a separate process for the candidate, so its constants cannot leak into the baseline. It writes `selection/selection.json` with the keep/discard decision, every gate and threshold, both ignored-evidence rates, and explicit rejection reasons.
+
+   From the terminal menu, compare the same candidate across several seeds with one command:
+
+   ```text
+   /compare episodes=50 seeds=7,11,17,23,29 candidate=arm4 output=logs
+   ```
+
+   Batch output uses one comparison directory per seed, such as `logs/seed7-arm4/` and `logs/seed11-arm4/`. Seeds are run serially. A failure stops the batch and reports which outputs completed.
 9. On the trace page, mark the run keep or discard and write the reason. That mark is stored beside the trace, in a `.decisions.jsonl` file. It does not change `BeliefUpdateScore`.
 10. Keep the candidate only when `selection.json` says `keep`. A higher reward learning rate that speeds acquisition and increases perseveration does not win.
 11. Repeat from step 6. Combine arms only after a single arm has already passed the keep rule.
