@@ -22,13 +22,13 @@ from partner import speak
 ROOT = Path(__file__).resolve().parent
 
 BANNER = r"""
-██████╗ ███████╗██████╗ ██╗   ██╗███████╗
-██╔══██╗██╔════╝██╔══██╗██║   ██║██╔════╝
-██████╔╝█████╗  ██████╔╝██║   ██║███████╗
-██╔══██╗██╔══╝  ██╔══██╗██║   ██║╚════██║
-██║  ██║███████╗██████╔╝╚██████╔╝███████║
-╚═╝  ╚═╝╚══════╝╚═════╝  ╚═════╝ ╚══════╝
-REBUS
+ █████╗ ███████╗███╗   ███╗██╗
+██╔══██╗██╔════╝████╗ ████║██║
+███████║███████╗██╔████╔██║██║
+██╔══██║╚════██║██║╚██╔╝██║██║
+██║  ██║███████║██║ ╚═╝ ██║███████╗
+╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝╚══════╝
+ALTERED STATE MACHINE LEARNING
 """.strip("\n")
 
 MENU = """
@@ -41,7 +41,7 @@ MENU = """
   7  /help       Show this menu
   8  /quit       Leave
 
-/arms lists the edits. REBUS is arm4.
+/arms lists the edits. arm4 is the prior-precision edit.
 /partner reads a finished trace. It does not train.
 /compare episodes=50 seed=7 output=logs/seed7-arm4 candidate=arm4
 /compare candidate=peft
@@ -72,8 +72,8 @@ ARM_CHOICES = {
 ARMS_TEXT = """
 arm2   Reward learning rate 0.30. Everything else stays at the baseline.
 arm3   Reward learning rate 0.30, punishment learning rate 0.22, stickiness 0.25, sensitivity down on quiet updates and up after a large belief move.
-arm4   REBUS. Prior precision 0.5, prediction-error gain 1, on the belief only. Also accepts rebus.
-arm5   The REBUS settings for the first 25 episodes, then the baseline constants. Evaluation reads the closed window.
+arm4   Prior precision 0.5 and prediction-error gain 1, on the belief only.
+arm5   The arm4 settings for the first 25 episodes, then the baseline constants. Evaluation reads the closed window.
 """.strip("\n")
 
 Runner = Callable[[List[str]], int]
@@ -416,7 +416,7 @@ def main() -> None:
     try:
         while True:
             try:
-                line = input("rebus> ")
+                line = input("asml> ")
             except (EOFError, KeyboardInterrupt):
                 print()
                 return

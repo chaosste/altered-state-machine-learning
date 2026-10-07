@@ -1,4 +1,4 @@
-# REBUS belief-update suite
+# Altered State Machine Learning
 
 A small, local-first experiment. It asks whether a few learning-rule changes, taken from psychedelic reinforcement-learning and predictive-coding results, help an agent revise a hidden partner model under partial observability.
 
@@ -63,7 +63,7 @@ Do these in order. One hypothesis, one change, then a comparison against the bas
 
    The page is at `http://127.0.0.1:8765/`. Each strip shows the cue, the belief before and after, epistemic and aleatoric uncertainty, the action, whether the commit gate would have blocked it, the cue stance, and the richness band. The scenario line shows cue polarity. `BeliefUpdateScore` stays the selection metric.
 6. Write one sentence in a note: which single constant in `train.py` you expect to move, and which component should move with it. The allowed sequence is in [`program.md`](program.md).
-7. Choose one pre-registered arm. From the menu, `candidate=arm4` is the REBUS edit (prior precision 0.5, prediction-error gain 1). `candidate=rebus` is the same arm. `/arms` lists the others. A hand-written copy of `train.py` is still accepted as a path. Do not edit `env.py`, `oracle.py`, or `eval.py`.
+7. Choose one pre-registered arm. From the menu, `candidate=arm4` is the prior-precision edit (prior precision 0.5, prediction-error gain 1). `/arms` lists the others. A hand-written copy of `train.py` is still accepted as a path. Do not edit `env.py`, `oracle.py`, or `eval.py`.
 8. Compare at the same seed:
 
    ```bash
@@ -74,7 +74,7 @@ Do these in order. One hypothesis, one change, then a comparison against the bas
      --candidate-train-py candidates/arm2_reward_lr.py
    ```
 
-   The runner starts a separate process for the candidate, so its constants cannot leak into the baseline. It writes `selection/selection.json` with `keep` true or false.
+   The runner starts a separate process for the candidate, so its constants cannot leak into the baseline. It writes `selection/selection.json` with the keep/discard decision, every gate and threshold, both ignored-evidence rates, and explicit rejection reasons.
 9. On the trace page, mark the run keep or discard and write the reason. That mark is stored beside the trace, in a `.decisions.jsonl` file. It does not change `BeliefUpdateScore`.
 10. Keep the candidate only when `selection.json` says `keep`. A higher reward learning rate that speeds acquisition and increases perseveration does not win.
 11. Repeat from step 6. Combine arms only after a single arm has already passed the keep rule.
@@ -110,7 +110,7 @@ The full statement is the Further-study tests section of [`program.md`](program.
 
 | Command | What it does |
 | --- | --- |
-| `python rebus.py` | Prints the REBUS banner, then a menu. Commands run with `.venv` when that folder is present |
+| `python rebus.py` | Prints the ASML banner, then a menu. Commands run with `.venv` when that folder is present |
 | `python train.py --episodes 50 --seed 7 --output-dir logs/baseline-seed7` | Trains the baseline, evaluates the fixed suite, prints `eval_metrics=` |
 | `python scripts/local_runner.py --episodes 50 --seed 7 --output-root logs/local-run` | Trains the baseline only |
 | `python scripts/local_runner.py ... --candidate-train-py PATH` | Trains baseline and candidate, then applies the keep rule |
@@ -120,7 +120,7 @@ The full statement is the Further-study tests section of [`program.md`](program.
 
 `train.py` defaults are 200 episodes, seed 7, device `cpu`, and a required `--output-dir`. The runner defaults to 50 episodes and seed 7.
 
-The menu and the page share one run directory. `/train output=logs/baseline-seed7` writes `metrics.json` and `trace.json` there. `/score metrics=logs/baseline-seed7/metrics.json` and the page print that score as the same list. `/trace output=logs/baseline-seed7` opens the page and returns to the menu, so you can train again while the page stays up. Refresh the page after a new train of that directory. `/quit` closes a page the menu opened. A direct `serve_trace.py` process stays in the foreground in that terminal. Two pages cannot share port 8765. A comparison directory has no trace at its root: open `output=logs/local-run/baseline` or `output=logs/local-run/candidate`. The Keep and Discard buttons write a note beside the trace. The automatic keep is `selection/selection.json` from `/compare`.
+The menu and the page share one run directory. `/train output=logs/baseline-seed7` writes `metrics.json` and `trace.json` there. `/score metrics=logs/baseline-seed7/metrics.json` and the page print that score as the same list. `/trace output=logs/baseline-seed7` opens the page and returns to the menu, so you can train again while the page stays up. Refresh the page after a new train of that directory. `/quit` closes a page the menu opened. A direct `serve_trace.py` process stays in the foreground in that terminal. Two pages cannot share port 8765. A comparison directory has no trace at its root: open `output=logs/local-run/baseline` or `output=logs/local-run/candidate`. The Keep and Discard buttons write a note beside the trace. The automatic decision is `selection/selection.json` from `/compare`; a discard includes the failed criteria and measured rejection reasons.
 
 ## Repository map
 

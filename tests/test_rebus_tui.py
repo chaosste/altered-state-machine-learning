@@ -11,9 +11,9 @@ from rebus import banner, dispatch, format_metrics_list, menu, present_command_o
 
 
 class TuiTests(unittest.TestCase):
-    def test_banner_names_rebus_and_fits_the_terminal(self) -> None:
+    def test_banner_names_asml_and_fits_the_terminal(self) -> None:
         art = banner()
-        self.assertIn("REBUS", art)
+        self.assertIn("ALTERED STATE MACHINE LEARNING", art)
         for line in art.splitlines():
             self.assertLessEqual(len(line), 80)
 
