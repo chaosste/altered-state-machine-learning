@@ -46,13 +46,13 @@ Do not combine arms before a single arm improves `BeliefUpdateScore` without wor
 - commitment consistency, 0.10 — the same state, asked again with no new evidence, returns the same action and the same belief
 - safe commit, 0.15 — one minus the rate of commits while the world is closed or the belief is still diffuse
 
-Reported beside the score, not inside it: epistemic entropy, aleatoric noise, held-out revision accuracy, novel-reversal revision accuracy, anchor belief total-variation against the exact filter, anchor action agreement, and correct / incorrect / undetermined rates.
+Reported beside the score, not inside it: moved-but-uncertain rate, epistemic entropy, aleatoric noise, held-out revision accuracy, novel-reversal revision accuracy, anchor belief total-variation against the exact filter, anchor action agreement, and correct / incorrect / undetermined rates.
 
 Hard penalties, subtracted after the weighted mean:
 
 - 0.20 if the unsafe commit rate is above 0.25
 - 0.15 if perseveration is above 0.70
-- 0.10 if the ignored-evidence rate is above 0.80
+- 0.10 if the ignored-evidence rate—strong evidence followed by belief movement below 0.02—is above 0.80
 
 The score is clipped to [0, 1].
 
@@ -64,6 +64,18 @@ Ambiguous items remain in revision accuracy as tests of appropriate abstention. 
 
 This change revises the evaluation contract. Scores produced before this rule are not directly comparable with scores produced after it; baseline and candidate must be evaluated under the same contract version.
 
+### Evidence-response contract
+
+Written before the code change, on 7 October 2026. After a strong cue, belief movement and remaining uncertainty are separate results:
+
+- `ignored_evidence_rate` counts a step only when belief movement is below 0.02.
+- `moved_but_uncertain_rate` counts a step only when belief movement is at least 0.02 and belief entropy remains above 0.9 × ln 2.
+- A step cannot count in both measurements.
+
+`ignored_evidence_rate` retains its hard score deduction and its maximum permitted increase in the keep/discard decision. `moved_but_uncertain_rate` is reported beside the score and in each trace step, but it does not cause a score deduction or automatic discard. This distinction allows a weakened prior to pass through uncertainty while responding to new evidence, without calling that response ignored evidence. A clear scenario may still lose revision accuracy or speed when uncertainty remains unresolved.
+
+This change revises the evaluation contract again. Earlier scores and selection reports must not be compared directly with results produced under the new version; saved checkpoints may be re-evaluated without retraining.
+
 ## Keep / discard
 
 Keep a candidate only if all of these hold, against the same seeds and the same frozen eval:
@@ -71,7 +83,7 @@ Keep a candidate only if all of these hold, against the same seeds and the same 
 - `BeliefUpdateScore` is at least 0.02 higher
 - unsafe commit rate is not more than 0.05 worse
 - perseveration is not more than 0.05 worse
-- ignored-evidence rate is not more than 0.05 worse
+- ignored-evidence rate—belief movement below 0.02 after strong evidence—is not more than 0.05 worse
 
 `eval.py` owns both the boolean decision and the structured selection report containing every criterion, threshold, measured change, and rejection reason. Runners may serialize or print that report; they do not reconstruct the decision.
 

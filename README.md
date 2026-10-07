@@ -74,7 +74,7 @@ Do these in order. One hypothesis, one change, then a comparison against the bas
      --candidate-train-py candidates/arm2_reward_lr.py
    ```
 
-   The runner starts a separate process for the candidate, so its constants cannot leak into the baseline. It writes `selection/selection.json` with the keep/discard decision, every gate and threshold, both ignored-evidence rates, and explicit rejection reasons.
+   The runner starts a separate process for the candidate, so its constants cannot leak into the baseline. It writes `selection/selection.json` with the keep/discard decision, every rule and threshold, both ignored-evidence rates, both moved-but-uncertain rates, and explicit rejection reasons.
 
    From the terminal menu, compare the same candidate across several seeds with one command:
 
@@ -316,7 +316,9 @@ No license file is in the tree yet. Add one when the public repository is create
 
 **Commit gate.** A flag on the trace when a commit would be blocked because the belief is too diffuse or the probability of open is too low. The environment still carries out the action, so the score can count it. The page shows the gate. It does not secretly fix the action.
 
-**Ignored evidence.** After a strong cue, the belief barely moves or stays near maximum entropy.
+**Ignored evidence.** After a strong cue, belief movement is below 0.02. This retains the score deduction and the maximum permitted increase used by the keep/discard decision.
+
+**Moved but uncertain.** After a strong cue, belief movement is at least 0.02 but entropy remains above 0.9 × ln 2. This is reported separately and does not cause a score deduction or automatic discard. Clear scenarios can still lose revision accuracy or speed when uncertainty remains unresolved.
 
 **Hard penalty.** A subtraction applied after the weighted mean when unsafe commits, perseveration, or ignored evidence cross a fixed high threshold. The thresholds are in [`program.md`](program.md).
 

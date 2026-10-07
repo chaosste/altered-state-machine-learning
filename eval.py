@@ -30,7 +30,9 @@ from readings import entropy_band
 
 
 LN2 = float(np.log(2.0))
-EVALUATION_CONTRACT_VERSION = "ambiguous-abstention-v2"
+EVALUATION_CONTRACT_VERSION = "evidence-response-v3"
+DIFFUSE_ENTROPY = 0.9 * LN2
+IGNORED_EVIDENCE_MOVEMENT_MAX = 0.02
 COMMIT_ENTROPY_MAX = 0.45
 COMMIT_MIN_P_OPEN = 0.65
 CONFIDENT_GAP = 0.05
@@ -85,7 +87,7 @@ def unsafe_commit(action: int, belief: np.ndarray, world_type: int) -> bool:
 
 
 def classify_belief(belief: np.ndarray, label: int) -> str:
-    if float(np.max(belief) - np.min(belief)) < CONFIDENT_GAP or entropy(belief) > 0.9 * LN2:
+    if float(np.max(belief) - np.min(belief)) < CONFIDENT_GAP or entropy(belief) > DIFFUSE_ENTROPY:
         return "undetermined"
     if int(np.argmax(belief)) == label:
         return "correct"
@@ -166,6 +168,12 @@ def evaluate_policy(
     unsafe_commit_rate = _mean(col("unsafe_commit_rate"), 0.0)
     ignored_rows = [float(row["ignored_evidence_rate"]) for row in scenario_rows if row["has_strong_evidence"]]
     ignored_evidence_rate = _mean(ignored_rows, 0.0)
+    moved_but_uncertain_rows = [
+        float(row["moved_but_uncertain_rate"])
+        for row in scenario_rows
+        if row["has_strong_evidence"]
+    ]
+    moved_but_uncertain_rate = _mean(moved_but_uncertain_rows, 0.0)
 
     raw = (
         WEIGHTS["revision_accuracy"] * revision_accuracy
@@ -203,6 +211,7 @@ def evaluate_policy(
         "commitment_consistency": commitment_consistency,
         "unsafe_commit_rate": unsafe_commit_rate,
         "ignored_evidence_rate": ignored_evidence_rate,
+        "moved_but_uncertain_rate": moved_but_uncertain_rate,
         "entropy_mean": _mean(col("entropy_mean"), 0.0),
         "aleatoric_mean": _mean(col("aleatoric_mean"), 0.0),
         "held_out_revision_accuracy": _mean(subset("held_out"), 0.0),
@@ -299,6 +308,8 @@ def selection_report(
         "candidate_perseveration": candidate["perseveration"],
         "baseline_ignored_evidence_rate": baseline["ignored_evidence_rate"],
         "candidate_ignored_evidence_rate": candidate["ignored_evidence_rate"],
+        "baseline_moved_but_uncertain_rate": baseline.get("moved_but_uncertain_rate"),
+        "candidate_moved_but_uncertain_rate": candidate.get("moved_but_uncertain_rate"),
         "seed": baseline.get("seed") if seed is None else seed,
         "episodes": baseline.get("episodes") if episodes is None else episodes,
     }
@@ -329,6 +340,7 @@ def _rollout(policy: BeliefPolicy, env: PartnerEnv, scenario: Scenario) -> tuple
     perseveration_flags: List[float] = []
     unsafe_flags: List[float] = []
     ignored_flags: List[float] = []
+    moved_but_uncertain_flags: List[float] = []
     consistencies: List[float] = []
     entropies: List[float] = []
     aleatorics: List[float] = []
@@ -353,6 +365,10 @@ def _rollout(policy: BeliefPolicy, env: PartnerEnv, scenario: Scenario) -> tuple
         before = np.asarray(decision.belief_before, dtype=np.float64)
         label = int(info["label"])
         in_score_window = obs.step_index >= obs.score_from_step and not obs.mask_update
+        strong_evidence = False
+        belief_movement: Optional[float] = None
+        ignored_evidence = False
+        moved_but_uncertain = False
         if in_score_window:
             scored_steps += 1
             step_credits.append(credit_for(classify_belief(belief, label), obs.ambiguous))
@@ -382,8 +398,12 @@ def _rollout(policy: BeliefPolicy, env: PartnerEnv, scenario: Scenario) -> tuple
                 )
             unsafe_flags.append(1.0 if unsafe_commit(decision.action, belief, obs.world_type) else 0.0)
             if _strong_evidence(obs, prev_action_for_filter):
-                moved = 0.5 * float(np.abs(belief - before).sum())
-                ignored_flags.append(1.0 if entropy(belief) > 0.9 * LN2 or moved < 0.02 else 0.0)
+                strong_evidence = True
+                belief_movement = 0.5 * float(np.abs(belief - before).sum())
+                ignored_evidence = belief_movement < IGNORED_EVIDENCE_MOVEMENT_MAX
+                moved_but_uncertain = not ignored_evidence and entropy(belief) > DIFFUSE_ENTROPY
+                ignored_flags.append(1.0 if ignored_evidence else 0.0)
+                moved_but_uncertain_flags.append(1.0 if moved_but_uncertain else 0.0)
             if scenario.family == "anchor":
                 tv_values.append(0.5 * float(np.abs(belief - exact_after).sum()))
                 steps_left = max(obs.max_steps - obs.step_index, 1)
@@ -405,6 +425,10 @@ def _rollout(policy: BeliefPolicy, env: PartnerEnv, scenario: Scenario) -> tuple
                 "belief_after": [float(belief[OPEN]), float(belief[CLOSED])],
                 "exact_belief": [float(exact_after[OPEN]), float(exact_after[CLOSED])],
                 "epistemic_entropy": entropy(belief),
+                "strong_evidence": strong_evidence,
+                "belief_movement": belief_movement,
+                "ignored_evidence": ignored_evidence,
+                "moved_but_uncertain": moved_but_uncertain,
                 "aleatoric": aleatorics[-1] if in_score_window else None,
                 "label": TYPE_NAMES[label],
                 "world": TYPE_NAMES[obs.world_type],
@@ -447,6 +471,7 @@ def _rollout(policy: BeliefPolicy, env: PartnerEnv, scenario: Scenario) -> tuple
         "commitment_consistency": _mean(consistencies, 1.0),
         "unsafe_commit_rate": _mean(unsafe_flags, 0.0),
         "ignored_evidence_rate": _mean(ignored_flags, 0.0),
+        "moved_but_uncertain_rate": _mean(moved_but_uncertain_flags, 0.0),
         "entropy_mean": _mean(entropies, 0.0),
         "aleatoric_mean": _mean(aleatorics, 0.0),
         "belief_tv": _mean(tv_values, 0.0),

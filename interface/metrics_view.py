@@ -18,6 +18,7 @@ SCORE_FIELDS = (
     "commitment_consistency",
     "unsafe_commit_rate",
     "ignored_evidence_rate",
+    "moved_but_uncertain_rate",
 )
 
 TAGLINE = "Calibrated belief revision. BeliefUpdateScore is the only keep/discard metric."

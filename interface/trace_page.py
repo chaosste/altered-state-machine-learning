@@ -197,6 +197,15 @@ def _step(step: Dict, row: Dict) -> str:
     aleatoric_text = "n/a" if aleatoric is None else f"{float(aleatoric):.2f}"
     entropy = step.get("epistemic_entropy")
     entropy_text = "n/a" if entropy is None else f"{float(entropy):.2f}"
+    movement = step.get("belief_movement")
+    movement_text = "n/a" if movement is None else f"{float(movement):.3f}"
+    evidence_result = ""
+    if step.get("ignored_evidence"):
+        evidence_result = " Strong evidence was followed by almost no belief movement."
+    elif step.get("moved_but_uncertain"):
+        evidence_result = " Belief moved after strong evidence but remained uncertain."
+    elif step.get("strong_evidence"):
+        evidence_result = " Belief moved and was no longer uncertain after strong evidence."
     return (
         "<div class='step'>"
         f"<div class='cue'>{html.escape(str(step.get('cue', '')))}</div>"
@@ -208,9 +217,10 @@ def _step(step: Dict, row: Dict) -> str:
         f"action {html.escape(str(step.get('action', '')))}, "
         f"confirm {html.escape(str(step.get('requery_action', '')))}, "
         f"label {html.escape(str(step.get('label', '')))}, "
-        f"epistemic {entropy_text}, aleatoric {aleatoric_text}, "
+        f"epistemic {entropy_text}, movement {movement_text}, aleatoric {aleatoric_text}, "
         f"stance {html.escape(str(cue_stance(step)))}, "
-        f"richness {html.escape(str(row.get('band_label', 'unavailable')))}"
+        f"richness {html.escape(str(row.get('band_label', 'unavailable')))}."
+        f"{html.escape(evidence_result)}"
         f"</div>{gate}</div></div>"
     )
 
