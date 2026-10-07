@@ -8,7 +8,9 @@ The scientific contract lives in [`program.md`](program.md). This file is the ma
 
 ## Status
 
-The frozen world, the exact small solution, the score, the baseline trainer, the tests, and the belief-trace page are in place. A one-episode file under `logs/ui-smoke/` was used to check the page. It is not a result.
+The frozen world, the exact small solution, the score, the baseline trainer, the tests, and the belief-trace page are in place. The current evaluator is `evidence-response-v3`: ignored evidence means almost no movement after strong evidence, while belief that moved but remained uncertain is reported separately.
+
+Eleven Arm 4 seed comparisons are committed under `logs/`. Seven pass every per-seed keep rule and four are discarded. See [`PROJECT_STATUS.md`](PROJECT_STATUS.md) for the current results, open questions, and continuation workflow. [`CODEX_HANDOFF_PROMPT.md`](CODEX_HANDOFF_PROMPT.md) contains a ready-to-paste prompt for a new Codex desktop chat.
 
 Cue stance, cue polarity, and richness can be read off a finished trace. They are reports. `BeliefUpdateScore` remains the only keep/discard metric. The boundary is written in [`program.md`](program.md) under Later readings.
 
@@ -134,6 +136,8 @@ The menu and the page share one run directory. `/train output=logs/baseline-seed
 
 | Path | Role during a search |
 | --- | --- |
+| [`PROJECT_STATUS.md`](PROJECT_STATUS.md) | Current evaluation version, multi-seed results, open decisions, and continuation workflow |
+| [`CODEX_HANDOFF_PROMPT.md`](CODEX_HANDOFF_PROMPT.md) | Ready-to-paste context for a new Codex desktop chat |
 | [`program.md`](program.md) | Claim, score, keep rule, allowed arms, Later readings, and further-study tests |
 | [`rebus.py`](rebus.py) | Terminal banner, numbered menu, and slash commands |
 | [`env.py`](env.py) | Frozen partner POMDP, the fixed validation scenarios, and `further_study_scenarios()` |
@@ -147,7 +151,7 @@ The menu and the page share one run directory. `/train output=logs/baseline-seed
 | [`interface/trace_page.py`](interface/trace_page.py) | Page renderer and the keep/discard note |
 | [`tests/`](tests) | Seed lock, oracle checks, memorizer failure, trainer smoke, and readings staying off the score |
 | [`academic_basis/`](academic_basis) | Source papers, grouped by question. The trainer does not import them |
-| `logs/` | Generated runs. One directory per seed and variant |
+| [`logs/`](logs/) | Committed metrics, traces, checkpoints, learning curves, selection reports, and earlier scoring snapshots |
 
 ## What a run writes
 
@@ -198,7 +202,7 @@ Leave out:
 - `graphify-out/`
 - `*.decisions.jsonl` notes from local reviews
 
-No license file is in the tree yet. Add one when the public repository is created, before the first push. The papers under `academic_basis/` stay subject to their own publishers' terms.
+The source repository includes an MIT [`LICENSE`](LICENSE). Papers under `academic_basis/` remain subject to their publishers' terms.
 
 ## Glossary
 

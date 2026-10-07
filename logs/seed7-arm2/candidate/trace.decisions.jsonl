@@ -1,0 +1,1 @@
+{"mark": "discard", "note": "Discarded: raising REWARD_LEARNING_RATE from 0.15 to 0.30 produced no measured change in perseveration or BeliefUpdateScore at seed 7.", "scenario": "anchor_open"}

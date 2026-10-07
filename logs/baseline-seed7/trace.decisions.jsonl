@@ -1,0 +1,1 @@
+{"mark": "keep", "note": "Raising REWARD_LEARNING_RATE from 0.15 to 0.30 should increase perseveration above the baseline value of 0.50 and may therefore reduce BeliefUpdateScore.", "scenario": "anchor_open"}

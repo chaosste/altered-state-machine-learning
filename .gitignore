@@ -4,9 +4,9 @@
 __pycache__/
 *.py[cod]
 
-logs/
 graphify-out/
 
 # Academic papers are kept locally; redistribution rights are not assumed.
 academic_basis/**/*.pdf
-*.decisions.jsonl
+
+# Experiment outputs are versioned so scoring changes and decisions remain auditable.

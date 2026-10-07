@@ -1,0 +1,1457 @@
+{
+  "instrument": "later_readings",
+  "changes_belief_update_score": false,
+  "selection_metric": null,
+  "scenarios": [
+    {
+      "name": "anchor_open",
+      "cue_stance": [
+        "approach",
+        "approach",
+        "approach",
+        "approach",
+        "approach",
+        "approach"
+      ],
+      "cue_polarity_sum": 6,
+      "cue_polarity_used_as_reward": false,
+      "steps_in_entropy_band": 0,
+      "n_steps": 6,
+      "partner_call_changes": 0,
+      "richness": [
+        {
+          "epistemic_entropy": 0.11323922920808985,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.023421358985061626,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.0650198818454109,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.012000435831507037,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.03650551478721443,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.006037802272616864,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.020168736190350554,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.003010000006845503,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.01100866783115586,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.0014936824366659223,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.005951974858332303,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.0007395345935429902,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        }
+      ],
+      "changes_belief_update_score": false,
+      "selection_metric": null
+    },
+    {
+      "name": "anchor_closed",
+      "cue_stance": [
+        "approach",
+        "withhold",
+        "avoid",
+        "withhold",
+        "approach",
+        "withhold"
+      ],
+      "cue_polarity_sum": 1,
+      "cue_polarity_used_as_reward": false,
+      "steps_in_entropy_band": 5,
+      "n_steps": 6,
+      "partner_call_changes": 0,
+      "richness": [
+        {
+          "epistemic_entropy": 0.11323922920808985,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.023421358985061626,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.16785445346568434,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.015967266053601763,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.2204081102204232,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.017662567110935848,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.31129031125850004,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.03618670095972575,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.19454382552227023,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.04516333768853515,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.2779990155234932,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.031027149572989292,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        }
+      ],
+      "changes_belief_update_score": false,
+      "selection_metric": null
+    },
+    {
+      "name": "handoff_open",
+      "cue_stance": [
+        "approach",
+        "approach",
+        "approach",
+        "avoid",
+        "approach",
+        "approach",
+        "approach",
+        "approach"
+      ],
+      "cue_polarity_sum": 6,
+      "cue_polarity_used_as_reward": false,
+      "steps_in_entropy_band": 0,
+      "n_steps": 8,
+      "partner_call_changes": 0,
+      "richness": [
+        {
+          "epistemic_entropy": 0.11323922920808985,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.023421358985061626,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.0650198818454109,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.012000435831507037,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.03650551478721443,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.006037802272616864,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.05012518622935,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.0027731417444670026,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.02792043471325737,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.004402953020939944,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.015334767685939419,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.0021895323667119556,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.008331821901322837,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.0010851904713113222,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.004488093050761071,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.0005369575608017967,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        }
+      ],
+      "changes_belief_update_score": false,
+      "selection_metric": null
+    },
+    {
+      "name": "handoff_closed",
+      "cue_stance": [
+        "avoid",
+        "avoid",
+        "approach",
+        "avoid",
+        "avoid",
+        "approach",
+        "avoid",
+        "avoid"
+      ],
+      "cue_polarity_sum": -4,
+      "cue_polarity_used_as_reward": false,
+      "steps_in_entropy_band": 8,
+      "n_steps": 8,
+      "partner_call_changes": 0,
+      "richness": [
+        {
+          "epistemic_entropy": 0.24882291580434562,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.020722539226679153,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.3184486996346611,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.028855106794701345,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.19967197805030354,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.046610113249620624,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.25958424512793965,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.021920755814234978,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.3310590565235161,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.03042448285925084,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.2087985437119541,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.04920245714327217,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.27066850902009054,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.023177402804186047,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.34394018614585864,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.032058412668658526,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        }
+      ],
+      "changes_belief_update_score": false,
+      "selection_metric": null
+    },
+    {
+      "name": "handoff_open_late",
+      "cue_stance": [
+        "withhold",
+        "approach",
+        "avoid",
+        "approach",
+        "avoid",
+        "approach",
+        "approach",
+        "avoid"
+      ],
+      "cue_polarity_sum": 1,
+      "cue_polarity_used_as_reward": false,
+      "steps_in_entropy_band": 4,
+      "n_steps": 8,
+      "partner_call_changes": 0,
+      "richness": [
+        {
+          "epistemic_entropy": 0.2731941565477503,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.030305835019898336,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.16785445346568434,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.0377599279513582,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.2204081102204232,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.017662567110935848,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.1323939508708905,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.02830762270296846,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.17578986001134483,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.013166977281823181,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.10364225362480294,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.02104045333767264,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.059258422190719376,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.010738998077373964,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.08062772859981931,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.004945247558870281,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        }
+      ],
+      "changes_belief_update_score": false,
+      "selection_metric": null
+    },
+    {
+      "name": "handoff_closed_late",
+      "cue_stance": [
+        "withhold",
+        "withhold",
+        "withhold",
+        "withhold",
+        "avoid",
+        "withhold",
+        "withhold",
+        "withhold"
+      ],
+      "cue_polarity_sum": -1,
+      "cue_polarity_used_as_reward": false,
+      "steps_in_entropy_band": 5,
+      "n_steps": 8,
+      "partner_call_changes": 2,
+      "richness": [
+        {
+          "epistemic_entropy": 0.2731941565477503,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.030305835019898336,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.37650720647398506,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.04713320266059434,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.4927521420801808,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.06968402274041866,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.6023530007604948,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.0956760436732757,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.6616886308964511,
+          "band": "diffuse",
+          "band_label": "diffuse",
+          "belief_movement": 0.085020745596224,
+          "call_before": "open",
+          "call_after": "undetermined",
+          "call_changed": true
+        },
+        {
+          "epistemic_entropy": 0.6931125300079487,
+          "band": "diffuse",
+          "band_label": "diffuse",
+          "belief_movement": 0.12891661732562387,
+          "call_before": "undetermined",
+          "call_after": "undetermined",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.6575965821251957,
+          "band": "diffuse",
+          "band_label": "diffuse",
+          "belief_movement": 0.12836553688046762,
+          "call_before": "undetermined",
+          "call_after": "undetermined",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.5682944924232141,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.11197468720437975,
+          "call_before": "undetermined",
+          "call_after": "closed",
+          "call_changed": true
+        }
+      ],
+      "changes_belief_update_score": false,
+      "selection_metric": null
+    },
+    {
+      "name": "reversal_open_to_closed",
+      "cue_stance": [
+        "approach",
+        "approach",
+        "approach",
+        "approach",
+        "avoid",
+        "avoid",
+        "avoid",
+        "withhold",
+        "avoid",
+        "avoid"
+      ],
+      "cue_polarity_sum": -1,
+      "cue_polarity_used_as_reward": false,
+      "steps_in_entropy_band": 0,
+      "n_steps": 10,
+      "partner_call_changes": 0,
+      "richness": [
+        {
+          "epistemic_entropy": 0.11323922920808985,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.023421358985061626,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.0650198818454109,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.012000435831507037,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.03650551478721443,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.006037802272616864,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.020168736190350554,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.003010000006845503,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.02792043471325737,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.0013801887303725626,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.03849126716846168,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.0020204454462293005,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.05280591249931366,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.0029530090667943005,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.08062772859981923,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.0063495787547892925,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.10887468120191542,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.007175081084340371,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.14564963469026548,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.01035181851278461,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        }
+      ],
+      "changes_belief_update_score": false,
+      "selection_metric": null
+    },
+    {
+      "name": "reversal_open_to_closed_late",
+      "cue_stance": [
+        "withhold",
+        "avoid",
+        "approach",
+        "withhold",
+        "approach",
+        "approach",
+        "avoid",
+        "avoid",
+        "withhold",
+        "avoid"
+      ],
+      "cue_polarity_sum": -1,
+      "cue_polarity_used_as_reward": false,
+      "steps_in_entropy_band": 9,
+      "n_steps": 10,
+      "partner_call_changes": 0,
+      "richness": [
+        {
+          "epistemic_entropy": 0.2731941565477503,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.030305835019898336,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.3468598016534883,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.0324331153774847,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.2204081102204232,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.05253047621790705,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.31129031125850015,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.03618670095972583,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.19454382552227023,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.045163337688535275,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.11559907012307208,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.024013965977767837,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.15431137777757858,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.0111419487515848,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.203485274915919,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.015912445347304363,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.2896052703920715,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.03279372551870963,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.3656888746364091,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.03488864258762559,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        }
+      ],
+      "changes_belief_update_score": false,
+      "selection_metric": null
+    },
+    {
+      "name": "novel_reversal_after_gap",
+      "cue_stance": [
+        "withhold",
+        "avoid",
+        "withhold",
+        "unavailable",
+        "unavailable",
+        "unavailable",
+        "approach",
+        "approach",
+        "avoid",
+        "approach"
+      ],
+      "cue_polarity_sum": 1,
+      "cue_polarity_used_as_reward": false,
+      "steps_in_entropy_band": 10,
+      "n_steps": 10,
+      "partner_call_changes": 0,
+      "richness": [
+        {
+          "epistemic_entropy": 0.2731941565477503,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.030305835019898336,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.3468598016534883,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.0324331153774847,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.46103252208902457,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.06310454151204946,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.46103252208902457,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.0,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.46103252208902457,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.0,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.46103252208902457,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.0,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.31129031125850015,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.07944831677023068,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.19454382552227023,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.045163337688535275,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.2533258745659097,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.02122130079318235,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.15431137777757858,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.03409331801936533,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        }
+      ],
+      "changes_belief_update_score": false,
+      "selection_metric": null
+    },
+    {
+      "name": "novel_reversal_after_gap_b",
+      "cue_stance": [
+        "withhold",
+        "withhold",
+        "withhold",
+        "unavailable",
+        "unavailable",
+        "unavailable",
+        "withhold",
+        "approach",
+        "approach",
+        "approach"
+      ],
+      "cue_polarity_sum": 3,
+      "cue_polarity_used_as_reward": false,
+      "steps_in_entropy_band": 10,
+      "n_steps": 10,
+      "partner_call_changes": 0,
+      "richness": [
+        {
+          "epistemic_entropy": 0.2731941565477503,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.030305835019898336,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.37650720647398506,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.04713320266059434,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.4927521420801808,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.06968402274041866,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.4927521420801808,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 6.938893903907228e-17,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.4927521420801808,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 6.938893903907228e-17,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.4927521420801808,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 6.938893903907228e-17,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.6023530007604948,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.0956760436732757,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.4527814144917138,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.1221745456820815,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.3042292842966922,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.07731793535686982,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.18952165364038598,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.043753656083941245,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        }
+      ],
+      "changes_belief_update_score": false,
+      "selection_metric": null
+    },
+    {
+      "name": "true_belief_control",
+      "cue_stance": [
+        "approach",
+        "withhold",
+        "approach",
+        "avoid",
+        "approach",
+        "approach",
+        "approach",
+        "approach"
+      ],
+      "cue_polarity_sum": 5,
+      "cue_polarity_used_as_reward": false,
+      "steps_in_entropy_band": 0,
+      "n_steps": 8,
+      "partner_call_changes": 0,
+      "richness": [
+        {
+          "epistemic_entropy": 0.11323922920808985,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.023421358985061626,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.047880973301028265,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.015736683498516892,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.006674736499423867,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.007443890985412047,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.002260961682058984,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.0005814640118302773,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.0002791858965472513,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.0002184862984176705,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 3.310566137501117e-05,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 2.161646801972752e-05,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 3.817625306478775e-06,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 2.138214602105345e-06,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 4.3132711415389916e-07,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 2.1149911344440732e-07,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        }
+      ],
+      "changes_belief_update_score": false,
+      "selection_metric": null
+    },
+    {
+      "name": "false_belief_private",
+      "cue_stance": [
+        "approach",
+        "approach",
+        "approach",
+        "approach",
+        "approach",
+        "approach",
+        "approach",
+        "approach"
+      ],
+      "cue_polarity_sum": 8,
+      "cue_polarity_used_as_reward": false,
+      "steps_in_entropy_band": 6,
+      "n_steps": 8,
+      "partner_call_changes": 2,
+      "richness": [
+        {
+          "epistemic_entropy": 0.11323922920808985,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.023421358985061626,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.2192168802004087,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.03320412063319972,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.3867940999748822,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.07300578162897575,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.582990986760008,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.13951646678362478,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.6920692523989217,
+          "band": "diffuse",
+          "band_label": "diffuse",
+          "belief_movement": 0.2070576885891817,
+          "call_before": "open",
+          "call_after": "undetermined",
+          "call_changed": true
+        },
+        {
+          "epistemic_entropy": 0.6173741893268552,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.21535574977945368,
+          "call_before": "undetermined",
+          "call_after": "closed",
+          "call_changed": true
+        },
+        {
+          "epistemic_entropy": 0.42743951665647395,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.155111640884967,
+          "call_before": "closed",
+          "call_after": "closed",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.24868517198081766,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.08464828147569456,
+          "call_before": "closed",
+          "call_after": "closed",
+          "call_changed": false
+        }
+      ],
+      "changes_belief_update_score": false,
+      "selection_metric": null
+    },
+    {
+      "name": "false_belief_no_access",
+      "cue_stance": [
+        "approach",
+        "approach",
+        "approach",
+        "approach",
+        "withhold",
+        "approach",
+        "approach",
+        "approach"
+      ],
+      "cue_polarity_sum": 7,
+      "cue_polarity_used_as_reward": false,
+      "steps_in_entropy_band": 8,
+      "n_steps": 8,
+      "partner_call_changes": 0,
+      "richness": [
+        {
+          "epistemic_entropy": 0.19086497110644246,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 1.1796119636642288e-16,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.19086497110644246,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 1.1796119636642288e-16,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.19086497110644246,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 1.1796119636642288e-16,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.19086497110644246,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 1.1796119636642288e-16,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.19086497110644246,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 1.1796119636642288e-16,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.19086497110644246,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 1.1796119636642288e-16,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.19086497110644246,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 1.1796119636642288e-16,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.19086497110644246,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 1.1796119636642288e-16,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        }
+      ],
+      "changes_belief_update_score": false,
+      "selection_metric": null
+    },
+    {
+      "name": "whose_belief",
+      "cue_stance": [
+        "avoid",
+        "avoid",
+        "withhold",
+        "avoid",
+        "avoid",
+        "avoid",
+        "avoid",
+        "withhold"
+      ],
+      "cue_polarity_sum": -6,
+      "cue_polarity_used_as_reward": false,
+      "steps_in_entropy_band": 5,
+      "n_steps": 8,
+      "partner_call_changes": 1,
+      "richness": [
+        {
+          "epistemic_entropy": 0.24882291580434562,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.020722539226679153,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.3184486996346611,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.028855106794701345,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.42936824595385914,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.05686916450618215,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.515032242078533,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.056940617262275076,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.5946519075698967,
+          "band": "in_band",
+          "band_label": "in band",
+          "belief_movement": 0.07099373722281883,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.6565900236607319,
+          "band": "diffuse",
+          "band_label": "diffuse",
+          "belief_movement": 0.08382506818576285,
+          "call_before": "open",
+          "call_after": "undetermined",
+          "call_changed": true
+        },
+        {
+          "epistemic_entropy": 0.6896944036387613,
+          "band": "diffuse",
+          "band_label": "diffuse",
+          "belief_movement": 0.09284199087365544,
+          "call_before": "undetermined",
+          "call_after": "undetermined",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.6772111225110534,
+          "band": "diffuse",
+          "band_label": "diffuse",
+          "belief_movement": 0.13055180853720638,
+          "call_before": "undetermined",
+          "call_after": "undetermined",
+          "call_changed": false
+        }
+      ],
+      "changes_belief_update_score": false,
+      "selection_metric": null
+    },
+    {
+      "name": "held_out_deceptive",
+      "cue_stance": [
+        "approach",
+        "approach",
+        "approach",
+        "withhold",
+        "approach",
+        "approach",
+        "approach",
+        "approach"
+      ],
+      "cue_polarity_sum": 7,
+      "cue_polarity_used_as_reward": false,
+      "steps_in_entropy_band": 0,
+      "n_steps": 8,
+      "partner_call_changes": 0,
+      "richness": [
+        {
+          "epistemic_entropy": 0.11323922920808985,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.023421358985061626,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.0650198818454109,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.012000435831507037,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.03650551478721443,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.006037802272616864,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.05627048341993522,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.004092290820985546,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.03144926086291671,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.005064197021045916,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.017316557170624036,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.0025208911914451513,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.009427149739517502,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.001250044473423059,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        },
+        {
+          "epistemic_entropy": 0.005086208277732318,
+          "band": "over_precise",
+          "band_label": "over-precise",
+          "belief_movement": 0.0006186811023544741,
+          "call_before": "open",
+          "call_after": "open",
+          "call_changed": false
+        }
+      ],
+      "changes_belief_update_score": false,
+      "selection_metric": null
+    }
+  ]
+}

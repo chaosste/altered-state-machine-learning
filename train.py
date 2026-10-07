@@ -282,7 +282,11 @@ def train(episodes: int, seed: int, output_dir: Path, device: str, hidden_dim: i
     output_dir.mkdir(parents=True, exist_ok=True)
     curve_path = output_dir / "learning_curve.csv"
     with curve_path.open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=["episode", "return", "belief_match"])
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=["episode", "return", "belief_match"],
+            lineterminator="\n",
+        )
         writer.writeheader()
         for episode in range(episodes):
             scenario = sample_training_scenario(rng)
