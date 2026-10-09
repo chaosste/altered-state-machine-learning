@@ -17,6 +17,13 @@ from typing import Callable, Dict, List, Optional, Tuple
 from interface.metrics_view import TAGLINE, format_metrics_list
 from interface.trace_page import load_traces, run_files
 from partner import speak
+from contracts import (
+    CONTRACT_DESCRIPTIONS,
+    DEFAULT_CONTRACT,
+    HIGH_RISK_BELIEF_UPDATE_V1,
+    contract_id_from_artifact,
+    resolve_contract,
+)
 
 
 ROOT = Path(__file__).resolve().parent
@@ -33,18 +40,24 @@ ALTERED STATE MACHINE LEARNING
 
 MENU = """
   1  /train      Train the baseline
-  2  /compare    Compare a named arm, or a candidate file
+  2  /compare    Compare a named arm or matched v1 variants
   3  /trace      Open the belief-trace page, then return here
   4  /readings   Write cue stance, polarity, and richness
-  5  /score      Show BeliefUpdateScore
+  5  /score      Show metrics for a saved artifact
   6  /test       Run the integrity tests
   7  /help       Show this menu
   8  /quit       Leave
 
-/arms lists the edits. arm4 is the prior-precision edit.
+/arms lists the edits. arm4 changes belief updating; arm6 combines it with less perseverative action control.
+/contracts lists the supported evaluation contracts.
 /partner reads a finished trace. It does not train.
 /compare episodes=50 seed=7 output=logs/seed7-arm4 candidate=arm4
 /compare episodes=50 seeds=7,11,17,23,29 output=logs candidate=arm4
+/compare episodes=50 seeds=7,11,17,23,29,31,37,41,43,47,53 output=logs candidate=arm6
+/compare episodes=50 seeds=7,11,17,23,29,31,37,41,43,47,53 output=logs candidate=arm7
+/compare episodes=50 seeds=7,11,17,23,29,31,37,41,43,47,53 output=logs candidate=arm8
+/compare contract=high-risk-belief-update-v1 variants=baseline,arm3,arm4 episodes=50 seeds=7,11,17,23,29,31,37,41,43,47,53 output=logs/high-risk-belief-update-v1
+/train contract=high-risk-belief-update-v1 variant=arm3 episodes=50 seed=7 output=logs/high-risk-belief-update-v1/seed7/arm3
 /compare candidate=peft
 /trace output=logs/baseline-seed7
 /partner output=logs/baseline-seed7
@@ -68,6 +81,9 @@ ARM_CHOICES = {
     "arm4_rebus": "arm4",
     "rebus": "arm4",
     "arm5": "arm5",
+    "arm6": "arm6",
+    "arm7": "arm7",
+    "arm8": "arm8",
 }
 
 ARMS_TEXT = """
@@ -75,6 +91,9 @@ arm2   Reward learning rate 0.30. Everything else stays at the baseline.
 arm3   Reward learning rate 0.30, punishment learning rate 0.22, stickiness 0.25, sensitivity down on quiet updates and up after a large belief move.
 arm4   Prior precision 0.5 and prediction-error gain 1, on the belief only.
 arm5   The arm4 settings for the first 25 episodes, then the baseline constants. Evaluation reads the closed window.
+arm6   Arm4 belief settings plus arm3 stickiness and phase-dependent sensitivity; reward/punishment rates stay baseline.
+arm7   Arm6 plus a commit guard when belief entropy exceeds 0.45 or P(open) is below 0.65.
+arm8   Prior precision 0.5 and belief prediction-error gain 0.8; other settings stay baseline.
 """.strip("\n")
 
 Runner = Callable[[List[str]], int]
@@ -223,9 +242,25 @@ def default_runner(cmd: List[str]) -> int:
 
 def show_score(path: Path) -> str:
     payload = json.loads(path.read_text())
-    if "BeliefUpdateScore" not in payload:
+    if "BeliefUpdateScore" not in payload and "belief_replay" not in payload and "closed_loop" not in payload:
         return f"{path} has no BeliefUpdateScore."
+    contract_id = contract_id_from_artifact(payload)
+    if contract_id:
+        payload = {"contract_id": contract_id, **payload}
     return format_metrics_list(payload)
+
+
+def contracts_text() -> str:
+    return "\n".join(f"{key}: {value}" for key, value in CONTRACT_DESCRIPTIONS.items())
+
+
+def _artifact_contract(path: Path) -> Optional[str]:
+    payload = json.loads(path.read_text())
+    if isinstance(payload, dict):
+        return contract_id_from_artifact(payload)
+    if isinstance(payload, list) and payload and isinstance(payload[0], dict):
+        return contract_id_from_artifact(payload[0])
+    return None
 
 
 def dispatch(line: str, ask: Optional[Ask] = None, runner: Optional[Runner] = None) -> Outcome:
@@ -237,6 +272,8 @@ def dispatch(line: str, ask: Optional[Ask] = None, runner: Optional[Runner] = No
         return Outcome(menu() + "\n\n" + ARMS_TEXT)
     if name == "arms":
         return Outcome(ARMS_TEXT)
+    if name == "contracts":
+        return Outcome(contracts_text())
     if name == "quit":
         return Outcome(quit=True)
     if name == "train":
@@ -257,9 +294,19 @@ def dispatch(line: str, ask: Optional[Ask] = None, runner: Optional[Runner] = No
 
 
 def _train(spec: Dict[str, str], ask: Optional[Ask], run: Runner) -> Outcome:
+    try:
+        contract_id = resolve_contract(spec.get("contract"))
+    except ValueError as exc:
+        return Outcome(str(exc))
     episodes = _field(spec, "episodes", ask, "Episodes", "50") or "50"
     seed = _field(spec, "seed", ask, "Seed", "7") or "7"
-    output = _field(spec, "output", ask, "Output directory", "logs/baseline-seed7") or "logs/baseline-seed7"
+    variant = spec.get("variant", "baseline")
+    default_output = (
+        f"logs/{HIGH_RISK_BELIEF_UPDATE_V1}/seed{seed}/{variant}"
+        if contract_id == HIGH_RISK_BELIEF_UPDATE_V1
+        else "logs/baseline-seed7"
+    )
+    output = _field(spec, "output", ask, "Output directory", default_output) or default_output
     if _integer(episodes) is None or _integer(seed) is None:
         return Outcome("Episodes and seed are integers.")
     cmd = [
@@ -271,28 +318,66 @@ def _train(spec: Dict[str, str], ask: Optional[Ask], run: Runner) -> Outcome:
         seed,
         "--output-dir",
         output,
+        "--contract",
+        contract_id,
     ]
     device = spec.get("device")
     if device:
         cmd.extend(["--device", device])
-    variant = spec.get("variant", "")
-    if variant:
-        cmd.extend(["--variant", variant])
+    cmd.extend(["--variant", variant])
     return _run(cmd, run)
 
 
 def _compare(spec: Dict[str, str], ask: Optional[Ask], run: Runner) -> Outcome:
+    try:
+        contract_id = resolve_contract(spec.get("contract"))
+    except ValueError as exc:
+        return Outcome(str(exc))
+    if "candidate" in spec and "variants" in spec:
+        return Outcome("Use candidate= for the original contract or variants= for v1; do not provide both.")
     episodes = _field(spec, "episodes", ask, "Episodes", "50") or "50"
     batch = "seeds" in spec
     if batch and "seed" in spec:
         return Outcome("Use seed= for one run or seeds= for a batch, not both.")
     if batch:
         seeds = _integer_list(spec["seeds"])
-        output = _field(spec, "output", ask, "Batch output root", "logs") or "logs"
+        default_output = f"logs/{HIGH_RISK_BELIEF_UPDATE_V1}" if contract_id == HIGH_RISK_BELIEF_UPDATE_V1 else "logs"
+        output = _field(spec, "output", ask, "Batch output root", default_output) or default_output
     else:
         seed = _field(spec, "seed", ask, "Seed", "7") or "7"
         seeds = [_integer(seed)] if _integer(seed) is not None else None
-        output = _field(spec, "output", ask, "Output root", "logs/local-run") or "logs/local-run"
+        default_output = f"logs/{HIGH_RISK_BELIEF_UPDATE_V1}" if contract_id == HIGH_RISK_BELIEF_UPDATE_V1 else "logs/local-run"
+        output = _field(spec, "output", ask, "Output root", default_output) or default_output
+
+    if contract_id == HIGH_RISK_BELIEF_UPDATE_V1:
+        if "candidate" in spec:
+            return Outcome("The high-risk v1 contract uses variants=baseline,arm3,arm4; candidate= belongs to the original contract.")
+        variants_text = spec.get("variants")
+        if variants_text is None and ask is not None:
+            variants_text = ask("Matched variants [baseline,arm3,arm4]: ").strip() or "baseline,arm3,arm4"
+        if not variants_text:
+            return Outcome("Pass variants=baseline,arm3,arm4 for a matched v1 comparison.")
+        if _integer(episodes) is None or seeds is None:
+            return Outcome("Episodes and seeds are integers. Separate batch seeds with commas.")
+        variants = [part.strip().lower() for part in variants_text.split(",")]
+        if any(not part for part in variants):
+            return Outcome("Separate variants with commas, for example variants=baseline,arm3,arm4.")
+        cmd = [
+            project_python(),
+            str(ROOT / "scripts" / "high_risk_compare.py"),
+            "--contract", contract_id,
+            "--episodes", episodes,
+            "--seeds", ",".join(str(value) for value in seeds),
+            "--variants", ",".join(variants),
+            "--output", output,
+        ]
+        device = spec.get("device")
+        if device:
+            cmd.extend(["--device", device])
+        return _run(cmd, run)
+
+    if "variants" in spec:
+        return Outcome("variants= is reserved for contract=high-risk-belief-update-v1; use candidate= for evidence-response-v3.")
     if "candidate" in spec:
         candidate = spec["candidate"]
     elif ask is None:
@@ -389,17 +474,32 @@ def _open_trace_page(cmd: List[str], port: str) -> Outcome:
 def _trace(spec: Dict[str, str], ask: Optional[Ask], run: Runner) -> Outcome:
     output = spec.get("output", "")
     trace = spec.get("trace", "")
+    found_trace: Optional[Path] = None
+    found_metrics: Optional[Path] = None
     if not output and not trace:
         if ask is None:
             return Outcome("An output directory or a trace path is required.")
         output = ask("Output directory [logs/baseline-seed7]: ").strip() or "logs/baseline-seed7"
     if output and not trace:
-        _, _, error = run_files(Path(output))
+        found_trace, found_metrics, error = run_files(Path(output))
         if error:
             return Outcome(error)
     elif trace and not Path(trace).is_file():
         return Outcome(f"No trace at {trace}.")
-    metrics = spec.get("metrics", "")
+    metrics_path = Path(spec["metrics"]) if spec.get("metrics") else found_metrics
+    requested_contract = spec.get("contract")
+    if requested_contract:
+        try:
+            requested_contract = resolve_contract(requested_contract)
+            artifact_path = metrics_path or (Path(trace) if trace else found_trace)
+            stored_contract = _artifact_contract(artifact_path) if artifact_path is not None and artifact_path.is_file() else None
+        except (ValueError, json.JSONDecodeError) as exc:
+            return Outcome(str(exc))
+        if stored_contract is None:
+            return Outcome("The selected trace has no contract metadata to verify.")
+        if requested_contract != stored_contract:
+            return Outcome(f"Requested contract {requested_contract} does not match artifact contract {stored_contract}.")
+    metrics = str(metrics_path) if metrics_path is not None else ""
     port = spec.get("port", "8765")
     if _integer(port) is None:
         return Outcome("Port is an integer.")
@@ -459,8 +559,18 @@ def _score(spec: Dict[str, str], ask: Optional[Ask]) -> Outcome:
     before = path.read_bytes()
     try:
         text = show_score(path)
+        requested_contract = spec.get("contract")
+        if requested_contract:
+            requested_contract = resolve_contract(requested_contract)
+            stored_contract = _artifact_contract(path)
+            if stored_contract != requested_contract:
+                return Outcome(
+                    f"Requested contract {requested_contract} does not match artifact contract {stored_contract or 'unknown'}."
+                )
     except json.JSONDecodeError:
         return Outcome(f"{path} is not a metrics file.")
+    except ValueError as exc:
+        return Outcome(str(exc))
     if path.read_bytes() != before:
         return Outcome("Refused to show a score that rewrote metrics.json.")
     return Outcome(text)
@@ -468,6 +578,7 @@ def _score(spec: Dict[str, str], ask: Optional[Ask]) -> Outcome:
 
 def main() -> None:
     print(banner())
+    print(f"Default contract: {DEFAULT_CONTRACT}")
     print(TAGLINE)
     print(menu())
     try:

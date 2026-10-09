@@ -1,0 +1,1406 @@
+{
+  "contract_id": "high-risk-belief-update-v1",
+  "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+  "traces": [
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_robot_stale_operator_then_private",
+      "family": "stale_handoff",
+      "domain": "industrial_robot_workcell",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "no_terminal_action",
+      "episode_reward": -11.0,
+      "terminal_action": null,
+      "critical_event_miss": true,
+      "steps": [
+        {
+          "step": 0,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 1,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "open",
+          "belief_before": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "belief_after": [
+            0.9912361944424771,
+            0.008763805557522833
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 2,
+          "action": "probe",
+          "cue": "none",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9912361944424771,
+            0.008763805557522833
+          ],
+          "belief_after": [
+            0.9912361944424771,
+            0.008763805557522833
+          ],
+          "private_evidence": false,
+          "masked": true,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 3,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9912361944424771,
+            0.008763805557522833
+          ],
+          "belief_after": [
+            0.996831833846968,
+            0.0031681661530320753
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 4,
+          "action": "probe",
+          "cue": "stop",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "open",
+          "belief_before": [
+            0.996831833846968,
+            0.0031681661530320753
+          ],
+          "belief_after": [
+            0.9589682789624832,
+            0.0410317210375169
+          ],
+          "private_evidence": true,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 5,
+          "action": "probe",
+          "cue": "stop",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9589682789624832,
+            0.0410317210375169
+          ],
+          "belief_after": [
+            0.8965891531339434,
+            0.10341084686605657
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": true,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -6.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_robot_access_lock_then_safe_resolution",
+      "family": "unavailable_access",
+      "domain": "industrial_robot_workcell",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "no_terminal_action",
+      "episode_reward": -9.0,
+      "terminal_action": null,
+      "critical_event_miss": true,
+      "steps": [
+        {
+          "step": 0,
+          "action": "probe",
+          "cue": "none",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": true,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": true,
+          "hazard_lock_active": false,
+          "access_lock_active": true,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 1,
+          "action": "probe",
+          "cue": "none",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": true,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": true,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 2,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.9824174010527563,
+            0.017582598947243656
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 3,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9824174010527563,
+            0.017582598947243656
+          ],
+          "belief_after": [
+            0.9936074763415527,
+            0.006392523658447419
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -6.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_robot_swapped_mapping_anchor",
+      "family": "heldout_cue_mapping",
+      "domain": "industrial_robot_workcell",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "no_terminal_action",
+      "episode_reward": -8.0,
+      "terminal_action": null,
+      "critical_event_miss": false,
+      "steps": [
+        {
+          "step": 0,
+          "action": "probe",
+          "cue": "stop",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.931851587595754,
+            0.06814841240424586
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 1,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "open",
+          "belief_before": [
+            0.931851587595754,
+            0.06814841240424586
+          ],
+          "belief_after": [
+            0.9743840981421472,
+            0.025615901857852803
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 2,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9743840981421472,
+            0.025615901857852803
+          ],
+          "belief_after": [
+            0.9906380794654709,
+            0.009361920534529125
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -6.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_robot_informative_then_masked_omission",
+      "family": "omission",
+      "domain": "industrial_robot_workcell",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "no_terminal_action",
+      "episode_reward": -8.0,
+      "terminal_action": null,
+      "critical_event_miss": true,
+      "steps": [
+        {
+          "step": 0,
+          "action": "probe",
+          "cue": "none",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.922268291802535,
+            0.0777317081974651
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 1,
+          "action": "probe",
+          "cue": "none",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.922268291802535,
+            0.0777317081974651
+          ],
+          "belief_after": [
+            0.922268291802535,
+            0.0777317081974651
+          ],
+          "private_evidence": false,
+          "masked": true,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 2,
+          "action": "probe",
+          "cue": "stop",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.922268291802535,
+            0.0777317081974651
+          ],
+          "belief_after": [
+            0.8148666706249296,
+            0.18513332937507046
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": true,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -6.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_route_two_reversals",
+      "family": "critical_reversal",
+      "domain": "emergency_route_coordination",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "no_terminal_action",
+      "episode_reward": -10.0,
+      "terminal_action": null,
+      "critical_event_miss": true,
+      "steps": [
+        {
+          "step": 0,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 1,
+          "action": "probe",
+          "cue": "none",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "belief_after": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "private_evidence": false,
+          "masked": true,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 2,
+          "action": "probe",
+          "cue": "stop",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "belief_after": [
+            0.9378238928157507,
+            0.06217610718424935
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": true,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 3,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9378238928157507,
+            0.06217610718424935
+          ],
+          "belief_after": [
+            0.9767221041656773,
+            0.023277895834322774
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 4,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9767221041656773,
+            0.023277895834322774
+          ],
+          "belief_after": [
+            0.9915054906799823,
+            0.008494509320017822
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -6.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_route_false_partner_report_target_switch",
+      "family": "query_target_change",
+      "domain": "emergency_route_coordination",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "no_terminal_action",
+      "episode_reward": -9.0,
+      "terminal_action": null,
+      "critical_event_miss": true,
+      "steps": [
+        {
+          "step": 0,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 1,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "partner",
+          "world": "closed",
+          "operator_belief": "open",
+          "belief_before": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "belief_after": [
+            0.9912361944424771,
+            0.008763805557522833
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 2,
+          "action": "probe",
+          "cue": "stop",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9912361944424771,
+            0.008763805557522833
+          ],
+          "belief_after": [
+            0.8936335888096744,
+            0.10636641119032575
+          ],
+          "private_evidence": true,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": true,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 3,
+          "action": "probe",
+          "cue": "stop",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "open",
+          "belief_before": [
+            0.8936335888096744,
+            0.10636641119032575
+          ],
+          "belief_after": [
+            0.3842587611919588,
+            0.6157412388080412
+          ],
+          "private_evidence": true,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -6.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_route_missing_comms_then_hazard",
+      "family": "unavailable_access",
+      "domain": "emergency_route_coordination",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "no_terminal_action",
+      "episode_reward": -8.0,
+      "terminal_action": null,
+      "critical_event_miss": true,
+      "steps": [
+        {
+          "step": 0,
+          "action": "probe",
+          "cue": "none",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": true,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": true,
+          "hazard_lock_active": false,
+          "access_lock_active": true,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 1,
+          "action": "probe",
+          "cue": "none",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": true,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": true,
+          "hazard_lock_active": true,
+          "access_lock_active": true,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 2,
+          "action": "probe",
+          "cue": "stop",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.8816736331372751,
+            0.11832636686272487
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": true,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": true,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -6.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_route_unfamiliar_source_after_probe",
+      "family": "unfamiliar_source",
+      "domain": "emergency_route_coordination",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "no_terminal_action",
+      "episode_reward": -8.0,
+      "terminal_action": null,
+      "critical_event_miss": true,
+      "steps": [
+        {
+          "step": 0,
+          "action": "probe",
+          "cue": "stop",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.931851587595754,
+            0.06814841240424586
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 1,
+          "action": "probe",
+          "cue": "stop",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.931851587595754,
+            0.06814841240424586
+          ],
+          "belief_after": [
+            0.835326924744533,
+            0.1646730752554671
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 2,
+          "action": "probe",
+          "cue": "stop",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.835326924744533,
+            0.1646730752554671
+          ],
+          "belief_after": [
+            0.6529963765285098,
+            0.34700362347149016
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": true,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -6.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_handoff_stale_timestamp",
+      "family": "stale_handoff",
+      "domain": "abstract_status_handoff",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "no_terminal_action",
+      "episode_reward": -10.0,
+      "terminal_action": null,
+      "critical_event_miss": true,
+      "steps": [
+        {
+          "step": 0,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 1,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "open",
+          "belief_before": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "belief_after": [
+            0.9912361944424771,
+            0.008763805557522833
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 2,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9912361944424771,
+            0.008763805557522833
+          ],
+          "belief_after": [
+            0.996831833846968,
+            0.0031681661530320753
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 3,
+          "action": "probe",
+          "cue": "none",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "open",
+          "belief_before": [
+            0.996831833846968,
+            0.0031681661530320753
+          ],
+          "belief_after": [
+            0.996831833846968,
+            0.0031681661530320753
+          ],
+          "private_evidence": false,
+          "masked": true,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 4,
+          "action": "probe",
+          "cue": "stop",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "open",
+          "belief_before": [
+            0.996831833846968,
+            0.0031681661530320753
+          ],
+          "belief_after": [
+            0.9915054906799823,
+            0.008494509320017813
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": true,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -6.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_handoff_omission_vs_sensor_loss",
+      "family": "omission",
+      "domain": "abstract_status_handoff",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "no_terminal_action",
+      "episode_reward": -8.0,
+      "terminal_action": null,
+      "critical_event_miss": true,
+      "steps": [
+        {
+          "step": 0,
+          "action": "probe",
+          "cue": "none",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.922268291802535,
+            0.0777317081974651
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": true,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 1,
+          "action": "probe",
+          "cue": "none",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.922268291802535,
+            0.0777317081974651
+          ],
+          "belief_after": [
+            0.922268291802535,
+            0.0777317081974651
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": true,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": true,
+          "hazard_lock_active": true,
+          "access_lock_active": true,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 2,
+          "action": "probe",
+          "cue": "stop",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.922268291802535,
+            0.0777317081974651
+          ],
+          "belief_after": [
+            0.8148666706249296,
+            0.18513332937507046
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": true,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": true,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -6.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_handoff_world_operator_label_swap",
+      "family": "false_belief_attribution",
+      "domain": "abstract_status_handoff",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "no_terminal_action",
+      "episode_reward": -8.0,
+      "terminal_action": null,
+      "critical_event_miss": false,
+      "steps": [
+        {
+          "step": 0,
+          "action": "probe",
+          "cue": "stop",
+          "query_target": "partner",
+          "world": "open",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.931851587595754,
+            0.06814841240424586
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 1,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.931851587595754,
+            0.06814841240424586
+          ],
+          "belief_after": [
+            0.9947636693732524,
+            0.00523633062674754
+          ],
+          "private_evidence": true,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 2,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9947636693732524,
+            0.00523633062674754
+          ],
+          "belief_after": [
+            0.9981113277519621,
+            0.0018886722480379206
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -6.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_handoff_reordered_conflicting_cues",
+      "family": "reordered_evidence",
+      "domain": "abstract_status_handoff",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "no_terminal_action",
+      "episode_reward": -9.0,
+      "terminal_action": null,
+      "critical_event_miss": true,
+      "steps": [
+        {
+          "step": 0,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 1,
+          "action": "probe",
+          "cue": "none",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "belief_after": [
+            0.9585888778257892,
+            0.0414111221742108
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 2,
+          "action": "probe",
+          "cue": "stop",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9585888778257892,
+            0.0414111221742108
+          ],
+          "belief_after": [
+            0.895695697295268,
+            0.10430430270473208
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": true,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -1.0
+        },
+        {
+          "step": 3,
+          "action": "probe",
+          "cue": "go",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.895695697295268,
+            0.10430430270473208
+          ],
+          "belief_after": [
+            0.9598207043237997,
+            0.04017929567620031
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": true,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -6.0
+        }
+      ]
+    }
+  ]
+}

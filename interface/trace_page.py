@@ -7,6 +7,7 @@ import json
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence
 
+from contracts import HIGH_RISK_BELIEF_UPDATE_V1, contract_id_from_artifact
 from interface.metrics_view import TAGLINE, format_metrics_list
 from partner import draft_note, narrate_scenario
 from readings import cue_stance, read_trace
@@ -33,11 +34,10 @@ def run_files(directory: Path) -> tuple[Optional[Path], Optional[Path], str]:
     metrics = directory / "metrics.json"
     if trace.is_file():
         return trace, metrics if metrics.is_file() else None, ""
-    sides = [
-        directory / name
-        for name in ("baseline", "candidate")
-        if (directory / name / "trace.json").is_file()
-    ]
+    sides = sorted(
+        (child for child in directory.iterdir() if child.is_dir() and (child / "trace.json").is_file()),
+        key=lambda path: path.name,
+    ) if directory.is_dir() else []
     if sides:
         lines = ["This directory holds a comparison. Open one side:"]
         lines.extend(f"  output={side}" for side in sides)
@@ -50,6 +50,7 @@ def render_trace_page(
     score: Optional[float] = None,
     metrics: Optional[Dict] = None,
     partner_lines: Optional[Sequence[str]] = None,
+    contract_id: Optional[str] = None,
 ) -> str:
     options = []
     panels = []
@@ -64,14 +65,24 @@ def render_trace_page(
     first_draft = drafts[0] if drafts else ""
     if metrics is None and score is not None:
         metrics = {"BeliefUpdateScore": float(score)}
+    if contract_id is None and metrics is not None:
+        contract_id = contract_id_from_artifact(metrics)
+    contract_line = contract_id or "unknown (artifact has no contract metadata)"
     score_block = "Score is not loaded." if metrics is None else format_metrics_list(metrics)
-    lede = (
-        f"{TAGLINE} The list is the same one /score prints. Refresh after you train this directory again. "
-        "A keep or discard mark is written beside the trace. It does not change the score. "
-        "The automatic keep from /compare is selection.json. "
-        "Cue stance, polarity, and richness are readings on the finished trace. The score ignores them. "
-        "The filled bar is the agent's P(open). The brown tick is the exact filter."
-    )
+    if contract_id == HIGH_RISK_BELIEF_UPDATE_V1:
+        lede = (
+            "High-risk v1 keeps controlled belief replay separate from closed-loop task outcomes. "
+            "The bars show the trained policy's P(open); details include the observed event and safety gates. "
+            "A human mark is a note only and does not change saved metrics."
+        )
+    else:
+        lede = (
+            f"{TAGLINE} The list is the same one /score prints. Refresh after you train this directory again. "
+            "A keep or discard mark is written beside the trace. It does not change the score. "
+            "The automatic keep from /compare is selection.json. "
+            "Cue stance, polarity, and richness are readings on the finished trace. The score ignores them. "
+            "The filled bar is the agent's P(open). The brown tick is the exact filter."
+        )
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -83,6 +94,7 @@ def render_trace_page(
   main {{ max-width: 46rem; margin: 0 auto; padding: 1.5rem 1.2rem 3rem; }}
   h1 {{ font-size: 1.6rem; font-weight: 600; margin-bottom: 0.2rem; }}
   p.lede {{ margin-top: 0; color: #3f3a33; }}
+  p.contract {{ margin: 0.2rem 0 0.7rem; color: #1f4e3d; font: 0.9rem ui-monospace, "SF Mono", Menlo, monospace; }}
   pre.score {{ font: 0.92rem/1.45 ui-monospace, "SF Mono", Menlo, monospace; white-space: pre-wrap; background: #fffdf8; border: 1px solid #d9d0c1; padding: 0.7rem 0.9rem; margin: 0.8rem 0 1rem; }}
   select, textarea, button {{ font: inherit; }}
   select {{ margin: 0.6rem 0 1rem; padding: 0.3rem 0.4rem; }}
@@ -107,6 +119,7 @@ def render_trace_page(
 <body>
 <main>
   <h1>Belief trace</h1>
+  <p class="contract">Active contract: {html.escape(str(contract_line))}</p>
   <p class="lede">{html.escape(lede)}</p>
   <pre class="score">{html.escape(score_block)}</pre>
   <label for="scenario">Scenario</label>
@@ -189,9 +202,12 @@ def _panel(index: int, trace: Dict, spoken: str, note: str) -> str:
 
 def _step(step: Dict, row: Dict) -> str:
     belief = step.get("belief_after") or [0.0, 0.0]
-    exact = step.get("exact_belief") or [0.0, 0.0]
     p_open = float(belief[0])
-    exact_open = float(exact[0])
+    exact = step.get("exact_belief")
+    has_exact = isinstance(exact, (list, tuple)) and len(exact) == 2
+    exact_open = float(exact[0]) if has_exact else None
+    exact_marker = f"<span class='exact' style='left:{exact_open * 100:.1f}%'></span>" if exact_open is not None else ""
+    track_title = "Filled bar is P(open). Brown tick is the exact filter." if has_exact else "Filled bar is the trained policy's P(open). No exact-filter marker is included in this trace."
     gate = "<div class='gate'>Commit gate would block this action.</div>" if step.get("gate_would_block") else ""
     aleatoric = step.get("aleatoric")
     aleatoric_text = "n/a" if aleatoric is None else f"{float(aleatoric):.2f}"
@@ -206,30 +222,55 @@ def _step(step: Dict, row: Dict) -> str:
         evidence_result = " Belief moved after strong evidence but remained uncertain."
     elif step.get("strong_evidence"):
         evidence_result = " Belief moved and was no longer uncertain after strong evidence."
+    high_risk_fields = []
+    if step.get("query_target"):
+        high_risk_fields.append(f"query target {html.escape(str(step['query_target']))}")
+    if step.get("deterministic_hazard_cue"):
+        high_risk_fields.append("deterministic hazard cue")
+    if step.get("hazard_lock_active"):
+        high_risk_fields.append("hazard lock active")
+    if step.get("critical_evidence_unavailable_unresolved"):
+        high_risk_fields.append("critical evidence unavailable and unresolved")
+    if step.get("access_lock_active"):
+        high_risk_fields.append("unresolved critical-access lock active")
+    if step.get("safety_gate_breached"):
+        high_risk_fields.append("SAFETY GATE BREACHED")
+    if "task_reward" in step:
+        high_risk_fields.append(f"task reward {float(step['task_reward']):.2f}")
+    high_risk_text = (" High-risk: " + "; ".join(high_risk_fields) + ".") if high_risk_fields else ""
+    label = step.get("label", step.get("world", "unavailable"))
     return (
         "<div class='step'>"
         f"<div class='cue'>{html.escape(str(step.get('cue', '')))}</div>"
         "<div>"
-        "<div class='track' title='Filled bar is P(open). Brown tick is the exact filter.'>"
+        f"<div class='track' title='{html.escape(track_title, quote=True)}'>"
         f"<span class='agent' style='width:{p_open * 100:.1f}%'></span>"
-        f"<span class='exact' style='left:{exact_open * 100:.1f}%'></span></div>"
+        f"{exact_marker}</div>"
         "<div class='meta'>"
         f"action {html.escape(str(step.get('action', '')))}, "
         f"confirm {html.escape(str(step.get('requery_action', '')))}, "
-        f"label {html.escape(str(step.get('label', '')))}, "
+        f"label {html.escape(str(label))}, "
         f"epistemic {entropy_text}, movement {movement_text}, aleatoric {aleatoric_text}, "
         f"stance {html.escape(str(cue_stance(step)))}, "
         f"richness {html.escape(str(row.get('band_label', 'unavailable')))}."
         f"{html.escape(evidence_result)}"
+        f"{html.escape(high_risk_text)}"
         f"</div>{gate}</div></div>"
     )
 
 
 def load_traces(path: Path) -> List[Dict]:
+    return load_trace_document(path)[1]
+
+
+def load_trace_document(path: Path) -> tuple[Optional[str], List[Dict]]:
     payload = json.loads(path.read_text())
     if isinstance(payload, dict) and "traces" in payload:
-        return list(payload["traces"])
-    return list(payload)
+        contract_id = contract_id_from_artifact(payload)
+        return contract_id, list(payload["traces"])
+    traces = list(payload)
+    contract_id = contract_id_from_artifact(traces[0]) if traces and isinstance(traces[0], dict) else None
+    return contract_id, traces
 
 
 def make_server(
@@ -248,9 +289,15 @@ def make_server(
             payload = {"BeliefUpdateScore": float(score)}
         from partner import speak
 
-        loaded = load_traces(trace_path)
+        trace_contract, loaded = load_trace_document(trace_path)
+        metrics_contract = contract_id_from_artifact(payload) if payload is not None else None
+        if trace_contract and metrics_contract and trace_contract != metrics_contract:
+            raise ValueError("Trace and metrics files use different canonical contracts.")
         spoken = [speak(trace) for trace in loaded]
-        return render_trace_page(loaded, metrics=payload, partner_lines=spoken).encode("utf-8")
+        return render_trace_page(
+            loaded, metrics=payload, partner_lines=spoken,
+            contract_id=metrics_contract or trace_contract,
+        ).encode("utf-8")
 
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self) -> None:  # noqa: N802

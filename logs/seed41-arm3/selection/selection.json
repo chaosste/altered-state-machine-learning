@@ -1,0 +1,50 @@
+{
+  "baseline_BeliefUpdateScore": 0.6332112512113721,
+  "baseline_evaluation_contract_version": "evidence-response-v3",
+  "baseline_ignored_evidence_rate": 0.39702380952380956,
+  "baseline_moved_but_uncertain_rate": 0.07270408163265306,
+  "baseline_perseveration": 0.5,
+  "baseline_unsafe_commit_rate": 0.0,
+  "baseline_variant": "baseline",
+  "candidate_BeliefUpdateScore": 0.6332112512113721,
+  "candidate_evaluation_contract_version": "evidence-response-v3",
+  "candidate_ignored_evidence_rate": 0.39702380952380956,
+  "candidate_moved_but_uncertain_rate": 0.07270408163265306,
+  "candidate_perseveration": 0.5,
+  "candidate_unsafe_commit_rate": 0.0,
+  "candidate_variant": "arm3_kanen_phase",
+  "criteria": {
+    "maximum_ignored_evidence_rate_increase": {
+      "actual_change": 0.0,
+      "maximum_allowed_increase": 0.05,
+      "metric": "ignored_evidence_rate",
+      "passed": true
+    },
+    "maximum_perseveration_increase": {
+      "actual_change": 0.0,
+      "maximum_allowed_increase": 0.05,
+      "metric": "perseveration",
+      "passed": true
+    },
+    "maximum_unsafe_commit_rate_increase": {
+      "actual_change": 0.0,
+      "maximum_allowed_increase": 0.05,
+      "metric": "unsafe_commit_rate",
+      "passed": true
+    },
+    "minimum_score_gain": {
+      "actual_change": 0.0,
+      "metric": "BeliefUpdateScore",
+      "passed": false,
+      "required_minimum_change": 0.02
+    }
+  },
+  "decision": "discard",
+  "episodes": 50,
+  "keep": false,
+  "rejection_reasons": [
+    "BeliefUpdateScore gain 0.000000 is below the required 0.020000."
+  ],
+  "score_gain": 0.0,
+  "seed": 41
+}

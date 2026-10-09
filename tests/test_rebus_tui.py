@@ -19,7 +19,7 @@ class TuiTests(unittest.TestCase):
 
     def test_menu_lists_the_slash_commands(self) -> None:
         text = menu()
-        for command in ("/train", "/compare", "/trace", "/readings", "/score", "/test", "/help", "/quit"):
+        for command in ("/train", "/compare", "/trace", "/readings", "/score", "/test", "/help", "/quit", "/contracts"):
             self.assertIn(command, text)
         self.assertIn("1", text)
         self.assertIn("8", text)
@@ -115,6 +115,63 @@ class TuiTests(unittest.TestCase):
         self.assertEqual(seen[0][seen[0].index("--candidate-variant") + 1], "arm4")
         self.assertNotIn("--candidate-train-py", seen[0])
         self.assertIn("Prior precision 0.5", dispatch("/arms").text)
+
+    def test_contract_listing_and_matched_v1_compare_dispatch(self) -> None:
+        self.assertIn("evidence-response-v3", dispatch("/contracts").text)
+        self.assertIn("high-risk-belief-update-v1", dispatch("/contracts").text)
+        seen = []
+
+        def runner(cmd):
+            seen.append(cmd)
+            return 0
+
+        outcome = dispatch(
+            "/compare contract=high-risk-belief-update-v1 variants=baseline,arm3,arm4 episodes=50 "
+            "seeds=7,11 output=logs/high-risk-belief-update-v1",
+            ask=None,
+            runner=runner,
+        )
+        self.assertEqual(outcome.text, "Done.")
+        self.assertTrue(seen[0][1].endswith("high_risk_compare.py"))
+        self.assertIn("--contract", seen[0])
+        self.assertEqual(seen[0][seen[0].index("--variants") + 1], "baseline,arm3,arm4")
+        self.assertEqual(seen[0][seen[0].index("--seeds") + 1], "7,11")
+
+    def test_compare_rejects_both_selector_forms_and_contract_mismatch(self) -> None:
+        called = []
+        outcome = dispatch(
+            "/compare candidate=arm4 variants=baseline,arm3,arm4",
+            ask=None,
+            runner=lambda cmd: called.append(cmd) or 0,
+        )
+        self.assertIn("do not provide both", outcome.text)
+        self.assertEqual(called, [])
+        outcome = dispatch(
+            "/compare variants=baseline,arm3,arm4",
+            ask=None,
+            runner=lambda cmd: called.append(cmd) or 0,
+        )
+        self.assertIn("reserved", outcome.text)
+        with TemporaryDirectory() as tmp:
+            metrics = Path(tmp) / "metrics.json"
+            metrics.write_text(json.dumps({"contract_id": "evidence-response-v3", "BeliefUpdateScore": 0.5}))
+            outcome = dispatch(
+                f"/score metrics={metrics} contract=high-risk-belief-update-v1",
+                ask=None,
+            )
+            self.assertIn("does not match artifact contract evidence-response-v3", outcome.text)
+
+    def test_trace_rejects_an_explicit_mismatched_contract(self) -> None:
+        with TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "trace.json").write_text(json.dumps({"contract_id": "evidence-response-v3", "traces": []}))
+            (root / "metrics.json").write_text(json.dumps({"contract_id": "evidence-response-v3", "BeliefUpdateScore": 0.5}))
+            outcome = dispatch(
+                f"/trace output={root} contract=high-risk-belief-update-v1",
+                ask=None,
+                runner=lambda _cmd: 0,
+            )
+            self.assertIn("does not match artifact contract evidence-response-v3", outcome.text)
 
     def test_trace_uses_the_train_output_directory(self) -> None:
         with TemporaryDirectory() as tmp:

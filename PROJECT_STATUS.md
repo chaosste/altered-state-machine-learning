@@ -1,6 +1,6 @@
 # Altered State Machine Learning — Project Status
 
-Updated 7 October 2026.
+Updated 9 October 2026.
 
 ## Repository identity
 
@@ -17,6 +17,18 @@ This project tests whether a small set of learning-rule changes helps an agent r
 ## Current evaluation rules
 
 Current version: `evidence-response-v3`.
+
+The default and original experiment remains `evidence-response-v3`. A separately versioned `high-risk-belief-update-v1` suite now compares baseline, Arm 3, and Arm 4 using controlled belief replay and closed-loop task evaluation. It has separate scenario templates, outputs, hard safety gates, and no `BeliefUpdateScore` keep/discard selector. See `program.md` for the v1 contract and `analysis/arm3-arm4-high-risk-v1-report.md` for the matched results.
+
+The initial v1 comparison completed 50 training episodes for each of the 11 registered seeds. Under the common prior, Arm 4 lowered stepwise Brier error against the exact posterior from `0.277` to `0.154`; Arm 3 matched baseline on this deterministic replay. In closed loop, Arm 4's mean reward was `-12.842` versus `-12.701` for baseline (paired 95% CI for the difference `[-0.363, 0.083]`), with the same completion rate. The hard gates failed 1 baseline seed, 4 Arm 3 seeds, and 1 Arm 4 seed. These are simulation results under the v1 cost matrix, not deployment evidence.
+
+A post-hoc sensitivity analysis rescored the v1 action traces under lighter/heavier delay, terminal-error, and catastrophe costs. The reward ranking stayed baseline > Arm 4 > Arm 3 in all seven matrices. Arm 4's paired reward difference versus baseline ranged from `-0.097` to `-0.227`, and every 95% paired interval crossed zero; hard-gate failures remained separate and unchanged. See `analysis/high-risk-belief-update-v1-cost-sensitivity.md`.
+
+The held-out expansion added 12 new templates to the original 21 (suite ID `high-risk-belief-update-scenarios-v2`) and evaluated the saved v1 checkpoints without retraining. On the added templates alone, Arm 4 lowered common-prior exact-posterior Brier error from `0.208` to `0.162`, but its task-reward difference versus baseline was `-7.555` (paired 95% CI `[-23.956, 8.847]`); the hard gates failed 1 baseline seed, 4 Arm 3 seeds, and 2 Arm 4 seeds. See `analysis/high-risk-belief-update-v1-heldout-v2-report.md`.
+
+A post-hoc sensitivity analysis rescored those saved actions under six alternative cost assumptions. The reward ranking stayed baseline > Arm 4 > Arm 3; Arm 4's reward difference from baseline ranged from `-0.097` to `-0.227`, with every paired interval crossing zero. Hard-gate failures stayed 1 / 4 / 1 because the gates are reported independently of reward. See `analysis/high-risk-belief-update-v1-cost-sensitivity.md`.
+
+The held-out scenario expansion added 12 new templates, bringing the evaluation suite to 33, and reused the saved v1 models without retraining. On the added templates alone, Arm 4's common-prior posterior Brier error was `0.162` versus `0.208` for baseline and Arm 3. Arm 4's mean task reward difference from baseline was `-7.555` (95% paired CI `[-23.956, 8.847]`); hard gates failed 1 baseline seed, 4 Arm 3 seeds, and 2 Arm 4 seeds. This expands template coverage, not the trained seed cohort. See `analysis/high-risk-belief-update-v1-heldout-v2-report.md`.
 
 - On clear questions, only the correct definite belief receives revision credit.
 - On the no-access ambiguous question, only `undetermined` receives revision credit.
@@ -68,6 +80,15 @@ All saved policies currently have `ambiguous_abstention_accuracy: 0`: none retur
 
 ## Working commands
 
+The next registered candidates are Arm 7, which adds the existing commit guard to Arm 6, and Arm 8, which lowers Arm 4's belief prediction-error gain to 0.8 while keeping other settings at baseline. Run each as a paired 11-seed comparison:
+
+```text
+/compare episodes=50 seeds=7,11,17,23,29,31,37,41,43,47,53 candidate=arm7 output=logs
+/compare episodes=50 seeds=7,11,17,23,29,31,37,41,43,47,53 candidate=arm8 output=logs
+```
+
+The exact settings are recorded in `program.md` and implemented by the corresponding variants in `train.py`.
+
 Start the terminal interface:
 
 ```bash
@@ -75,10 +96,10 @@ cd "/Users/stephenbeale/Projects/Altered State Machine Learning"
 .venv/bin/python rebus.py
 ```
 
-Compare Arm 4 across several seeds:
+Compare Arm 7 across the registered 11-seed cohort:
 
 ```text
-/compare episodes=50 seeds=7,11,17,23,29 candidate=arm4 output=logs
+/compare episodes=50 seeds=7,11,17,23,29,31,37,41,43,47,53 candidate=arm7 output=logs
 ```
 
 Open a candidate trace:
@@ -104,8 +125,6 @@ Show a saved score:
 
 ## Suggested next workflow
 
-1. Confirm the 11-seed results from `logs/seed*-arm4/selection/selection.json`.
-2. Define a multi-seed promotion rule before using the 11 runs to make one overall Arm 4 decision.
-3. Examine the two remaining failure types separately: insufficient score improvement (`11`, `17`) and excess perseveration (`23`, `31`).
-4. Decide whether the no-access failure requires a new candidate or should remain a reported limitation.
-5. Pre-register the next candidate in `program.md`, run it against the same seed set, and compare it with both baseline and Arm 4.
+1. Run Arms 7 and 8 across the 11 registered seeds using the commands above.
+2. Compare both with baseline and Arms 2–6 on score, perseveration, evidence uptake, belief flexibility, and unsafe commits.
+3. Use per-seed and scenario-level outcomes to identify where the commit guard or lower prediction-error gain changes the Arm 6 trade-offs.

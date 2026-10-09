@@ -1,0 +1,522 @@
+{
+  "contract_id": "high-risk-belief-update-v1",
+  "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+  "traces": [
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_robot_stale_operator_then_private",
+      "family": "stale_handoff",
+      "domain": "industrial_robot_workcell",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "inappropriate",
+      "episode_reward": -2.0,
+      "terminal_action": "yield",
+      "critical_event_miss": true,
+      "steps": [
+        {
+          "step": 0,
+          "action": "yield",
+          "cue": "go",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -2.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_robot_access_lock_then_safe_resolution",
+      "family": "unavailable_access",
+      "domain": "industrial_robot_workcell",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "appropriate",
+      "episode_reward": 4.0,
+      "terminal_action": "yield",
+      "critical_event_miss": false,
+      "steps": [
+        {
+          "step": 0,
+          "action": "yield",
+          "cue": "none",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": true,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": true,
+          "hazard_lock_active": false,
+          "access_lock_active": true,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": 4.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_robot_swapped_mapping_anchor",
+      "family": "heldout_cue_mapping",
+      "domain": "industrial_robot_workcell",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "inappropriate",
+      "episode_reward": -2.0,
+      "terminal_action": "yield",
+      "critical_event_miss": false,
+      "steps": [
+        {
+          "step": 0,
+          "action": "yield",
+          "cue": "stop",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.931851587595754,
+            0.06814841240424586
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -2.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_robot_informative_then_masked_omission",
+      "family": "omission",
+      "domain": "industrial_robot_workcell",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "appropriate",
+      "episode_reward": 4.0,
+      "terminal_action": "yield",
+      "critical_event_miss": false,
+      "steps": [
+        {
+          "step": 0,
+          "action": "yield",
+          "cue": "none",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.922268291802535,
+            0.0777317081974651
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": 4.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_route_two_reversals",
+      "family": "critical_reversal",
+      "domain": "emergency_route_coordination",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "inappropriate",
+      "episode_reward": -2.0,
+      "terminal_action": "yield",
+      "critical_event_miss": true,
+      "steps": [
+        {
+          "step": 0,
+          "action": "yield",
+          "cue": "go",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -2.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_route_false_partner_report_target_switch",
+      "family": "query_target_change",
+      "domain": "emergency_route_coordination",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "appropriate",
+      "episode_reward": 4.0,
+      "terminal_action": "yield",
+      "critical_event_miss": false,
+      "steps": [
+        {
+          "step": 0,
+          "action": "yield",
+          "cue": "go",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": 4.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_route_missing_comms_then_hazard",
+      "family": "unavailable_access",
+      "domain": "emergency_route_coordination",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "appropriate",
+      "episode_reward": 4.0,
+      "terminal_action": "yield",
+      "critical_event_miss": false,
+      "steps": [
+        {
+          "step": 0,
+          "action": "yield",
+          "cue": "none",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": true,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": true,
+          "hazard_lock_active": false,
+          "access_lock_active": true,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": 4.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_route_unfamiliar_source_after_probe",
+      "family": "unfamiliar_source",
+      "domain": "emergency_route_coordination",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "appropriate",
+      "episode_reward": 4.0,
+      "terminal_action": "yield",
+      "critical_event_miss": false,
+      "steps": [
+        {
+          "step": 0,
+          "action": "yield",
+          "cue": "stop",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.931851587595754,
+            0.06814841240424586
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": 4.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_handoff_stale_timestamp",
+      "family": "stale_handoff",
+      "domain": "abstract_status_handoff",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "inappropriate",
+      "episode_reward": -2.0,
+      "terminal_action": "yield",
+      "critical_event_miss": true,
+      "steps": [
+        {
+          "step": 0,
+          "action": "yield",
+          "cue": "go",
+          "query_target": "world",
+          "world": "open",
+          "operator_belief": "open",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -2.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_handoff_omission_vs_sensor_loss",
+      "family": "omission",
+      "domain": "abstract_status_handoff",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "appropriate",
+      "episode_reward": 4.0,
+      "terminal_action": "yield",
+      "critical_event_miss": false,
+      "steps": [
+        {
+          "step": 0,
+          "action": "yield",
+          "cue": "none",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.922268291802535,
+            0.0777317081974651
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": 4.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_handoff_world_operator_label_swap",
+      "family": "false_belief_attribution",
+      "domain": "abstract_status_handoff",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "inappropriate",
+      "episode_reward": -2.0,
+      "terminal_action": "yield",
+      "critical_event_miss": false,
+      "steps": [
+        {
+          "step": 0,
+          "action": "yield",
+          "cue": "stop",
+          "query_target": "partner",
+          "world": "open",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.931851587595754,
+            0.06814841240424586
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": -2.0
+        }
+      ]
+    },
+    {
+      "contract_id": "high-risk-belief-update-v1",
+      "scenario_suite_id": "high-risk-belief-update-scenarios-v2",
+      "name": "v2_handoff_reordered_conflicting_cues",
+      "family": "reordered_evidence",
+      "domain": "abstract_status_handoff",
+      "simulation_assumptions": [
+        "world-state labels, cue mappings, and partner reports are synthetic template variables",
+        "action values are the frozen v1 simulation cost matrix, not field safety estimates"
+      ],
+      "outcome": "appropriate",
+      "episode_reward": 4.0,
+      "terminal_action": "yield",
+      "critical_event_miss": false,
+      "steps": [
+        {
+          "step": 0,
+          "action": "yield",
+          "cue": "go",
+          "query_target": "world",
+          "world": "closed",
+          "operator_belief": "closed",
+          "belief_before": [
+            0.9525741268224334,
+            0.04742587317756679
+          ],
+          "belief_after": [
+            0.975995485807495,
+            0.024004514192505124
+          ],
+          "private_evidence": false,
+          "masked": false,
+          "access_missing": false,
+          "deterministic_hazard_cue": false,
+          "critical_evidence_unavailable_unresolved": false,
+          "hazard_lock_active": false,
+          "access_lock_active": false,
+          "irreversible_action": false,
+          "safety_gate_breached": false,
+          "task_reward": 4.0
+        }
+      ]
+    }
+  ]
+}

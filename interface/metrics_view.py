@@ -6,6 +6,7 @@ from typing import Dict, List
 
 
 SCORE_FIELDS = (
+    "contract_id",
     "BeliefUpdateScore",
     "revision_accuracy",
     "clear_revision_accuracy",
@@ -19,6 +20,9 @@ SCORE_FIELDS = (
     "unsafe_commit_rate",
     "ignored_evidence_rate",
     "moved_but_uncertain_rate",
+    "scenario_suite_id",
+    "belief_replay",
+    "closed_loop",
 )
 
 TAGLINE = "Calibrated belief revision. BeliefUpdateScore is the only keep/discard metric."
@@ -38,9 +42,14 @@ def format_value(value: object) -> str:
 
 
 def format_metrics_list(payload: Dict[str, object]) -> str:
-    """One field per line. BeliefUpdateScore comes first."""
+    """One field per line, with the active contract visible at the top."""
     lines: List[str] = []
     seen = set()
+
+    if "contract_id" in payload:
+        add_contract = payload["contract_id"]
+        lines.append(f"- contract_id: {format_value(add_contract)}")
+        seen.add("contract_id")
 
     def add(key: str, value: object, indent: int = 0) -> None:
         pad = "  " * indent

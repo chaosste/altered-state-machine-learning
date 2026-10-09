@@ -17,6 +17,29 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from eval import selection_report  # noqa: E402
+from contracts import DEFAULT_CONTRACT, contract_id_from_artifact  # noqa: E402
+
+
+def _ensure_contract_metadata(output_dir: Path) -> Dict[str, object]:
+    metrics_path = output_dir / "metrics.json"
+    trace_path = output_dir / "trace.json"
+    metrics = json.loads(metrics_path.read_text())
+    contract_id = contract_id_from_artifact(metrics) or DEFAULT_CONTRACT
+    metrics["contract_id"] = contract_id
+    metrics_path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n")
+    if trace_path.is_file():
+        trace = json.loads(trace_path.read_text())
+        if isinstance(trace, dict) and isinstance(trace.get("traces"), list):
+            trace_contract = contract_id_from_artifact(trace)
+            if trace_contract is not None and trace_contract != contract_id:
+                raise ValueError("Metrics and trace outputs use different canonical contracts.")
+            trace.setdefault("contract_id", contract_id)
+        elif isinstance(trace, list):
+            trace = {"contract_id": contract_id, "traces": list(trace)}
+        else:
+            raise ValueError(f"Unsupported trace artifact format in {trace_path}.")
+        trace_path.write_text(json.dumps(trace, indent=2) + "\n")
+    return metrics
 
 
 def run_train(
@@ -75,8 +98,8 @@ def main() -> None:
         args.device,
         args.candidate_variant or "baseline",
     )
-    baseline = json.loads((baseline_dir / "metrics.json").read_text())
-    candidate = json.loads((candidate_dir / "metrics.json").read_text())
+    baseline = _ensure_contract_metadata(baseline_dir)
+    candidate = _ensure_contract_metadata(candidate_dir)
     selection = selection_report(baseline, candidate, seed=args.seed, episodes=args.episodes)
     selection_dir = output_root / "selection"
     selection_dir.mkdir(parents=True, exist_ok=True)

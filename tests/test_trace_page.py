@@ -13,6 +13,7 @@ from interface.trace_page import (
     append_decision,
     decisions_path,
     load_traces,
+    load_trace_document,
     make_server,
     render_trace_page,
     run_files,
@@ -20,6 +21,38 @@ from interface.trace_page import (
 
 
 class TracePageTests(unittest.TestCase):
+    def test_contract_metadata_is_read_from_wrapped_trace_and_shown(self) -> None:
+        with TemporaryDirectory() as tmp:
+            trace = Path(tmp) / "trace.json"
+            trace.write_text(json.dumps({
+                "contract_id": "high-risk-belief-update-v1",
+                "traces": [{"contract_id": "high-risk-belief-update-v1", "name": "anchor", "steps": []}],
+            }))
+            contract, traces = load_trace_document(trace)
+            self.assertEqual(contract, "high-risk-belief-update-v1")
+            self.assertEqual(len(traces), 1)
+            page = render_trace_page(
+                traces,
+                metrics={"contract_id": contract, "closed_loop": {"completion_rate": 0.5}},
+                contract_id=contract,
+            )
+            self.assertIn("Active contract: high-risk-belief-update-v1", page)
+            self.assertIn("closed-loop task outcomes", page)
+
+    def test_v1_trace_does_not_draw_a_missing_exact_filter_as_zero(self) -> None:
+        trace = {
+            "contract_id": "high-risk-belief-update-v1",
+            "name": "hazard",
+            "steps": [{
+                "cue": "stop", "action": "wait", "belief_after": [0.6, 0.4],
+                "world": "closed", "query_target": "world",
+            }],
+        }
+        page = render_trace_page([trace], contract_id="high-risk-belief-update-v1")
+        self.assertIn("No exact-filter marker is included in this trace", page)
+        self.assertNotIn("class='exact'", page)
+        self.assertIn("label closed", page)
+
     def test_mark_does_not_rewrite_metrics(self) -> None:
         with TemporaryDirectory() as tmp:
             root = Path(tmp)

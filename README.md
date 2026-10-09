@@ -8,13 +8,31 @@ The scientific contract lives in [`program.md`](program.md). This file is the ma
 
 ## Status
 
-The frozen world, the exact small solution, the score, the baseline trainer, the tests, and the belief-trace page are in place. The current evaluator is `evidence-response-v3`: ignored evidence means almost no movement after strong evidence, while belief that moved but remained uncertain is reported separately.
+The original/default evaluator is `evidence-response-v3`: ignored evidence means almost no movement after strong evidence, while belief that moved but remained uncertain is reported separately. A separate `high-risk-belief-update-v1` contract runs a matched Arm 3/Arm 4 comparison with distinct belief replay and closed-loop task results.
 
-Eleven Arm 4 seed comparisons are committed under `logs/`. Seven pass every per-seed keep rule and four are discarded. See [`PROJECT_STATUS.md`](PROJECT_STATUS.md) for the current results, open questions, and continuation workflow. [`CODEX_HANDOFF_PROMPT.md`](CODEX_HANDOFF_PROMPT.md) contains a ready-to-paste prompt for a new Codex desktop chat.
+Eleven seed comparisons are available for Arms 1–6. Arm 7 adds the existing commit guard to Arm 6; Arm 8 tests a lower belief prediction-error gain. See [`PROJECT_STATUS.md`](PROJECT_STATUS.md) for results and run commands. [`CODEX_HANDOFF_PROMPT.md`](CODEX_HANDOFF_PROMPT.md) contains a ready-to-paste prompt for a new Codex desktop chat.
 
-Cue stance, cue polarity, and richness can be read off a finished trace. They are reports. `BeliefUpdateScore` remains the only keep/discard metric. The boundary is written in [`program.md`](program.md) under Later readings.
+Cue stance, cue polarity, and richness can be read off an evidence-response-v3 trace. They are reports. `BeliefUpdateScore` remains the only keep/discard metric for that contract. The v1 suite has no composite score or single keep/discard selector. The boundary is written in [`program.md`](program.md).
 
 Online runs and GPU fine-tuning are later steps. They must use this same `env.py`, `oracle.py`, and `eval.py`. A language model may later read the belief trace aloud. It does not track the partner.
+
+## High-risk v1 comparison
+
+The two contract IDs have separate metrics and outputs. Use `/contracts` to see both. The v1 comparison pre-generates one existing training-scenario schedule per seed and shares it across baseline, Arm 3, and Arm 4. It writes the schedules, hashes, metrics, replay traces, closed-loop traces, and comparison summary under a contract-specific root.
+
+```text
+/compare contract=high-risk-belief-update-v1 variants=baseline,arm3,arm4 episodes=50 seeds=7,11,17,23,29,31,37,41,43,47,53 output=logs/high-risk-belief-update-v1
+```
+
+Use `/score` and `/trace` with an artifact path to inspect v1 results. An explicit `contract=` is checked against the artifact. `/compare candidate=...` remains the original single-candidate workflow; `candidate=` and `variants=` cannot be used together. The analysis is saved to [`analysis/arm3-arm4-high-risk-v1-report.md`](analysis/arm3-arm4-high-risk-v1-report.md). Domain labels, action consequences, thresholds, and rewards are frozen simulation assumptions, not validated for real-world deployment.
+
+The post-hoc cost sensitivity report is [`analysis/high-risk-belief-update-v1-cost-sensitivity.md`](analysis/high-risk-belief-update-v1-cost-sensitivity.md); it rescales saved actions without retraining. The held-out expansion reuses the v1 checkpoints on the separate `high-risk-belief-update-scenarios-v2` template set:
+
+```bash
+.venv/bin/python scripts/high_risk_heldout_v2.py
+```
+
+Its results are in [`analysis/high-risk-belief-update-v1-heldout-v2-report.md`](analysis/high-risk-belief-update-v1-heldout-v2-report.md) and `logs/high-risk-belief-update-v1-heldout-v2/`.
 
 ## Requirements
 
@@ -65,7 +83,7 @@ Do these in order. One hypothesis, one change, then a comparison against the bas
 
    The page is at `http://127.0.0.1:8765/`. Each strip shows the cue, the belief before and after, epistemic and aleatoric uncertainty, the action, whether the commit gate would have blocked it, the cue stance, and the richness band. The scenario line shows cue polarity. `BeliefUpdateScore` stays the selection metric.
 6. Write one sentence in a note: which single constant in `train.py` you expect to move, and which component should move with it. The allowed sequence is in [`program.md`](program.md).
-7. Choose one pre-registered arm. From the menu, `candidate=arm4` is the prior-precision edit (prior precision 0.5, prediction-error gain 1). `/arms` lists the others. A hand-written copy of `train.py` is still accepted as a path. Do not edit `env.py`, `oracle.py`, or `eval.py`.
+7. Choose one pre-registered arm. `candidate=arm4` changes prior precision and belief prediction-error gain. `candidate=arm6` combines those belief settings with lower stickiness and phase-dependent action sensitivity. `candidate=arm7` adds the existing commit guard to Arm 6. `candidate=arm8` uses prior precision 0.5 and prediction-error gain 0.8 with the baseline action policy. `/arms` lists all arms. A hand-written copy of `train.py` is still accepted as a path. Do not edit `env.py`, `oracle.py`, or `eval.py`.
 8. Compare at the same seed:
 
    ```bash
@@ -84,10 +102,18 @@ Do these in order. One hypothesis, one change, then a comparison against the bas
    /compare episodes=50 seeds=7,11,17,23,29 candidate=arm4 output=logs
    ```
 
+   Arms 6–8 use the same paired comparison workflow:
+
+   ```text
+   /compare episodes=50 seeds=7,11,17,23,29,31,37,41,43,47,53 candidate=arm6 output=logs
+   /compare episodes=50 seeds=7,11,17,23,29,31,37,41,43,47,53 candidate=arm7 output=logs
+   /compare episodes=50 seeds=7,11,17,23,29,31,37,41,43,47,53 candidate=arm8 output=logs
+   ```
+
    Batch output uses one comparison directory per seed, such as `logs/seed7-arm4/` and `logs/seed11-arm4/`. Seeds are run serially. A failure stops the batch and reports which outputs completed.
 9. On the trace page, mark the run keep or discard and write the reason. That mark is stored beside the trace, in a `.decisions.jsonl` file. It does not change `BeliefUpdateScore`.
 10. Keep the candidate only when `selection.json` says `keep`. A higher reward learning rate that speeds acquisition and increases perseveration does not win.
-11. Repeat from step 6. Combine arms only after a single arm has already passed the keep rule.
+11. Repeat from step 6. Run only pre-registered combinations; their hypotheses and settings are recorded in [`program.md`](program.md).
 
 Changing a weight or a scenario is a separate kind of edit. Write it in [`program.md`](program.md) before the run. That is the double loop. Do not hide it inside `eval.py`.
 
@@ -126,6 +152,8 @@ The full statement is the Further-study tests section of [`program.md`](program.
 | `python scripts/local_runner.py ... --candidate-train-py PATH` | Trains baseline and candidate, then applies the keep rule |
 | `python scripts/serve_trace.py --output-dir logs/baseline-seed7` | Opens the belief-trace page for that run. `--port` defaults to 8765. `--trace` still accepts a trace file |
 | `python scripts/read_trace.py --trace PATH` | Writes cue stance, polarity, and richness beside the trace. It refuses to replace `metrics.json` |
+| `/contracts` | Lists `evidence-response-v3` and `high-risk-belief-update-v1` |
+| `/compare contract=high-risk-belief-update-v1 variants=baseline,arm3,arm4 ...` | Runs the matched multi-arm replay and closed-loop comparison under its own logs root |
 | `python -m unittest discover -s tests -t .` | Runs the integrity tests |
 
 `train.py` defaults are 200 episodes, seed 7, device `cpu`, and a required `--output-dir`. The runner defaults to 50 episodes and seed 7.
@@ -157,7 +185,7 @@ The menu and the page share one run directory. `/train output=logs/baseline-seed
 
 Inside the output directory:
 
-- `metrics.json` — `BeliefUpdateScore`, the components, the seed, the episode count, and the constants used at evaluation
+- `metrics.json` — `BeliefUpdateScore`, its components, report-only evaluation return and terminal-action rates, the seed, episode count, and constants used at evaluation
 - `trace.json` — cue, belief, uncertainty, action, and commit gate for every validation episode
 - `trace.readings.json` — optional report from `scripts/read_trace.py`: cue stance, polarity, and richness. It is not a score
 - `learning_curve.csv` — return and belief match by training episode
@@ -338,7 +366,7 @@ The source repository includes an MIT [`LICENSE`](LICENSE). Papers under `academ
 
 **Baseline.** The untouched `train.py`: open-leaning prior, low prediction-error gain, equal reward and punishment learning rates, stickiness on the previous action only.
 
-**Arm.** One pre-registered edit. Arm 2 raises the reward learning rate only. Arm 3 is the Kanen phase pattern. Arm 4 lowers prior precision and raises prediction-error gain on the belief channel. Arm 5 is a plasticity window around arm 3 or 4.
+**Arm.** One pre-registered edit. Arm 2 raises the reward learning rate only. Arm 3 changes reward and punishment learning, stickiness, and phase-dependent sensitivity. Arm 4 lowers prior precision and raises prediction-error gain on the belief channel. Arm 5 is a plasticity window around arm 3 or 4. Arm 6 combines Arm 4's belief settings with Arm 3's lower stickiness and phase-dependent sensitivity, leaving reward and punishment learning at baseline. Arm 7 adds a commit guard to Arm 6. Arm 8 lowers Arm 4's prediction-error gain to 0.8 and retains the baseline action policy.
 
 **Frozen file.** `env.py`, `oracle.py`, and `eval.py` during a search. Editing them changes the test, so the new number is not comparable.
 

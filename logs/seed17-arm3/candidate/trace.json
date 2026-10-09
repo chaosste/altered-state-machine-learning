@@ -1,0 +1,3887 @@
+[
+  {
+    "name": "anchor_open",
+    "family": "anchor",
+    "blurb": "Stationary open partner. Two-state anchor for the exact belief MDP.",
+    "outcome": "correct",
+    "ambiguous": false,
+    "outcome_credit": 1.0,
+    "outcome_status": "appropriate",
+    "steps": [
+      {
+        "step": 0,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.975995485807495,
+          0.024004514192505124
+        ],
+        "exact_belief": [
+          0.8823529411764706,
+          0.11764705882352944
+        ],
+        "epistemic_entropy": 0.11323922920808985,
+        "strong_evidence": true,
+        "belief_movement": 0.023421358985061626,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.25,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 1,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.975995485807495,
+          0.024004514192505124
+        ],
+        "belief_after": [
+          0.9912361944424771,
+          0.008763805557522833
+        ],
+        "exact_belief": [
+          0.99288256227758,
+          0.007117437722419931
+        ],
+        "epistemic_entropy": 0.0502405335236843,
+        "strong_evidence": true,
+        "belief_movement": 0.01524070863498223,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 2,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9912361944424771,
+          0.008763805557522833
+        ],
+        "belief_after": [
+          0.9968318338469678,
+          0.0031681661530320745
+        ],
+        "exact_belief": [
+          0.9996147474669647,
+          0.0003852525330354048
+        ],
+        "epistemic_entropy": 0.021394678624564067,
+        "strong_evidence": true,
+        "belief_movement": 0.005595639404490731,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 3,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.996831833846968,
+          0.0031681661530320753
+        ],
+        "belief_after": [
+          0.9988588029979093,
+          0.0011411970020907152
+        ],
+        "exact_belief": [
+          0.9999792799449344,
+          2.072005506561834e-05
+        ],
+        "epistemic_entropy": 0.008872928513953151,
+        "strong_evidence": true,
+        "belief_movement": 0.0020269691509413046,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 4,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9988588029979093,
+          0.0011411970020907152
+        ],
+        "belief_after": [
+          0.9995894664439369,
+          0.00041053355606307886
+        ],
+        "exact_belief": [
+          0.9999988859967037,
+          1.114003296371403e-06
+        ],
+        "epistemic_entropy": 0.0036118116581256286,
+        "strong_evidence": true,
+        "belief_movement": 0.0007306634460276024,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 5,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9995894664439369,
+          0.00041053355606307886
+        ],
+        "belief_after": [
+          0.9998523840294828,
+          0.0001476159705172089
+        ],
+        "exact_belief": [
+          0.9999999401072865,
+          5.989271347609558e-08
+        ],
+        "epistemic_entropy": 0.0014497102650887098,
+        "strong_evidence": true,
+        "belief_movement": 0.00026291758554592207,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      }
+    ]
+  },
+  {
+    "name": "anchor_closed",
+    "family": "anchor",
+    "blurb": "Stationary closed partner. Two-state anchor for the exact belief MDP.",
+    "outcome": "correct",
+    "ambiguous": false,
+    "outcome_credit": 1.0,
+    "outcome_status": "appropriate",
+    "steps": [
+      {
+        "step": 0,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.975995485807495,
+          0.024004514192505124
+        ],
+        "exact_belief": [
+          0.8823529411764706,
+          0.11764705882352944
+        ],
+        "epistemic_entropy": 0.11323922920808985,
+        "strong_evidence": true,
+        "belief_movement": 0.023421358985061626,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.9,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 1,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.975995485807495,
+          0.024004514192505124
+        ],
+        "belief_after": [
+          0.9378238928157507,
+          0.06217610718424935
+        ],
+        "exact_belief": [
+          0.30612244897959184,
+          0.693877551020408
+        ],
+        "epistemic_entropy": 0.23291364405194362,
+        "strong_evidence": true,
+        "belief_movement": 0.038171592991744226,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 2,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9378238928157507,
+          0.06217610718424935
+        ],
+        "belief_after": [
+          0.8483819884183594,
+          0.1516180115816406
+        ],
+        "exact_belief": [
+          0.025295109612141667,
+          0.9747048903878582
+        ],
+        "epistemic_entropy": 0.42550545611830215,
+        "strong_evidence": true,
+        "belief_movement": 0.08944190439739128,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 3,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.8483819884183594,
+          0.1516180115816406
+        ],
+        "belief_after": [
+          0.6748803277190217,
+          0.3251196722809783
+        ],
+        "exact_belief": [
+          0.0015242353419367965,
+          0.9984757646580632
+        ],
+        "epistemic_entropy": 0.6306684627218849,
+        "strong_evidence": true,
+        "belief_movement": 0.1735016606993377,
+        "ignored_evidence": false,
+        "moved_but_uncertain": true,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 4,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.6748803277190217,
+          0.3251196722809783
+        ],
+        "belief_after": [
+          0.4350484368682486,
+          0.5649515631317514
+        ],
+        "exact_belief": [
+          8.978971249334077e-05,
+          0.9999102102875067
+        ],
+        "epistemic_entropy": 0.6846858778457197,
+        "strong_evidence": true,
+        "belief_movement": 0.2398318908507731,
+        "ignored_evidence": false,
+        "moved_but_uncertain": true,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 5,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.4350484368682486,
+          0.5649515631317514
+        ],
+        "belief_after": [
+          0.22219727791631125,
+          0.7778027220836887
+        ],
+        "exact_belief": [
+          5.2821941812053335e-06,
+          0.9999947178058188
+        ],
+        "epistemic_entropy": 0.5296749479548974,
+        "strong_evidence": true,
+        "belief_movement": 0.21285115895193735,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      }
+    ]
+  },
+  {
+    "name": "handoff_open",
+    "family": "handoff",
+    "blurb": "Structured handoff. The task is known and the partner model is open.",
+    "outcome": "correct",
+    "ambiguous": false,
+    "outcome_credit": 1.0,
+    "outcome_status": "appropriate",
+    "steps": [
+      {
+        "step": 0,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.975995485807495,
+          0.024004514192505124
+        ],
+        "exact_belief": [
+          0.8823529411764706,
+          0.11764705882352944
+        ],
+        "epistemic_entropy": 0.11323922920808985,
+        "strong_evidence": true,
+        "belief_movement": 0.023421358985061626,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.25,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 1,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.975995485807495,
+          0.024004514192505124
+        ],
+        "belief_after": [
+          0.9912361944424771,
+          0.008763805557522833
+        ],
+        "exact_belief": [
+          0.99288256227758,
+          0.007117437722419931
+        ],
+        "epistemic_entropy": 0.0502405335236843,
+        "strong_evidence": true,
+        "belief_movement": 0.01524070863498223,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 2,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9912361944424771,
+          0.008763805557522833
+        ],
+        "belief_after": [
+          0.9968318338469678,
+          0.0031681661530320745
+        ],
+        "exact_belief": [
+          0.9996147474669647,
+          0.0003852525330354048
+        ],
+        "epistemic_entropy": 0.021394678624564067,
+        "strong_evidence": true,
+        "belief_movement": 0.005595639404490731,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 3,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.996831833846968,
+          0.0031681661530320753
+        ],
+        "belief_after": [
+          0.9988588029979093,
+          0.0011411970020907152
+        ],
+        "exact_belief": [
+          0.9999792799449344,
+          2.072005506561834e-05
+        ],
+        "epistemic_entropy": 0.008872928513953151,
+        "strong_evidence": true,
+        "belief_movement": 0.0020269691509413046,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 4,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9988588029979093,
+          0.0011411970020907152
+        ],
+        "belief_after": [
+          0.9995894664439369,
+          0.00041053355606307886
+        ],
+        "exact_belief": [
+          0.9999988859967037,
+          1.114003296371403e-06
+        ],
+        "epistemic_entropy": 0.0036118116581256286,
+        "strong_evidence": true,
+        "belief_movement": 0.0007306634460276024,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 5,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9995894664439369,
+          0.00041053355606307886
+        ],
+        "belief_after": [
+          0.9998523840294828,
+          0.0001476159705172089
+        ],
+        "exact_belief": [
+          0.9999999401072865,
+          5.989271347609558e-08
+        ],
+        "epistemic_entropy": 0.0014497102650887098,
+        "strong_evidence": true,
+        "belief_movement": 0.00026291758554592207,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 6,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9998523840294827,
+          0.00014761597051720886
+        ],
+        "belief_after": [
+          0.9999469305140585,
+          5.306948594154144e-05
+        ],
+        "exact_belief": [
+          0.9999999967799615,
+          3.2200385414180648e-09
+        ],
+        "epistemic_entropy": 0.0005754792387008668,
+        "strong_evidence": true,
+        "belief_movement": 9.454648457570449e-05,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 7,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9999469305140584,
+          5.306948594154143e-05
+        ],
+        "belief_after": [
+          0.9999809221199768,
+          1.9077880023176015e-05
+        ],
+        "exact_belief": [
+          0.9999999998268796,
+          1.731203522166272e-10
+        ],
+        "epistemic_entropy": 0.00022639665792430737,
+        "strong_evidence": true,
+        "belief_movement": 3.399160591840147e-05,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      }
+    ]
+  },
+  {
+    "name": "handoff_closed",
+    "family": "handoff",
+    "blurb": "Structured handoff. Commit is unsafe; yield is appropriate.",
+    "outcome": "correct",
+    "ambiguous": false,
+    "outcome_credit": 1.0,
+    "outcome_status": "appropriate",
+    "steps": [
+      {
+        "step": 0,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.9318515875957541,
+          0.06814841240424588
+        ],
+        "exact_belief": [
+          0.25,
+          0.7499999999999999
+        ],
+        "epistemic_entropy": 0.24882291580434562,
+        "strong_evidence": true,
+        "belief_movement": 0.020722539226679153,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.55,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 1,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.931851587595754,
+          0.06814841240424586
+        ],
+        "belief_after": [
+          0.835326924744533,
+          0.1646730752554671
+        ],
+        "exact_belief": [
+          0.019230769230769242,
+          0.9807692307692308
+        ],
+        "epistemic_entropy": 0.4473382934759328,
+        "strong_evidence": true,
+        "belief_movement": 0.09652466285122116,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 2,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.835326924744533,
+          0.1646730752554671
+        ],
+        "belief_after": [
+          0.6529963765285098,
+          0.34700362347149016
+        ],
+        "exact_belief": [
+          0.0011520737327188955,
+          0.9988479262672811
+        ],
+        "epistemic_entropy": 0.645572005842458,
+        "strong_evidence": true,
+        "belief_movement": 0.1823305482160231,
+        "ignored_evidence": false,
+        "moved_but_uncertain": true,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 3,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.6529963765285098,
+          0.34700362347149016
+        ],
+        "belief_after": [
+          0.41110764634688657,
+          0.5888923536531134
+        ],
+        "exact_belief": [
+          6.784260515603808e-05,
+          0.9999321573948441
+        ],
+        "epistemic_entropy": 0.67725915642486,
+        "strong_evidence": true,
+        "belief_movement": 0.24188873018162327,
+        "ignored_evidence": false,
+        "moved_but_uncertain": true,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 4,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.41110764634688657,
+          0.5888923536531134
+        ],
+        "belief_after": [
+          0.2057048108672606,
+          0.7942951891327394
+        ],
+        "exact_belief": [
+          3.990996312319416e-06,
+          0.9999960090036877
+        ],
+        "epistemic_entropy": 0.5082099821878259,
+        "strong_evidence": true,
+        "belief_movement": 0.20540283547962598,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 5,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.2057048108672606,
+          0.7942951891327394
+        ],
+        "belief_after": [
+          0.08765275283017136,
+          0.9123472471698286
+        ],
+        "exact_belief": [
+          2.3476537079312218e-07,
+          0.9999997652346291
+        ],
+        "epistemic_entropy": 0.2970732470809774,
+        "strong_evidence": true,
+        "belief_movement": 0.11805205803708921,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 6,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.08765275283017136,
+          0.9123472471698286
+        ],
+        "belief_after": [
+          0.034414311996063776,
+          0.9655856880039362
+        ],
+        "exact_belief": [
+          1.3809730745050994e-08,
+          0.9999999861902693
+        ],
+        "epistemic_entropy": 0.14976677505643013,
+        "strong_evidence": true,
+        "belief_movement": 0.05323844083410757,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 7,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.034414311996063776,
+          0.9655856880039362
+        ],
+        "belief_after": [
+          0.013049282000166834,
+          0.9869507179998332
+        ],
+        "exact_belief": [
+          8.123371132083243e-10,
+          0.9999999991876629
+        ],
+        "epistemic_entropy": 0.06958489118496913,
+        "strong_evidence": true,
+        "belief_movement": 0.021365029995897004,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      }
+    ]
+  },
+  {
+    "name": "handoff_open_late",
+    "family": "handoff",
+    "blurb": "Structured handoff with a longer look before the score window.",
+    "outcome": "correct",
+    "ambiguous": false,
+    "outcome_credit": 1.0,
+    "outcome_status": "appropriate",
+    "steps": [
+      {
+        "step": 0,
+        "cue": "none",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.922268291802535,
+          0.0777317081974651
+        ],
+        "exact_belief": [
+          0.18181818181818185,
+          0.8181818181818181
+        ],
+        "epistemic_entropy": 0.2731941565477503,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": null,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 1,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.922268291802535,
+          0.0777317081974651
+        ],
+        "belief_after": [
+          0.9705931421602646,
+          0.029406857839735314
+        ],
+        "exact_belief": [
+          0.8051948051948052,
+          0.1948051948051948
+        ],
+        "epistemic_entropy": 0.1326742635235447,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": null,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 2,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9705931421602648,
+          0.02940685783973532
+        ],
+        "belief_after": [
+          0.9244954209661789,
+          0.07550457903382102
+        ],
+        "exact_belief": [
+          0.19558359621451113,
+          0.804416403785489
+        ],
+        "epistemic_entropy": 0.26765028882597613,
+        "strong_evidence": true,
+        "belief_movement": 0.046097721194085825,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.95,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 3,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9244954209661791,
+          0.07550457903382103
+        ],
+        "belief_after": [
+          0.9714785110332933,
+          0.02852148896670671
+        ],
+        "exact_belief": [
+          0.8189177673625906,
+          0.1810822326374095
+        ],
+        "epistemic_entropy": 0.1295645447152634,
+        "strong_evidence": true,
+        "belief_movement": 0.046983090067114264,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 4,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9714785110332933,
+          0.02852148896670671
+        ],
+        "belief_after": [
+          0.9895564050552662,
+          0.010443594944733799
+        ],
+        "exact_belief": [
+          0.9882512951219377,
+          0.011748704878062276
+        ],
+        "epistemic_entropy": 0.0580301104085794,
+        "strong_evidence": true,
+        "belief_movement": 0.018077894021972907,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 5,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9895564050552662,
+          0.010443594944733799
+        ],
+        "belief_after": [
+          0.9962204908160297,
+          0.0037795091839703384
+        ],
+        "exact_belief": [
+          0.9993612481613716,
+          0.0006387518386283816
+        ],
+        "epistemic_entropy": 0.024855069019053076,
+        "strong_evidence": true,
+        "belief_movement": 0.006664085760763477,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 6,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9962204908160297,
+          0.0037795091839703384
+        ],
+        "belief_after": [
+          0.9986380583001125,
+          0.0013619416998874477
+        ],
+        "exact_belief": [
+          0.9999656377343908,
+          3.436226560915687e-05
+        ],
+        "epistemic_entropy": 0.010348254483031314,
+        "strong_evidence": true,
+        "belief_movement": 0.0024175674840828647,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 7,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9986380583001125,
+          0.0013619416998874477
+        ],
+        "belief_after": [
+          0.9995099865380045,
+          0.0004900134619955526
+        ],
+        "exact_belief": [
+          0.9999981525062942,
+          1.8474937058483306e-06
+        ],
+        "epistemic_entropy": 0.004224324050649044,
+        "strong_evidence": true,
+        "belief_movement": 0.0008719282378919226,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      }
+    ]
+  },
+  {
+    "name": "handoff_closed_late",
+    "family": "handoff",
+    "blurb": "Structured handoff. Early cues are easy to over-read.",
+    "outcome": "correct",
+    "ambiguous": false,
+    "outcome_credit": 1.0,
+    "outcome_status": "appropriate",
+    "steps": [
+      {
+        "step": 0,
+        "cue": "none",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.922268291802535,
+          0.0777317081974651
+        ],
+        "exact_belief": [
+          0.18181818181818185,
+          0.8181818181818181
+        ],
+        "epistemic_entropy": 0.2731941565477503,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": null,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 1,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.922268291802535,
+          0.0777317081974651
+        ],
+        "belief_after": [
+          0.8148666706249296,
+          0.18513332937507046
+        ],
+        "exact_belief": [
+          0.012903225806451618,
+          0.9870967741935485
+        ],
+        "epistemic_entropy": 0.4790887852134421,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": null,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 2,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.8148666706249296,
+          0.18513332937507046
+        ],
+        "belief_after": [
+          0.6201826542714315,
+          0.3798173457285685
+        ],
+        "exact_belief": [
+          0.0007683442182097581,
+          0.9992316557817902
+        ],
+        "epistemic_entropy": 0.6639746376818443,
+        "strong_evidence": true,
+        "belief_movement": 0.19468401635349808,
+        "ignored_evidence": false,
+        "moved_but_uncertain": true,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 3,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.6201826542714315,
+          0.3798173457285685
+        ],
+        "belief_after": [
+          0.3772349541906821,
+          0.6227650458093179
+        ],
+        "exact_belief": [
+          4.522942626472784e-05,
+          0.9999547705737353
+        ],
+        "epistemic_entropy": 0.6626942624033658,
+        "strong_evidence": true,
+        "belief_movement": 0.2429477000807494,
+        "ignored_evidence": false,
+        "moved_but_uncertain": true,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 4,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.3772349541906821,
+          0.6227650458093179
+        ],
+        "belief_after": [
+          0.18348299132076998,
+          0.81651700867923
+        ],
+        "exact_belief": [
+          2.660667747784664e-06,
+          0.9999973393322523
+        ],
+        "epistemic_entropy": 0.4766340217836105,
+        "strong_evidence": true,
+        "belief_movement": 0.19375196286991214,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 5,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.18348299132076995,
+          0.8165170086792299
+        ],
+        "belief_after": [
+          0.07694837366894072,
+          0.9230516263310593
+        ],
+        "exact_belief": [
+          1.565102594431446e-07,
+          0.9999998434897407
+        ],
+        "epistemic_entropy": 0.2712522285881708,
+        "strong_evidence": true,
+        "belief_movement": 0.1065346176518293,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 6,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.07694837366894071,
+          0.9230516263310592
+        ],
+        "belief_after": [
+          0.02999777621264012,
+          0.9700022237873599
+        ],
+        "exact_belief": [
+          9.206487205747072e-09,
+          0.9999999907935128
+        ],
+        "epistemic_entropy": 0.13473443799046694,
+        "strong_evidence": true,
+        "belief_movement": 0.04695059745630065,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 7,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.02999777621264012,
+          0.9700022237873599
+        ],
+        "belief_after": [
+          0.011342404098172658,
+          0.9886575959018274
+        ],
+        "exact_belief": [
+          5.415580756188592e-10,
+          0.9999999994584419
+        ],
+        "epistemic_entropy": 0.06208281029475349,
+        "strong_evidence": true,
+        "belief_movement": 0.01865537211446751,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      }
+    ]
+  },
+  {
+    "name": "reversal_open_to_closed",
+    "family": "reversal",
+    "blurb": "Veridical reversal from open to closed.",
+    "outcome": "incorrect",
+    "ambiguous": false,
+    "outcome_credit": 0.0,
+    "outcome_status": "inappropriate",
+    "steps": [
+      {
+        "step": 0,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.975995485807495,
+          0.024004514192505124
+        ],
+        "exact_belief": [
+          0.8823529411764706,
+          0.11764705882352944
+        ],
+        "epistemic_entropy": 0.11323922920808985,
+        "strong_evidence": true,
+        "belief_movement": 0.023421358985061626,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.25,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 1,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.975995485807495,
+          0.024004514192505124
+        ],
+        "belief_after": [
+          0.9912361944424771,
+          0.008763805557522833
+        ],
+        "exact_belief": [
+          0.99288256227758,
+          0.007117437722419931
+        ],
+        "epistemic_entropy": 0.0502405335236843,
+        "strong_evidence": true,
+        "belief_movement": 0.01524070863498223,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 2,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9912361944424771,
+          0.008763805557522833
+        ],
+        "belief_after": [
+          0.9968318338469678,
+          0.0031681661530320745
+        ],
+        "exact_belief": [
+          0.9996147474669647,
+          0.0003852525330354048
+        ],
+        "epistemic_entropy": 0.021394678624564067,
+        "strong_evidence": true,
+        "belief_movement": 0.005595639404490731,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 3,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.996831833846968,
+          0.0031681661530320753
+        ],
+        "belief_after": [
+          0.9988588029979093,
+          0.0011411970020907152
+        ],
+        "exact_belief": [
+          0.9999792799449344,
+          2.072005506561834e-05
+        ],
+        "epistemic_entropy": 0.008872928513953151,
+        "strong_evidence": true,
+        "belief_movement": 0.0020269691509413046,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 4,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9988588029979093,
+          0.0011411970020907152
+        ],
+        "belief_after": [
+          0.9969297185711148,
+          0.003070281428885214
+        ],
+        "exact_belief": [
+          0.9996478758004095,
+          0.00035212419959062456
+        ],
+        "epistemic_entropy": 0.020830168803690118,
+        "strong_evidence": true,
+        "belief_movement": 0.0019290844267945064,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 5,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9969297185711147,
+          0.0030702814288852136
+        ],
+        "belief_after": [
+          0.9917665806545096,
+          0.008233419345490382
+        ],
+        "exact_belief": [
+          0.9940474253363822,
+          0.00595257466361774
+        ],
+        "epistemic_entropy": 0.04771617108344559,
+        "strong_evidence": true,
+        "belief_movement": 0.005163137916605111,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 6,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9917665806545096,
+          0.008233419345490382
+        ],
+        "belief_after": [
+          0.9781114875550592,
+          0.02188851244494088
+        ],
+        "exact_belief": [
+          0.9076059503799008,
+          0.09239404962009921
+        ],
+        "epistemic_entropy": 0.10530056252070782,
+        "strong_evidence": true,
+        "belief_movement": 0.013655093099450477,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 7,
+        "cue": "none",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9781114875550592,
+          0.02188851244494088
+        ],
+        "belief_after": [
+          0.9621798164579904,
+          0.03782018354200958
+        ],
+        "exact_belief": [
+          0.6626910947977396,
+          0.3373089052022604
+        ],
+        "epistemic_entropy": 0.16095359645856455,
+        "strong_evidence": true,
+        "belief_movement": 0.015931671097068712,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.9,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 8,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9621798164579903,
+          0.037820183542009576
+        ],
+        "belief_after": [
+          0.9041953115514688,
+          0.09580468844853128
+        ],
+        "exact_belief": [
+          0.1035949747139964,
+          0.8964050252860036
+        ],
+        "epistemic_entropy": 0.3157659084180954,
+        "strong_evidence": true,
+        "belief_movement": 0.057984504906521614,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 9,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9041953115514688,
+          0.09580468844853128
+        ],
+        "belief_after": [
+          0.7778375964454514,
+          0.22216240355454872
+        ],
+        "exact_belief": [
+          0.0067521660111163105,
+          0.9932478339888837
+        ],
+        "epistemic_entropy": 0.5296312500938722,
+        "strong_evidence": true,
+        "belief_movement": 0.12635771510601745,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      }
+    ]
+  },
+  {
+    "name": "reversal_open_to_closed_late",
+    "family": "reversal",
+    "blurb": "Veridical reversal from open to closed, later in the episode.",
+    "outcome": "incorrect",
+    "ambiguous": false,
+    "outcome_credit": 0.0,
+    "outcome_status": "inappropriate",
+    "steps": [
+      {
+        "step": 0,
+        "cue": "none",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.922268291802535,
+          0.0777317081974651
+        ],
+        "exact_belief": [
+          0.18181818181818185,
+          0.8181818181818181
+        ],
+        "epistemic_entropy": 0.2731941565477503,
+        "strong_evidence": true,
+        "belief_movement": 0.030305835019898336,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.9,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 1,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.922268291802535,
+          0.0777317081974651
+        ],
+        "belief_after": [
+          0.9705931421602646,
+          0.029406857839735314
+        ],
+        "exact_belief": [
+          0.8051948051948052,
+          0.1948051948051948
+        ],
+        "epistemic_entropy": 0.1326742635235447,
+        "strong_evidence": true,
+        "belief_movement": 0.04832485035772969,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 2,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9705931421602648,
+          0.02940685783973532
+        ],
+        "belief_after": [
+          0.9892259895842483,
+          0.01077401041575174
+        ],
+        "exact_belief": [
+          0.9871597329224449,
+          0.012840267077555215
+        ],
+        "epistemic_entropy": 0.059528691974666946,
+        "strong_evidence": true,
+        "belief_movement": 0.01863284742398355,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 3,
+        "cue": "none",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9892259895842483,
+          0.01077401041575174
+        ],
+        "belief_after": [
+          0.9812288159299531,
+          0.018771184070046815
+        ],
+        "exact_belief": [
+          0.9389350268685882,
+          0.06106497313141189
+        ],
+        "epistemic_entropy": 0.09321746491768033,
+        "strong_evidence": true,
+        "belief_movement": 0.007997173654295135,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.98,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 4,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9812288159299531,
+          0.018771184070046815
+        ],
+        "belief_after": [
+          0.993170082263466,
+          0.0068299177365339645
+        ],
+        "exact_belief": [
+          0.9965156017416416,
+          0.003484398258358381
+        ],
+        "epistemic_entropy": 0.04086353366301391,
+        "strong_evidence": true,
+        "belief_movement": 0.01194126633351287,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 5,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.993170082263466,
+          0.0068299177365339645
+        ],
+        "belief_after": [
+          0.9975340172836472,
+          0.002465982716352862
+        ],
+        "exact_belief": [
+          0.9998120470672638,
+          0.00018795293273636725
+        ],
+        "epistemic_entropy": 0.017271572489018026,
+        "strong_evidence": true,
+        "belief_movement": 0.004363935020181139,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 6,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9975340172836472,
+          0.002465982716352862
+        ],
+        "belief_after": [
+          0.9933803504004559,
+          0.0066196495995441244
+        ],
+        "exact_belief": [
+          0.996814380089159,
+          0.003185619910841025
+        ],
+        "epistemic_entropy": 0.039813192011900006,
+        "strong_evidence": true,
+        "belief_movement": 0.004153666883191281,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 7,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9933803504004559,
+          0.0066196495995441244
+        ],
+        "belief_after": [
+          0.9823540677877893,
+          0.017645932212210724
+        ],
+        "exact_belief": [
+          0.948470895762834,
+          0.05152910423716589
+        ],
+        "epistemic_entropy": 0.08873035849997848,
+        "strong_evidence": true,
+        "belief_movement": 0.011026282612666591,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 8,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9823540677877892,
+          0.01764593221221072
+        ],
+        "belief_after": [
+          0.9538153163474828,
+          0.04618468365251711
+        ],
+        "exact_belief": [
+          0.5198622876303891,
+          0.48013771236961095
+        ],
+        "epistemic_entropy": 0.1871242090082075,
+        "strong_evidence": true,
+        "belief_movement": 0.028538751440306383,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 9,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9538153163474828,
+          0.04618468365251711
+        ],
+        "belief_after": [
+          0.8845454726600502,
+          0.11545452733994986
+        ],
+        "exact_belief": [
+          0.059876769041750974,
+          0.9401232309582489
+        ],
+        "epistemic_entropy": 0.35776953831318964,
+        "strong_evidence": true,
+        "belief_movement": 0.06926984368743268,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      }
+    ]
+  },
+  {
+    "name": "novel_reversal_after_gap",
+    "family": "reversal",
+    "blurb": "Unrelated intervening trials, then a novel closed-to-open reversal.",
+    "outcome": "correct",
+    "ambiguous": false,
+    "outcome_credit": 1.0,
+    "outcome_status": "appropriate",
+    "steps": [
+      {
+        "step": 0,
+        "cue": "none",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.922268291802535,
+          0.0777317081974651
+        ],
+        "exact_belief": [
+          0.18181818181818185,
+          0.8181818181818181
+        ],
+        "epistemic_entropy": 0.2731941565477503,
+        "strong_evidence": true,
+        "belief_movement": 0.030305835019898336,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.55,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 1,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.922268291802535,
+          0.0777317081974651
+        ],
+        "belief_after": [
+          0.8148666706249296,
+          0.18513332937507046
+        ],
+        "exact_belief": [
+          0.012903225806451618,
+          0.9870967741935485
+        ],
+        "epistemic_entropy": 0.4790887852134421,
+        "strong_evidence": true,
+        "belief_movement": 0.1074016211776054,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 2,
+        "cue": "none",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.8148666706249296,
+          0.18513332937507046
+        ],
+        "belief_after": [
+          0.7147659288425839,
+          0.28523407115741617
+        ],
+        "exact_belief": [
+          0.002607561929595831,
+          0.9973924380704042
+        ],
+        "epistemic_entropy": 0.5978290072626139,
+        "strong_evidence": true,
+        "belief_movement": 0.10010074178234567,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.9,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 3,
+        "cue": "none",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.7147659288425839,
+          0.28523407115741617
+        ],
+        "belief_after": [
+          0.7147659288425839,
+          0.28523407115741617
+        ],
+        "exact_belief": [
+          0.002607561929595831,
+          0.9973924380704042
+        ],
+        "epistemic_entropy": 0.5978290072626139,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": null,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": true,
+        "private": false
+      },
+      {
+        "step": 4,
+        "cue": "none",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.7147659288425839,
+          0.28523407115741617
+        ],
+        "belief_after": [
+          0.7147659288425839,
+          0.28523407115741617
+        ],
+        "exact_belief": [
+          0.002607561929595831,
+          0.9973924380704042
+        ],
+        "epistemic_entropy": 0.5978290072626139,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": null,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": true,
+        "private": false
+      },
+      {
+        "step": 5,
+        "cue": "none",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.7147659288425839,
+          0.28523407115741617
+        ],
+        "belief_after": [
+          0.7147659288425839,
+          0.28523407115741617
+        ],
+        "exact_belief": [
+          0.002607561929595831,
+          0.9973924380704042
+        ],
+        "epistemic_entropy": 0.5978290072626139,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": null,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": true,
+        "private": false
+      },
+      {
+        "step": 6,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.7147659288425839,
+          0.28523407115741617
+        ],
+        "belief_after": [
+          0.874544440670099,
+          0.12545555932990105
+        ],
+        "exact_belief": [
+          0.04637247569184744,
+          0.9536275243081526
+        ],
+        "epistemic_entropy": 0.3776556910377968,
+        "strong_evidence": true,
+        "belief_movement": 0.15977851182751507,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 7,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.874544440670099,
+          0.12545555932990105
+        ],
+        "belief_after": [
+          0.9509610431609505,
+          0.04903895683904948
+        ],
+        "exact_belief": [
+          0.47491969360019765,
+          0.5250803063998024
+        ],
+        "epistemic_entropy": 0.19567572866880267,
+        "strong_evidence": true,
+        "belief_movement": 0.07641660249085158,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 8,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9509610431609504,
+          0.04903895683904947
+        ],
+        "belief_after": [
+          0.9817999750475216,
+          0.01820002495247852
+        ],
+        "exact_belief": [
+          0.9438932043449102,
+          0.0561067956550898
+        ],
+        "epistemic_entropy": 0.09094873856905393,
+        "strong_evidence": true,
+        "belief_movement": 0.03083893188657106,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 9,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9817999750475216,
+          0.01820002495247852
+        ],
+        "belief_after": [
+          0.9933803504004559,
+          0.0066196495995441244
+        ],
+        "exact_belief": [
+          0.996814380089159,
+          0.003185619910841025
+        ],
+        "epistemic_entropy": 0.039813192011900006,
+        "strong_evidence": true,
+        "belief_movement": 0.01158037535293436,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      }
+    ]
+  },
+  {
+    "name": "novel_reversal_after_gap_b",
+    "family": "reversal",
+    "blurb": "Second seed of the novel reversal after a gap.",
+    "outcome": "correct",
+    "ambiguous": false,
+    "outcome_credit": 1.0,
+    "outcome_status": "appropriate",
+    "steps": [
+      {
+        "step": 0,
+        "cue": "none",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.922268291802535,
+          0.0777317081974651
+        ],
+        "exact_belief": [
+          0.18181818181818185,
+          0.8181818181818181
+        ],
+        "epistemic_entropy": 0.2731941565477503,
+        "strong_evidence": true,
+        "belief_movement": 0.030305835019898336,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.55,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 1,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.922268291802535,
+          0.0777317081974651
+        ],
+        "belief_after": [
+          0.8148666706249296,
+          0.18513332937507046
+        ],
+        "exact_belief": [
+          0.012903225806451618,
+          0.9870967741935485
+        ],
+        "epistemic_entropy": 0.4790887852134421,
+        "strong_evidence": true,
+        "belief_movement": 0.1074016211776054,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 2,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.8148666706249296,
+          0.18513332937507046
+        ],
+        "belief_after": [
+          0.9244954209661789,
+          0.07550457903382102
+        ],
+        "exact_belief": [
+          0.19558359621451105,
+          0.804416403785489
+        ],
+        "epistemic_entropy": 0.26765028882597613,
+        "strong_evidence": true,
+        "belief_movement": 0.10962875034124937,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.95,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 3,
+        "cue": "none",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9244954209661791,
+          0.07550457903382103
+        ],
+        "belief_after": [
+          0.9244954209661789,
+          0.07550457903382102
+        ],
+        "exact_belief": [
+          0.19558359621451105,
+          0.804416403785489
+        ],
+        "epistemic_entropy": 0.26765028882597613,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": null,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": true,
+        "private": false
+      },
+      {
+        "step": 4,
+        "cue": "none",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9244954209661791,
+          0.07550457903382103
+        ],
+        "belief_after": [
+          0.9244954209661789,
+          0.07550457903382102
+        ],
+        "exact_belief": [
+          0.19558359621451105,
+          0.804416403785489
+        ],
+        "epistemic_entropy": 0.26765028882597613,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": null,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": true,
+        "private": false
+      },
+      {
+        "step": 5,
+        "cue": "none",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9244954209661791,
+          0.07550457903382103
+        ],
+        "belief_after": [
+          0.9244954209661789,
+          0.07550457903382102
+        ],
+        "exact_belief": [
+          0.19558359621451105,
+          0.804416403785489
+        ],
+        "epistemic_entropy": 0.26765028882597613,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": null,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": true,
+        "private": false
+      },
+      {
+        "step": 6,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9244954209661791,
+          0.07550457903382103
+        ],
+        "belief_after": [
+          0.9714785110332933,
+          0.02852148896670672
+        ],
+        "exact_belief": [
+          0.8189177673625906,
+          0.1810822326374095
+        ],
+        "epistemic_entropy": 0.1295645447152634,
+        "strong_evidence": true,
+        "belief_movement": 0.046983090067114264,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 7,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9714785110332933,
+          0.02852148896670672
+        ],
+        "belief_after": [
+          0.9895564050552662,
+          0.010443594944733799
+        ],
+        "exact_belief": [
+          0.9882512951219377,
+          0.011748704878062276
+        ],
+        "epistemic_entropy": 0.0580301104085794,
+        "strong_evidence": true,
+        "belief_movement": 0.018077894021972914,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 8,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9895564050552662,
+          0.010443594944733799
+        ],
+        "belief_after": [
+          0.9962204908160297,
+          0.0037795091839703384
+        ],
+        "exact_belief": [
+          0.9993612481613716,
+          0.0006387518386283816
+        ],
+        "epistemic_entropy": 0.024855069019053076,
+        "strong_evidence": true,
+        "belief_movement": 0.006664085760763477,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 9,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9962204908160297,
+          0.0037795091839703384
+        ],
+        "belief_after": [
+          0.9986380583001125,
+          0.0013619416998874477
+        ],
+        "exact_belief": [
+          0.9999656377343908,
+          3.436226560915687e-05
+        ],
+        "epistemic_entropy": 0.010348254483031314,
+        "strong_evidence": true,
+        "belief_movement": 0.0024175674840828647,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      }
+    ]
+  },
+  {
+    "name": "true_belief_control",
+    "family": "false_belief",
+    "blurb": "True-belief control. Public cues and private evidence agree.",
+    "outcome": "correct",
+    "ambiguous": false,
+    "outcome_credit": 1.0,
+    "outcome_status": "appropriate",
+    "steps": [
+      {
+        "step": 0,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.975995485807495,
+          0.024004514192505124
+        ],
+        "exact_belief": [
+          0.8823529411764706,
+          0.11764705882352944
+        ],
+        "epistemic_entropy": 0.11323922920808985,
+        "strong_evidence": true,
+        "belief_movement": 0.023421358985061626,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.25,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 1,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.975995485807495,
+          0.024004514192505124
+        ],
+        "belief_after": [
+          0.9982328430702457,
+          0.0017671569297543176
+        ],
+        "exact_belief": [
+          0.9999275965680774,
+          7.240343192267324e-05
+        ],
+        "epistemic_entropy": 0.012966512520852841,
+        "strong_evidence": true,
+        "belief_movement": 0.022237357262750793,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 2,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9982328430702457,
+          0.0017671569297543176
+        ],
+        "belief_after": [
+          0.9998725951150034,
+          0.00012740488499657997
+        ],
+        "exact_belief": [
+          0.9999999606773804,
+          3.9322619589395854e-08
+        ],
+        "epistemic_entropy": 0.001269981674091039,
+        "strong_evidence": true,
+        "belief_movement": 0.001639752044757687,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 3,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9998725951150034,
+          0.00012740488499657997
+        ],
+        "belief_after": [
+          0.9999312304231559,
+          6.87695768440946e-05
+        ],
+        "exact_belief": [
+          0.9999999932476307,
+          6.7523692403276796e-09
+        ],
+        "epistemic_entropy": 0.0007279063524666398,
+        "strong_evidence": true,
+        "belief_movement": 5.863530815250898e-05,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.95,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 4,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9999312304231559,
+          6.87695768440946e-05
+        ],
+        "belief_after": [
+          0.9999950498059836,
+          4.950194016397724e-06
+        ],
+        "exact_belief": [
+          0.9999999999963329,
+          3.666975825946247e-12
+        ],
+        "epistemic_entropy": 6.542216662995574e-05,
+        "strong_evidence": true,
+        "belief_movement": 6.381938282771567e-05,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 5,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9999950498059836,
+          4.950194016397724e-06
+        ],
+        "belief_after": [
+          0.9999996436946303,
+          3.563053696655692e-07
+        ],
+        "exact_belief": [
+          0.999999999999998,
+          1.9914064439881033e-15
+        ],
+        "epistemic_entropy": 5.646541334473456e-06,
+        "strong_evidence": true,
+        "belief_movement": 4.593888646720555e-06,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 6,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9999996436946302,
+          3.5630536966556914e-07
+        ],
+        "belief_after": [
+          0.9999999743539394,
+          2.5646060497758133e-08
+        ],
+        "exact_belief": [
+          1.0,
+          1.0814632583838947e-18
+        ],
+        "epistemic_entropy": 4.7391036811950264e-07,
+        "strong_evidence": true,
+        "belief_movement": 3.306593091617337e-07,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 7,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9999999743539396,
+          2.564606049775814e-08
+        ],
+        "belief_after": [
+          0.9999999981540547,
+          1.845945285204218e-09
+        ],
+        "exact_belief": [
+          1.0,
+          5.873049084304837e-22
+        ],
+        "epistemic_entropy": 3.8968411387664246e-08,
+        "strong_evidence": true,
+        "belief_movement": 2.3800115156750483e-08,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "open",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      }
+    ]
+  },
+  {
+    "name": "false_belief_private",
+    "family": "false_belief",
+    "blurb": "Public cues say go. A private channel reveals that the world is closed.",
+    "outcome": "undetermined",
+    "ambiguous": false,
+    "outcome_credit": 0.0,
+    "outcome_status": "inappropriate",
+    "steps": [
+      {
+        "step": 0,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.975995485807495,
+          0.024004514192505124
+        ],
+        "exact_belief": [
+          0.8823529411764706,
+          0.11764705882352944
+        ],
+        "epistemic_entropy": 0.11323922920808985,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": null,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 1,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.975995485807495,
+          0.024004514192505124
+        ],
+        "belief_after": [
+          0.9577114700290638,
+          0.042288529970936246
+        ],
+        "exact_belief": [
+          0.5849056603773584,
+          0.41509433962264153
+        ],
+        "epistemic_entropy": 0.17515023608335523,
+        "strong_evidence": true,
+        "belief_movement": 0.01828401577843116,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 2,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9577114700290638,
+          0.042288529970936246
+        ],
+        "belief_after": [
+          0.9265487859156469,
+          0.07345121408435307
+        ],
+        "exact_belief": [
+          0.20932258767153117,
+          0.7906774123284689
+        ],
+        "epistemic_entropy": 0.26247604099549177,
+        "strong_evidence": true,
+        "belief_movement": 0.031162684113416824,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 3,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9265487859156469,
+          0.07345121408435307
+        ],
+        "belief_after": [
+          0.8754095498319048,
+          0.12459045016809522
+        ],
+        "exact_belief": [
+          0.047381990358510005,
+          0.95261800964149
+        ],
+        "epistemic_entropy": 0.3759724465924165,
+        "strong_evidence": true,
+        "belief_movement": 0.05113923608374216,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 4,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.8754095498319048,
+          0.12459045016809522
+        ],
+        "belief_after": [
+          0.7964859556337552,
+          0.20351404436624487
+        ],
+        "exact_belief": [
+          0.009258330736765585,
+          0.9907416692632344
+        ],
+        "epistemic_entropy": 0.5052355022489177,
+        "strong_evidence": true,
+        "belief_movement": 0.0789235941981496,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 5,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.7964859556337552,
+          0.20351404436624487
+        ],
+        "belief_after": [
+          0.6855268754113344,
+          0.3144731245886656
+        ],
+        "exact_belief": [
+          0.00175262172089229,
+          0.9982473782791076
+        ],
+        "epistemic_entropy": 0.622633048930296,
+        "strong_evidence": true,
+        "belief_movement": 0.11095908022242079,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 6,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.6855268754113344,
+          0.3144731245886656
+        ],
+        "belief_after": [
+          0.5483741384899731,
+          0.4516258615100269
+        ],
+        "exact_belief": [
+          0.00032974979101970986,
+          0.9996702502089804
+        ],
+        "epistemic_entropy": 0.6884597373791723,
+        "strong_evidence": true,
+        "belief_movement": 0.13715273692136132,
+        "ignored_evidence": false,
+        "moved_but_uncertain": true,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 7,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.5483741384899731,
+          0.4516258615100269
+        ],
+        "belief_after": [
+          0.40345692989965265,
+          0.5965430701003474
+        ],
+        "exact_belief": [
+          6.196958629697332e-05,
+          0.999938030413703
+        ],
+        "epistemic_entropy": 0.674388458539263,
+        "strong_evidence": true,
+        "belief_movement": 0.14491720859032042,
+        "ignored_evidence": false,
+        "moved_but_uncertain": true,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      }
+    ]
+  },
+  {
+    "name": "false_belief_no_access",
+    "family": "false_belief",
+    "blurb": "No perceptual access. The public cue follows a false partner belief.",
+    "outcome": "incorrect",
+    "ambiguous": true,
+    "outcome_credit": 0.0,
+    "outcome_status": "inappropriate",
+    "steps": [
+      {
+        "step": 0,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.9525741268224331,
+          0.047425873177566774
+        ],
+        "exact_belief": [
+          0.5,
+          0.5
+        ],
+        "epistemic_entropy": 0.19086497110644246,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.25,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 1,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.9525741268224331,
+          0.047425873177566774
+        ],
+        "exact_belief": [
+          0.5,
+          0.5
+        ],
+        "epistemic_entropy": 0.19086497110644246,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 2,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.9525741268224331,
+          0.047425873177566774
+        ],
+        "exact_belief": [
+          0.5,
+          0.5
+        ],
+        "epistemic_entropy": 0.19086497110644246,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 3,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.9525741268224331,
+          0.047425873177566774
+        ],
+        "exact_belief": [
+          0.5,
+          0.5
+        ],
+        "epistemic_entropy": 0.19086497110644246,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 4,
+        "cue": "none",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.9525741268224331,
+          0.047425873177566774
+        ],
+        "exact_belief": [
+          0.5,
+          0.5
+        ],
+        "epistemic_entropy": 0.19086497110644246,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.98,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 5,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.9525741268224331,
+          0.047425873177566774
+        ],
+        "exact_belief": [
+          0.5,
+          0.5
+        ],
+        "epistemic_entropy": 0.19086497110644246,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 6,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.9525741268224331,
+          0.047425873177566774
+        ],
+        "exact_belief": [
+          0.5,
+          0.5
+        ],
+        "epistemic_entropy": 0.19086497110644246,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 7,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.9525741268224331,
+          0.047425873177566774
+        ],
+        "exact_belief": [
+          0.5,
+          0.5
+        ],
+        "epistemic_entropy": 0.19086497110644246,
+        "strong_evidence": false,
+        "belief_movement": null,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      }
+    ]
+  },
+  {
+    "name": "whose_belief",
+    "family": "false_belief",
+    "blurb": "The question is what the partner believes, not what is true of the world.",
+    "outcome": "correct",
+    "ambiguous": false,
+    "outcome_credit": 1.0,
+    "outcome_status": "appropriate",
+    "steps": [
+      {
+        "step": 0,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.9318515875957541,
+          0.06814841240424588
+        ],
+        "exact_belief": [
+          0.25,
+          0.7499999999999999
+        ],
+        "epistemic_entropy": 0.24882291580434562,
+        "strong_evidence": true,
+        "belief_movement": 0.020722539226679153,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.55,
+        "label": "closed",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 1,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.931851587595754,
+          0.06814841240424586
+        ],
+        "belief_after": [
+          0.835326924744533,
+          0.1646730752554671
+        ],
+        "exact_belief": [
+          0.019230769230769242,
+          0.9807692307692308
+        ],
+        "epistemic_entropy": 0.4473382934759328,
+        "strong_evidence": true,
+        "belief_movement": 0.09652466285122116,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 2,
+        "cue": "none",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.835326924744533,
+          0.1646730752554671
+        ],
+        "belief_after": [
+          0.7427971193804794,
+          0.2572028806195206
+        ],
+        "exact_belief": [
+          0.003906250000000002,
+          0.99609375
+        ],
+        "epistemic_entropy": 0.5701108382946872,
+        "strong_evidence": true,
+        "belief_movement": 0.09252980536405353,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.9,
+        "label": "closed",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 3,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.7427971193804793,
+          0.25720288061952057
+        ],
+        "belief_after": [
+          0.517226451388261,
+          0.482773548611739
+        ],
+        "exact_belief": [
+          0.000230627306273063,
+          0.9997693726937269
+        ],
+        "epistemic_entropy": 0.6925535618347172,
+        "strong_evidence": true,
+        "belief_movement": 0.2255706679922184,
+        "ignored_evidence": false,
+        "moved_but_uncertain": true,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 4,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.517226451388261,
+          0.482773548611739
+        ],
+        "belief_after": [
+          0.2844097835656654,
+          0.7155902164343346
+        ],
+        "exact_belief": [
+          1.356925749023016e-05,
+          0.9999864307425098
+        ],
+        "epistemic_entropy": 0.5970701123102462,
+        "strong_evidence": true,
+        "belief_movement": 0.2328166678225956,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 5,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.2844097835656654,
+          0.7155902164343346
+        ],
+        "belief_after": [
+          0.12849671975327168,
+          0.8715032802467283
+        ],
+        "exact_belief": [
+          7.982018109602694e-07,
+          0.999999201798189
+        ],
+        "epistemic_entropy": 0.3835190090807673,
+        "strong_evidence": true,
+        "belief_movement": 0.15591306381239367,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 6,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.12849671975327168,
+          0.8715032802467283
+        ],
+        "belief_after": [
+          0.05186066223685371,
+          0.9481393377631463
+        ],
+        "exact_belief": [
+          4.6953082976990734e-08,
+          0.999999953046917
+        ],
+        "epistemic_entropy": 0.2039578274261184,
+        "strong_evidence": true,
+        "belief_movement": 0.07663605751641799,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      },
+      {
+        "step": 7,
+        "cue": "stop",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.05186066223685371,
+          0.9481393377631463
+        ],
+        "belief_after": [
+          0.019887702219201275,
+          0.9801122977807988
+        ],
+        "exact_belief": [
+          2.7619461795235873e-09,
+          0.9999999972380538
+        ],
+        "epistemic_entropy": 0.09760174820163528,
+        "strong_evidence": true,
+        "belief_movement": 0.03197296001765246,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.15000000000000002,
+        "label": "closed",
+        "world": "open",
+        "gate_would_block": false,
+        "masked": false,
+        "private": true
+      }
+    ]
+  },
+  {
+    "name": "held_out_deceptive",
+    "family": "deceptive",
+    "blurb": "Held-out partner. Public cues say go, and commit is unsafe.",
+    "outcome": "incorrect",
+    "ambiguous": false,
+    "outcome_credit": 0.0,
+    "outcome_status": "inappropriate",
+    "steps": [
+      {
+        "step": 0,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9525741268224334,
+          0.04742587317756679
+        ],
+        "belief_after": [
+          0.975995485807495,
+          0.024004514192505124
+        ],
+        "exact_belief": [
+          0.8823529411764706,
+          0.11764705882352944
+        ],
+        "epistemic_entropy": 0.11323922920808985,
+        "strong_evidence": true,
+        "belief_movement": 0.023421358985061626,
+        "ignored_evidence": false,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.25,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 1,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.975995485807495,
+          0.024004514192505124
+        ],
+        "belief_after": [
+          0.9912361944424771,
+          0.008763805557522833
+        ],
+        "exact_belief": [
+          0.99288256227758,
+          0.007117437722419931
+        ],
+        "epistemic_entropy": 0.0502405335236843,
+        "strong_evidence": true,
+        "belief_movement": 0.01524070863498223,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 2,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9912361944424771,
+          0.008763805557522833
+        ],
+        "belief_after": [
+          0.9968318338469678,
+          0.0031681661530320745
+        ],
+        "exact_belief": [
+          0.9996147474669647,
+          0.0003852525330354048
+        ],
+        "epistemic_entropy": 0.021394678624564067,
+        "strong_evidence": true,
+        "belief_movement": 0.005595639404490731,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 3,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.996831833846968,
+          0.0031681661530320753
+        ],
+        "belief_after": [
+          0.9988588029979093,
+          0.0011411970020907152
+        ],
+        "exact_belief": [
+          0.9999792799449344,
+          2.072005506561834e-05
+        ],
+        "epistemic_entropy": 0.008872928513953151,
+        "strong_evidence": true,
+        "belief_movement": 0.0020269691509413046,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 4,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9988588029979093,
+          0.0011411970020907152
+        ],
+        "belief_after": [
+          0.9995894664439369,
+          0.00041053355606307886
+        ],
+        "exact_belief": [
+          0.9999988859967037,
+          1.114003296371403e-06
+        ],
+        "epistemic_entropy": 0.0036118116581256286,
+        "strong_evidence": true,
+        "belief_movement": 0.0007306634460276024,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 5,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9995894664439369,
+          0.00041053355606307886
+        ],
+        "belief_after": [
+          0.9998523840294828,
+          0.0001476159705172089
+        ],
+        "exact_belief": [
+          0.9999999401072865,
+          5.989271347609558e-08
+        ],
+        "epistemic_entropy": 0.0014497102650887098,
+        "strong_evidence": true,
+        "belief_movement": 0.00026291758554592207,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 6,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9998523840294827,
+          0.00014761597051720886
+        ],
+        "belief_after": [
+          0.9999469305140585,
+          5.306948594154144e-05
+        ],
+        "exact_belief": [
+          0.9999999967799615,
+          3.2200385414180648e-09
+        ],
+        "epistemic_entropy": 0.0005754792387008668,
+        "strong_evidence": true,
+        "belief_movement": 9.454648457570449e-05,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      },
+      {
+        "step": 7,
+        "cue": "go",
+        "action": "probe",
+        "requery_action": "probe",
+        "consistent": true,
+        "belief_before": [
+          0.9999469305140584,
+          5.306948594154143e-05
+        ],
+        "belief_after": [
+          0.9999809221199768,
+          1.9077880023176015e-05
+        ],
+        "exact_belief": [
+          0.9999999998268796,
+          1.731203522166272e-10
+        ],
+        "epistemic_entropy": 0.00022639665792430737,
+        "strong_evidence": true,
+        "belief_movement": 3.399160591840147e-05,
+        "ignored_evidence": true,
+        "moved_but_uncertain": false,
+        "aleatoric": 0.06999999999999995,
+        "label": "closed",
+        "world": "closed",
+        "gate_would_block": false,
+        "masked": false,
+        "private": false
+      }
+    ]
+  }
+]

@@ -1,0 +1,48 @@
+{
+  "baseline_BeliefUpdateScore": 0.6606134257386265,
+  "baseline_evaluation_contract_version": "evidence-response-v3",
+  "baseline_ignored_evidence_rate": 0.3112244897959183,
+  "baseline_moved_but_uncertain_rate": 0.0625,
+  "baseline_perseveration": 0.29166666666666663,
+  "baseline_unsafe_commit_rate": 0.0,
+  "baseline_variant": "baseline",
+  "candidate_BeliefUpdateScore": 0.6979669322792211,
+  "candidate_evaluation_contract_version": "evidence-response-v3",
+  "candidate_ignored_evidence_rate": 0.0,
+  "candidate_moved_but_uncertain_rate": 0.38636363636363635,
+  "candidate_perseveration": 0.0,
+  "candidate_unsafe_commit_rate": 0.0,
+  "candidate_variant": "arm7_evidence_flexible_policy_commit_guard",
+  "criteria": {
+    "maximum_ignored_evidence_rate_increase": {
+      "actual_change": -0.3112244897959183,
+      "maximum_allowed_increase": 0.05,
+      "metric": "ignored_evidence_rate",
+      "passed": true
+    },
+    "maximum_perseveration_increase": {
+      "actual_change": -0.29166666666666663,
+      "maximum_allowed_increase": 0.05,
+      "metric": "perseveration",
+      "passed": true
+    },
+    "maximum_unsafe_commit_rate_increase": {
+      "actual_change": 0.0,
+      "maximum_allowed_increase": 0.05,
+      "metric": "unsafe_commit_rate",
+      "passed": true
+    },
+    "minimum_score_gain": {
+      "actual_change": 0.03735350654059466,
+      "metric": "BeliefUpdateScore",
+      "passed": true,
+      "required_minimum_change": 0.02
+    }
+  },
+  "decision": "keep",
+  "episodes": 50,
+  "keep": true,
+  "rejection_reasons": [],
+  "score_gain": 0.03735350654059466,
+  "seed": 31
+}

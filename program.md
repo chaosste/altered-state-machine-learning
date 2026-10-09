@@ -31,8 +31,11 @@ The baseline in `train.py` is a standard recurrent controller plus an explicit b
 3. Kanen et al. (2023) phase pattern. Raise reward learning rate more than punishment learning rate, lower `STICKINESS`, set `PHASE_DEPENDENT_SENSITIVITY` so reinforcement sensitivity is lower on quiet updates and higher after a large belief move. In the human data, sensitivity fell in acquisition and rose after reversal.
 4. REBUS precision. `PRIOR_PRECISION` 0.5 and `BELIEF_PE_GAIN` 1. The menu name is `arm4` (`rebus` is the same arm). This is the Carhart-Harris and Friston (2019) claim: an overweighted high-level prior gives way to prediction error. Herzog et al. (2023) is why the gain sits on the belief channel and not on the action logits.
 5. Plasticity window. Use arm 3 or 4, and set `PLASTICITY_UNTIL_EPISODE`. Evaluation always reads the post-window constants (`phenotype_constants` with the window closed). Šabanović et al. (2024): a benefit that exists only while the boost is on, and disappears on a later novel reversal, is not a lasting effect.
+6. Evidence-sensitive updating plus less perseverative action selection. The menu name is `arm6`. Combine Arm 4's `PRIOR_PRECISION` 0.5 and `BELIEF_PE_GAIN` 1.0 with Arm 3's `STICKINESS` 0.25 and phase-dependent action sensitivity (`ACQUISITION_BETA` 0.75, `REVERSAL_BETA` 1.25). Keep reward and punishment learning rates at their baseline values (0.15). This tests whether stronger evidence-driven belief revision and less repetition of the previous action work together to help adaptation to a changing partner. The Arm 3 reward/punishment learning-rate changes are excluded so this combination isolates the belief settings and the action-control changes.
+7. Evidence-sensitive updating with a commit guard. The menu name is `arm7`. Use Arm 6's constants and enforce the existing commit-gate condition during training and evaluation: mask `commit` when `gate_would_block` is true (belief entropy above 0.45 or P(open) below 0.65). This tests whether retaining Arm 6's belief and action-control effects while preventing commits under the gate's uncertainty conditions improves safety. The evaluator and its thresholds remain unchanged.
+8. Lower-intensity REBUS belief update. The menu name is `arm8`. Use prior precision 0.5 and prediction-error gain 0.8; all action-policy, learning-rate, and stickiness settings stay at baseline. This tests whether a less amplified belief update retains useful evidence sensitivity with a milder change than Arm 4. This is a lower-intensity computational modulation, not a pharmacological dose estimate.
 
-Do not combine arms before a single arm improves `BeliefUpdateScore` without worsening unsafe commits or perseveration.
+Arm 6 is a pre-registered, focused combination of the Arm 4 belief settings and the Arm 3 action-control settings. Arm 7 adds the existing commit guard to that combination. Arm 8 is a one-parameter REBUS modulation. Do not combine other arms before a single arm improves `BeliefUpdateScore` without worsening unsafe commits or perseveration.
 
 ## Score
 
@@ -55,6 +58,10 @@ Hard penalties, subtracted after the weighted mean:
 - 0.10 if the ignored-evidence rate—strong evidence followed by belief movement below 0.02—is above 0.80
 
 The score is clipped to [0, 1].
+
+### Report-only task-utility outcomes
+
+Evaluation additionally reports mean cumulative environment reward per fixed scenario, the share of episodes ending in a terminal action, and the share ending in an appropriate terminal action. An appropriate terminal action is `proceed` or `commit` when the world is open, and `yield` when it is closed; an episode that reaches its step limit without a terminal action is not counted as an appropriate terminal outcome. Cumulative reward includes the environment's time and probe costs. These outcomes describe task utility beside `BeliefUpdateScore`; they do not change its formula, hard penalties, or keep/discard decision.
 
 ### Ambiguous-outcome contract
 
@@ -145,8 +152,47 @@ From this directory, with the virtualenv:
 .venv/bin/python scripts/serve_trace.py --output-dir logs/baseline-seed7
 ```
 
-`rebus.py` prints a banner and a menu. Numbers and slash commands (`/train`, `/compare`, `/trace`, `/readings`, `/score`, `/partner`, `/test`, `/help`, `/quit`) call these same scripts. `/trace output=logs/baseline-seed7` opens the page and returns to the menu. `/partner output=logs/baseline-seed7` prints the partner's reading of that trace. `/score` only reads `metrics.json`, and the page shows that same list. `train.py` prints `eval_metrics=` and writes `metrics.json`, `trace.json`, `learning_curve.csv`, and `model.pt`. `read_trace.py` writes `trace.readings.json` (cue stance, polarity, and richness) and refuses to replace `metrics.json`. The runner writes `baseline/` and, if you pass `--candidate-train-py` or `candidate=peft`, `candidate/` plus `selection/selection.json`. The page shows the belief strip, the partner paragraph, and the three readings. It can mark a run keep or discard. That mark is stored next to the trace and does not change the score. The readings do not change the score either.
+`rebus.py` prints a banner and a menu. Numbers and slash commands (`/train`, `/compare`, `/trace`, `/readings`, `/score`, `/partner`, `/test`, `/help`, `/quit`) call these same scripts; `/contracts` lists the supported contract IDs. `/trace output=logs/baseline-seed7` opens the page and returns to the menu. `/partner output=logs/baseline-seed7` prints the partner's reading of that trace. `/score` only reads `metrics.json`, and the page shows that same list and the active contract. `train.py` writes contract-tagged `metrics.json` and `trace.json` plus `learning_curve.csv` and `model.pt`. `read_trace.py` writes `trace.readings.json` (cue stance, polarity, and richness) and refuses to replace `metrics.json`. The original-contract runner writes `baseline/` and, if you pass `--candidate-train-py` or `candidate=peft`, `candidate/` plus `selection/selection.json`. A trace note never changes metrics.
 
-The menu accepts `seeds=` on `/compare`, for example `/compare episodes=50 seeds=7,11,17,23,29 candidate=arm4 output=logs`. It runs the canonical single-seed comparison serially for each seed and writes `logs/seed7-arm4/`, `logs/seed11-arm4/`, and so on. `seed=` and `seeds=` are mutually exclusive.
+The menu accepts `seeds=` on `/compare`, for example `/compare episodes=50 seeds=7,11,17,23,29 candidate=arm4 output=logs`. It runs the canonical single-seed comparison serially for each seed and writes `logs/seed7-arm4/`, `logs/seed11-arm4/`, and so on. Use `candidate=arm6` for the belief-update and action-control combination, `candidate=arm7` to add its commit guard, or `candidate=arm8` for the lower-intensity REBUS belief update. `seed=` and `seeds=` are mutually exclusive.
 
 A candidate is another training file run as its own process. Do not import it into the baseline process. `train_peft.py` is that candidate for the fine-tune. The same `env.py`, `eval.py`, and `oracle.py` are the contract. The language-model partner reads the finished belief trace. It does not track the partner.
+
+## High-Risk Belief Update Suite v1
+
+This is a second, separately versioned contract. The original suite is `evidence-response-v3`; its scenarios, `BeliefUpdateScore`, selection rule, and historical interpretation remain the original experiment. The new contract ID is `high-risk-belief-update-v1`. Never compare scores, traces, selection reports, or scenario results across these IDs. The v1 contract does not use `BeliefUpdateScore` or the baseline-versus-candidate keep/discard selector.
+
+Arm settings are fixed by `train.py`: Arm 3 uses reward learning rate 0.30, punishment learning rate 0.22, stickiness 0.25, and action sensitivity 0.75 / 1.25; Arm 4 uses prior precision 0.5 and belief prediction-error gain 1.0 with baseline action control and learning rates. Baseline is the existing baseline. Do not tune or combine these settings in this comparison.
+
+The v1 comparison has two results tracks:
+
+- **Controlled belief-update replay:** every arm receives the same scripted cue and previous-action history. Native-prior results include each arm's prior; common-prior results use the baseline prior. Initial-prior Brier/log error is separate from stepwise posterior error against the specified exact Bayesian posterior, truth scoring, evidence-response direction/magnitude, revision latency, family/uncertainty calibration, world/operator attribution, and abstention.
+- **Closed-loop task evaluation:** trained policies choose their own actions in the same simulation templates. Reward, completion, appropriate and inappropriate terminal actions, unsafe actions, critical misses, probes, delay, handoffs, no-terminal outcomes, and the worst family are reported separately from replay results.
+
+`high_risk_suite.py` freezes the provisional v1 likelihood mappings, 0.80 decisive-posterior threshold, 0.65 abstention threshold, and simulation cost matrix before the comparison. The exact replay reference uses a symmetric 0.5 state-switch probability at marked reversal/stale-world steps; this resets the reference prediction to uniform before that cue without revealing the new state. The hard gates require zero irreversible actions after a deterministic hazard cue while its safety lock is active, and zero irreversible actions while critical evidence is unavailable and unresolved. Locks clear only at a template event marked as safe resolution. Each breach fails its seed regardless of mean reward. Wait and probe actions carry explicit costs, so always abstaining cannot pass through safety alone. Domain labels for robot workcells, emergency routes, and status handoffs are simulation assumptions, not validated operational mappings or safety estimates.
+
+Training uses the existing training-scenario generator, pre-generated once per seed and shared across baseline, Arm 3, and Arm 4. The schedule and hash are saved for audit. Hidden evaluation templates are kept separate from training. The initial comparison uses 50 episodes and the cohort `7,11,17,23,29,31,37,41,43,47,53`; this is an initial comparison, not broad deployment evidence.
+
+Run the suite from the terminal menu:
+
+```text
+/contracts
+/compare contract=high-risk-belief-update-v1 variants=baseline,arm3,arm4 episodes=50 seeds=7,11,17,23,29,31,37,41,43,47,53 output=logs/high-risk-belief-update-v1
+/score metrics=logs/high-risk-belief-update-v1/seed7/arm4/metrics.json contract=high-risk-belief-update-v1
+/trace output=logs/high-risk-belief-update-v1/seed7/arm4 contract=high-risk-belief-update-v1
+```
+
+Each seed directory contains one training schedule and `baseline/`, `arm3/`, and `arm4/` outputs. Metrics, replay traces, closed-loop traces, and comparison summaries carry the canonical contract ID. The cross-seed report is `analysis/arm3-arm4-high-risk-v1-report.md`; `comparison_summary.json` records paired differences, confidence intervals, source hashes, package versions, and schedule provenance. Existing `logs/` outputs are never reused as v1 artifacts.
+
+The REBUS report and academic papers motivate partial-observability, false-belief, uncertainty, cue-mapping, and handover tests. They do not specify or validate this suite's numerical thresholds, domain costs, or real-world safety claims.
+
+### Post-run analyses
+
+The task-cost sensitivity pass is post-hoc and re-scores the saved v1 action traces under one-factor lighter/heavier delay, terminal-error, and catastrophic-penalty assumptions. It does not retrain or change actions; the hard safety gates stay independent of each reward matrix. Outputs use a separate `cost-sensitivity` analysis ID under `logs/high-risk-belief-update-v1-cost-sensitivity/`.
+
+The held-out expansion adds 12 new templates across the three simulated domains, then evaluates the existing 11-seed v1 checkpoints without retraining. The expanded scenario-suite ID is `high-risk-belief-update-scenarios-v2`; its outputs keep the same belief/task definitions and canonical contract ID but remain in a separate path and identify that suite explicitly. The existing v1 suite and artifacts remain unchanged.
+
+```bash
+.venv/bin/python scripts/high_risk_cost_sensitivity.py
+.venv/bin/python scripts/high_risk_heldout_v2.py
+```

@@ -16,6 +16,8 @@ from env import (
     COMMIT,
     OBS_NAMES,
     OPEN,
+    PROCEED,
+    YIELD,
     TYPE_NAMES,
     Observation,
     PartnerEnv,
@@ -25,6 +27,7 @@ from env import (
     likelihood,
     perseverative_action,
 )
+from contracts import EVIDENCE_RESPONSE_V3
 from oracle import anchor_action, entropy, evidence_update, initial_logits, softmax
 from readings import entropy_band
 
@@ -174,6 +177,9 @@ def evaluate_policy(
         if row["has_strong_evidence"]
     ]
     moved_but_uncertain_rate = _mean(moved_but_uncertain_rows, 0.0)
+    mean_episode_return = _mean(col("episode_return"), 0.0)
+    terminal_action_rate = _mean(col("terminated_by_action"), 0.0)
+    appropriate_terminal_action_rate = _mean(col("appropriate_terminal_action"), 0.0)
 
     raw = (
         WEIGHTS["revision_accuracy"] * revision_accuracy
@@ -199,6 +205,7 @@ def evaluate_policy(
 
     metrics: Dict[str, object] = {
         "evaluation_contract_version": EVALUATION_CONTRACT_VERSION,
+        "contract_id": EVIDENCE_RESPONSE_V3,
         "BeliefUpdateScore": score,
         "revision_accuracy": revision_accuracy,
         "clear_revision_accuracy": clear_revision_accuracy,
@@ -212,6 +219,9 @@ def evaluate_policy(
         "unsafe_commit_rate": unsafe_commit_rate,
         "ignored_evidence_rate": ignored_evidence_rate,
         "moved_but_uncertain_rate": moved_but_uncertain_rate,
+        "mean_episode_return": mean_episode_return,
+        "terminal_action_rate": terminal_action_rate,
+        "appropriate_terminal_action_rate": appropriate_terminal_action_rate,
         "entropy_mean": _mean(col("entropy_mean"), 0.0),
         "aleatoric_mean": _mean(col("aleatoric_mean"), 0.0),
         "held_out_revision_accuracy": _mean(subset("held_out"), 0.0),
@@ -240,6 +250,10 @@ def selection_report(
     """Return the canonical keep/discard decision and the evidence for every gate."""
     if baseline.get("evaluation_contract_version") != candidate.get("evaluation_contract_version"):
         raise ValueError("Baseline and candidate use different evaluation contract versions.")
+    baseline_contract = baseline.get("contract_id", baseline.get("evaluation_contract_version"))
+    candidate_contract = candidate.get("contract_id", candidate.get("evaluation_contract_version"))
+    if baseline_contract != candidate_contract:
+        raise ValueError("Baseline and candidate use different canonical contracts.")
 
     score_gain = float(candidate["BeliefUpdateScore"]) - float(baseline["BeliefUpdateScore"])
     unsafe_change = float(candidate["unsafe_commit_rate"]) - float(baseline["unsafe_commit_rate"])
@@ -291,6 +305,7 @@ def selection_report(
 
     kept = all(bool(gate["passed"]) for gate in criteria.values())
     return {
+        "contract_id": baseline_contract or EVIDENCE_RESPONSE_V3,
         "keep": kept,
         "decision": "keep" if kept else "discard",
         "rejection_reasons": rejection_reasons,
@@ -351,6 +366,9 @@ def _rollout(policy: BeliefPolicy, env: PartnerEnv, scenario: Scenario) -> tuple
     saw_post_reversal = False
     scored_steps = 0
     prev_action_for_filter = 0  # WAIT, matching env.reset
+    episode_return = 0.0
+    terminal_action: Optional[str] = None
+    terminal_action_appropriate = False
 
     while True:
         exact_before = softmax(exact_logits)
@@ -358,7 +376,11 @@ def _rollout(policy: BeliefPolicy, env: PartnerEnv, scenario: Scenario) -> tuple
         exact_logits = evidence_update(exact_logits, obs, prev_action_for_filter, pe_gain=1.0)
         exact_after = softmax(exact_logits)
         confirm = policy.requery(obs)
-        _obs_next, _reward, done, step_info = env.step(decision.action)
+        _obs_next, reward, done, step_info = env.step(decision.action)
+        episode_return += float(reward)
+        if decision.action in (YIELD, PROCEED, COMMIT):
+            terminal_action = ACTION_NAMES[decision.action]
+            terminal_action_appropriate = _appropriate_terminal_action(decision.action, obs.world_type)
 
         belief = np.asarray(decision.belief_after, dtype=np.float64)
         belief = belief / max(float(belief.sum()), 1e-12)
@@ -419,6 +441,7 @@ def _rollout(policy: BeliefPolicy, env: PartnerEnv, scenario: Scenario) -> tuple
                 "step": obs.step_index,
                 "cue": OBS_NAMES[obs.discrete],
                 "action": ACTION_NAMES[decision.action],
+                "reward": float(reward),
                 "requery_action": ACTION_NAMES[int(confirm.action)],
                 "consistent": bool(belief_same and action_same),
                 "belief_before": [float(before[OPEN]), float(before[CLOSED])],
@@ -465,6 +488,10 @@ def _rollout(policy: BeliefPolicy, env: PartnerEnv, scenario: Scenario) -> tuple
         "has_omission": len(omission_hits) > 0,
         "has_strong_evidence": len(ignored_flags) > 0,
         "revision_accuracy": _mean(step_credits, 0.0),
+        "episode_return": episode_return,
+        "terminal_action": terminal_action,
+        "terminated_by_action": terminal_action is not None,
+        "appropriate_terminal_action": 1.0 if terminal_action_appropriate else 0.0,
         "revision_speed": 1.0 - latency_ratio,
         "perseveration": _mean(perseveration_flags, 0.0),
         "omission_sensitivity": _mean(omission_hits, 0.5),
@@ -491,9 +518,19 @@ def _rollout(policy: BeliefPolicy, env: PartnerEnv, scenario: Scenario) -> tuple
         "ambiguous": scenario.ambiguous,
         "outcome_credit": outcome_credit,
         "outcome_status": outcome_status,
+        "episode_return": episode_return,
+        "terminal_action": terminal_action,
+        "terminated_by_action": terminal_action is not None,
+        "terminal_action_appropriate": terminal_action_appropriate if terminal_action is not None else None,
         "steps": steps,
     }
     return row, trace
+
+
+def _appropriate_terminal_action(action: int, world_type: int) -> bool:
+    if world_type == OPEN:
+        return action in (PROCEED, COMMIT)
+    return action == YIELD
 
 
 def _strong_evidence(obs: Observation, prev_action: int) -> bool:

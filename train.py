@@ -12,25 +12,30 @@ Later arms change one block:
   4. Lower PRIOR_PRECISION, raise BELIEF_PE_GAIN.
   5. Raise the rates and set PLASTICITY_UNTIL_EPISODE so eval, which uses the
      post-window constants, sees whether the change lasted.
+  6. Combine arm 4 belief settings with arm 3 stickiness and phase sensitivity.
+  7. Add the existing commit guard to arm 6.
+  8. Use arm 4 prior precision with a lower belief prediction-error gain.
 """
 
 from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import random
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Optional, Sequence
 
 import numpy as np
 import torch
 import torch.nn as nn
 from torch.distributions import Categorical
 
-from env import OBS_DIM, WAIT, Observation, PartnerEnv, sample_training_scenario
-from eval import emit_eval_metrics, evaluate_policy
+from contracts import DEFAULT_CONTRACT, EVIDENCE_RESPONSE_V3, HIGH_RISK_BELIEF_UPDATE_V1, resolve_contract
+from env import COMMIT, OBS_DIM, WAIT, Observation, PartnerEnv, Scenario, sample_training_scenario
+from eval import emit_eval_metrics, evaluate_policy, gate_would_block
 from oracle import evidence_update, initial_logits, softmax
 
 
@@ -55,7 +60,7 @@ GAMMA = 0.95
 ENTROPY_COEF = 0.01
 VALUE_COEF = 0.5
 
-# One pre-registered edit each. `rebus` and `arm4_rebus` are arm 4.
+# Pre-registered variants. `rebus` and `arm4_rebus` are aliases for arm 4.
 VARIANT_ALIASES = {
     "baseline": "baseline",
     "arm2": "arm2",
@@ -64,6 +69,9 @@ VARIANT_ALIASES = {
     "arm4_rebus": "arm4",
     "rebus": "arm4",
     "arm5": "arm5",
+    "arm6": "arm6",
+    "arm7": "arm7",
+    "arm8": "arm8",
 }
 VARIANT_LABELS = {
     "baseline": "baseline",
@@ -71,6 +79,9 @@ VARIANT_LABELS = {
     "arm3": "arm3_kanen_phase",
     "arm4": "arm4_rebus",
     "arm5": "arm5_plasticity_window",
+    "arm6": "arm6_evidence_flexible_policy",
+    "arm7": "arm7_evidence_flexible_policy_commit_guard",
+    "arm8": "arm8_rebus_pe_gain_08",
 }
 VARIANT_OVERRIDES: Dict[str, Dict[str, object]] = {
     "baseline": {},
@@ -85,6 +96,23 @@ VARIANT_OVERRIDES: Dict[str, Dict[str, object]] = {
     },
     "arm4": {"prior_precision": 0.5, "pe_gain": 1.0},
     "arm5": {"prior_precision": 0.5, "pe_gain": 1.0, "plasticity_until_episode": 25},
+    "arm6": {
+        "prior_precision": 0.5,
+        "pe_gain": 1.0,
+        "stickiness": 0.25,
+        "phase_dependent_sensitivity": True,
+        "acquisition_beta": 0.75,
+        "reversal_beta": 1.25,
+    },
+    "arm7": {
+        "prior_precision": 0.5,
+        "pe_gain": 1.0,
+        "stickiness": 0.25,
+        "phase_dependent_sensitivity": True,
+        "acquisition_beta": 0.75,
+        "reversal_beta": 1.25,
+    },
+    "arm8": {"prior_precision": 0.5, "pe_gain": 0.8},
 }
 _ACTIVE_VARIANT = "baseline"
 
@@ -105,6 +133,50 @@ def apply_variant(name: str) -> str:
 
 def active_variant() -> str:
     return VARIANT_LABELS[_ACTIVE_VARIANT]
+
+
+def active_variant_key() -> str:
+    return _ACTIVE_VARIANT
+
+
+def training_schedule_for_seed(episodes: int, seed: int) -> List[Scenario]:
+    """Pre-generate the existing training template schedule for matched runs."""
+    rng = random.Random(seed)
+    return [sample_training_scenario(rng) for _ in range(episodes)]
+
+
+def scenario_schedule_hash(schedule: Sequence[Scenario]) -> str:
+    payload = [asdict(scenario) for scenario in schedule]
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def scenario_schedule_payload(contract_id: str, seed: int, schedule: Sequence[Scenario]) -> Dict[str, object]:
+    return {
+        "contract_id": contract_id,
+        "seed": seed,
+        "episodes": len(schedule),
+        "schedule_sha256": scenario_schedule_hash(schedule),
+        "generator": "env.sample_training_scenario(random.Random(seed))",
+        "scenarios": [asdict(scenario) for scenario in schedule],
+    }
+
+
+def load_training_schedule(path: Path) -> List[Scenario]:
+    payload = json.loads(Path(path).read_text())
+    rows = payload.get("scenarios") if isinstance(payload, dict) else payload
+    if not isinstance(rows, list):
+        raise ValueError(f"{path} does not contain a scenario schedule.")
+    schedule = []
+    for row in rows:
+        values = dict(row)
+        if values.get("scripted_cues") is not None:
+            values["scripted_cues"] = tuple(values["scripted_cues"])
+        schedule.append(Scenario(**values))
+    expected = payload.get("schedule_sha256") if isinstance(payload, dict) else None
+    if expected and expected != scenario_schedule_hash(schedule):
+        raise ValueError(f"Training schedule hash mismatch in {path}.")
+    return schedule
 
 
 def phenotype_constants(episode: int | None = None) -> Dict[str, float | bool | None]:
@@ -236,6 +308,9 @@ class BaselinePolicy(nn.Module):
         sticky = torch.zeros_like(action_logits)
         sticky[stick_from] = self.stickiness
         action_logits = (action_logits + sticky) * self.beta
+        if _ACTIVE_VARIANT == "arm7" and gate_would_block(COMMIT, belief):
+            action_logits = action_logits.clone()
+            action_logits[COMMIT] = torch.finfo(action_logits.dtype).min
         value = self.value_head(hidden).squeeze()
         dist = Categorical(logits=action_logits)
         if deterministic:
@@ -271,7 +346,26 @@ def _episode_loss(policy: BaselinePolicy, decisions: List[StepDecision], rewards
     )
 
 
-def train(episodes: int, seed: int, output_dir: Path, device: str, hidden_dim: int, lr: float) -> Dict[str, object]:
+def train(
+    episodes: int,
+    seed: int,
+    output_dir: Path,
+    device: str,
+    hidden_dim: int,
+    lr: float,
+    contract_id: str = DEFAULT_CONTRACT,
+    training_schedule: Optional[Sequence[Scenario]] = None,
+    quiet: bool = False,
+) -> Dict[str, object]:
+    contract_id = resolve_contract(contract_id)
+    if training_schedule is not None and len(training_schedule) != episodes:
+        raise ValueError("The supplied training schedule length must equal episodes.")
+    if contract_id == HIGH_RISK_BELIEF_UPDATE_V1 and output_dir.exists() and any(output_dir.iterdir()):
+        raise FileExistsError(f"Refusing to overwrite existing high-risk v1 artifacts in {output_dir}.")
+    schedule = list(training_schedule) if training_schedule is not None else None
+    if contract_id == HIGH_RISK_BELIEF_UPDATE_V1 and schedule is None:
+        schedule = training_schedule_for_seed(episodes, seed)
+    schedule_hash = scenario_schedule_hash(schedule) if schedule is not None else None
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
@@ -289,7 +383,7 @@ def train(episodes: int, seed: int, output_dir: Path, device: str, hidden_dim: i
         )
         writer.writeheader()
         for episode in range(episodes):
-            scenario = sample_training_scenario(rng)
+            scenario = schedule[episode] if schedule is not None else sample_training_scenario(rng)
             policy.begin_training_episode(episode)
             obs, info = env.reset(scenario)
             decisions: List[StepDecision] = []
@@ -322,21 +416,64 @@ def train(episodes: int, seed: int, output_dir: Path, device: str, hidden_dim: i
     was_training = policy.training
     policy.eval()
     with torch.no_grad():
-        metrics = evaluate_policy(policy)
+        if contract_id == HIGH_RISK_BELIEF_UPDATE_V1:
+            from high_risk_suite import evaluate_high_risk_policy
+
+            evaluated = evaluate_high_risk_policy(
+                policy,
+                variant=active_variant_key(),
+                constants=phenotype_constants(10**9),
+                baseline_prior_precision=PRIOR_PRECISION,
+            )
+            replay_artifact = evaluated.pop("replay_artifact")
+            trace_artifact = evaluated.pop("trace_artifact")
+            metrics = evaluated
+        else:
+            metrics = evaluate_policy(policy)
+            traces = metrics.pop("traces")
+            trace_artifact = {
+                "contract_id": EVIDENCE_RESPONSE_V3,
+                "traces": traces,
+            }
+            replay_artifact = None
     if was_training:
         policy.train()
-    traces = metrics.pop("traces")
     payload = {
+        "contract_id": contract_id,
         "variant": active_variant(),
         "seed": seed,
         "episodes": episodes,
         "constants": phenotype_constants(10**9),
+        "training_device": device,
+        "hidden_dim": hidden_dim,
+        "optimizer_lr": lr,
         **metrics,
     }
+    if schedule_hash is not None:
+        payload["training_schedule_sha256"] = schedule_hash
+        payload["training_schedule_source"] = "pre-generated and reused" if training_schedule is not None else "generated once before training"
+    if contract_id == HIGH_RISK_BELIEF_UPDATE_V1:
+        payload["configuration_provenance"] = {
+            "variant_key": active_variant_key(),
+            "constants": phenotype_constants(10**9),
+            "training_device": device,
+            "hidden_dim": hidden_dim,
+            "optimizer_lr": lr,
+            "episodes": episodes,
+            "seed": seed,
+            "training_schedule_sha256": schedule_hash,
+        }
     (output_dir / "metrics.json").write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n")
-    (output_dir / "trace.json").write_text(json.dumps(traces, indent=2) + "\n")
+    (output_dir / "trace.json").write_text(json.dumps(trace_artifact, indent=2) + "\n")
+    if replay_artifact is not None:
+        (output_dir / "belief_replay.json").write_text(json.dumps(replay_artifact, indent=2) + "\n")
+        if training_schedule is None:
+            (output_dir / "training_schedule.json").write_text(
+                json.dumps(scenario_schedule_payload(contract_id, seed, schedule or []), indent=2) + "\n"
+            )
     torch.save(
         {
+            "contract_id": contract_id,
             "state_dict": policy.state_dict(),
             "constants": phenotype_constants(None),
             "variant": active_variant(),
@@ -344,9 +481,10 @@ def train(episodes: int, seed: int, output_dir: Path, device: str, hidden_dim: i
         },
         output_dir / "model.pt",
     )
-    print(emit_eval_metrics(payload))
-    print(f"saved_checkpoint={output_dir / 'model.pt'}")
-    print(f"learning_curve_csv={curve_path}")
+    if not quiet:
+        print(emit_eval_metrics(payload))
+        print(f"saved_checkpoint={output_dir / 'model.pt'}")
+        print(f"learning_curve_csv={curve_path}")
     return payload
 
 
@@ -359,6 +497,8 @@ def main() -> None:
     parser.add_argument("--hidden", type=int, default=64)
     parser.add_argument("--lr", type=float, default=3e-3)
     parser.add_argument("--variant", default="baseline")
+    parser.add_argument("--contract", default=DEFAULT_CONTRACT)
+    parser.add_argument("--scenario-schedule", default="", help="JSON schedule produced for a matched comparison")
     args = parser.parse_args()
     try:
         apply_variant(args.variant)
@@ -371,6 +511,8 @@ def main() -> None:
         device=args.device,
         hidden_dim=args.hidden,
         lr=args.lr,
+        contract_id=args.contract,
+        training_schedule=load_training_schedule(Path(args.scenario_schedule)) if args.scenario_schedule else None,
     )
 
 
